@@ -1,9 +1,5 @@
-﻿# CMakeList.txt : CMake project for oya, include source and define
-# project specific logic here.
-#
-cmake_minimum_required (VERSION 3.8)
+﻿cmake_minimum_required (VERSION 3.30)
 
-# Enable Hot Reload for MSVC compilers if supported.
 if (POLICY CMP0141)
   cmake_policy(SET CMP0141 NEW)
   set(CMAKE_MSVC_DEBUG_INFORMATION_FORMAT "$<IF:$<AND:$<C_COMPILER_ID:MSVC>,$<CXX_COMPILER_ID:MSVC>>,$<$<CONFIG:Debug,RelWithDebInfo>:EditAndContinue>,$<$<CONFIG:Debug,RelWithDebInfo>:ProgramDatabase>>")
@@ -11,11 +7,19 @@ endif()
 
 project ("oya")
 
-# Add source to this project's executable.
+find_package(OpenGL REQUIRED COMPONENTS OpenGL)
+
 add_executable (oya "oya.cpp" )
 
-if (CMAKE_VERSION VERSION_GREATER 3.12)
-  set_property(TARGET oya PROPERTY CXX_STANDARD 20)
-endif()
+include_directories(${CMAKE_SOURCE_DIR}/external/glfw/include)
+include_directories(${CMAKE_SOURCE_DIR}/external/imgui)
+include_directories(${CMAKE_SOURCE_DIR}/external/imgui/backends)
 
-# TODO: Add tests and install targets if needed.
+set(glfw_lib "${CMAKE_SOURCE_DIR}/external/build/glfw/src/${CMAKE_BUILD_TYPE}/glfw3.lib")
+set(imgui_lib "${CMAKE_SOURCE_DIR}/external/build/${CMAKE_BUILD_TYPE}/imgui.lib")
+# add_dependencies(oya OpenGL)
+
+target_link_libraries(oya ${glfw_lib} ${imgui_lib} OpenGL32) 
+
+
+set_property(TARGET oya PROPERTY CXX_STANDARD 23)
