@@ -18,7 +18,17 @@ endif()
 
 add_subdirectory(glfw)
 add_subdirectory(glm)
-add_subdirectory(${GLEW_SOURCE_DIR}/build/cmake)
+
+add_library(glew STATIC
+    ${GLEW_SOURCE_DIR}/src/glew.c
+)
+
+target_compile_definitions(glew PUBLIC GLEW_STATIC)
+
+target_include_directories(glew PUBLIC
+    ${GLEW_SOURCE_DIR}/include
+)
+
 
 add_library(imgui STATIC
 	imgui/imgui.cpp

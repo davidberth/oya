@@ -1,4 +1,6 @@
-﻿#include "imgui.h"
+﻿#include "GL/glew.h"
+
+#include "imgui.h"
 #include "imgui_impl_glfw.h"
 #include "imgui_impl_opengl3.h"
 #include <stdio.h>
@@ -14,6 +16,13 @@ static void glfw_error_callback(int error, const char* description)
 // Main code
 int main(int, char**)
 {
+
+    if (GLEW_OK != glewInit())
+    {
+        // GLEW failed!
+		fprintf(stderr, "Failed to initialize GLEW\n");
+        return 1;
+    }
     glfwSetErrorCallback(glfw_error_callback);
     if (!glfwInit())
         return 1;
