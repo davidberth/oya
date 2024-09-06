@@ -1,9 +1,24 @@
 cmake_minimum_required (VERSION 3.30)
 
 project(external)
+
+set(GLEW_VERSION 2.2.0)
+set(GLEW_URL https://sourceforge.net/projects/glew/files/glew/${GLEW_VERSION}/glew-${GLEW_VERSION}.zip/download)
+set(GLEW_ZIP ${CMAKE_BINARY_DIR}/glew.zip)
+set(GLEW_SOURCE_DIR ${CMAKE_SOURCE_DIR}/glew-${GLEW_VERSION})
+
+if(NOT EXISTS ${GLEW_ZIP})
+    file(DOWNLOAD ${GLEW_URL} ${GLEW_ZIP})
+endif()
+
+if(NOT EXISTS ${GLEW_SOURCE_DIR})
+    file(ARCHIVE_EXTRACT INPUT ${GLEW_ZIP} DESTINATION ${CMAKE_SOURCE_DIR})
+endif()
+
+
 add_subdirectory(glfw)
 add_subdirectory(glm)
-add_subdirectory(glew/build/cmake)
+add_subdirectory(${GLEW_SOURCE_DIR}/build/cmake)
 
 add_library(imgui STATIC
 	imgui/imgui.cpp
@@ -16,3 +31,5 @@ add_library(imgui STATIC
 )
 
 target_include_directories(imgui PUBLIC ${CMAKE_SOURCE_DIR}/imgui)
+
+file(REMOVE ${GLEW_ZIP})
