@@ -3,6 +3,7 @@ cmake_minimum_required (VERSION 3.30)
 project(external)
 add_subdirectory(glfw)
 add_subdirectory(glm)
+add_subdirectory(glew/build/cmake)
 
 add_library(imgui STATIC
 	imgui/imgui.cpp
