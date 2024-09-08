@@ -5,7 +5,7 @@
 #include "imgui_impl_opengl3.h"
 #include <stdio.h>
 
-#include <GLFW/glfw3.h> // Will drag system OpenGL headers
+#include "GLFW/glfw3.h"
 
 
 static void glfw_error_callback(int error, const char* description)
@@ -17,12 +17,6 @@ static void glfw_error_callback(int error, const char* description)
 int main(int, char**)
 {
 
-    if (GLEW_OK != glewInit())
-    {
-        // GLEW failed!
-		fprintf(stderr, "Failed to initialize GLEW\n");
-        return 1;
-    }
     glfwSetErrorCallback(glfw_error_callback);
     if (!glfwInit())
         return 1;
@@ -39,8 +33,17 @@ int main(int, char**)
     if (window == nullptr)
         return 1;
     glfwMakeContextCurrent(window);
+
+    if (GLEW_OK != glewInit())
+    {
+        // GLEW failed!
+        fprintf(stderr, "Failed to initialize GLEW\n");
+        return 1;
+    }
+
     glfwSwapInterval(1); // Enable vsync
 
+  
     // Setup Dear ImGui context
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
@@ -49,7 +52,7 @@ int main(int, char**)
     // io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // Enable Gamepad Controls
 
     io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
-    // io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
+    //io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
 
 
 
@@ -60,7 +63,6 @@ int main(int, char**)
 
     // Setup Platform/Renderer backends
     ImGui_ImplGlfw_InitForOpenGL(window, true);
-
     ImGui_ImplOpenGL3_Init(glsl_version);
 
     
@@ -106,7 +108,8 @@ int main(int, char**)
         ImGui_ImplOpenGL3_NewFrame();
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
-		ImGui::DockSpaceOverViewport();
+        //ImGui::DockSpaceOverViewport();
+        ImGui::DockSpaceOverViewport(0, ImGui::GetMainViewport());
 
         // 1. Show the big demo window (Most of the sample code is in ImGui::ShowDemoWindow()! You can browse its code to learn more about Dear ImGui!).
         if (show_demo_window)
@@ -154,6 +157,11 @@ int main(int, char**)
         glClear(GL_COLOR_BUFFER_BIT);
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
+        //GLFWwindow* backup_current_context = glfwGetCurrentContext();
+        //ImGui::UpdatePlatformWindows();
+        //ImGui::RenderPlatformWindowsDefault();
+        //glfwMakeContextCurrent(backup_current_context);
+        
         glfwSwapBuffers(window);
     }
 
