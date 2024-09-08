@@ -4,7 +4,6 @@ project(external)
 
 add_subdirectory(glfw)
 add_subdirectory(glm)
-add_subdirectory(spdlog)
 
 # download and extract glew
 set(GLEW_VERSION 2.2.0)
