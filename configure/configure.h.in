@@ -1,0 +1,4 @@
+#pragma once
+
+#cmakedefine APPNAME "${APPNAME}"
+#cmakedefine APPVERSION "${APPVERSION}"

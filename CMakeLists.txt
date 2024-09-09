@@ -5,6 +5,11 @@ if (POLICY CMP0141)
   set(CMAKE_MSVC_DEBUG_INFORMATION_FORMAT "$<IF:$<AND:$<C_COMPILER_ID:MSVC>,$<CXX_COMPILER_ID:MSVC>>,$<$<CONFIG:Debug,RelWithDebInfo>:EditAndContinue>,$<$<CONFIG:Debug,RelWithDebInfo>:ProgramDatabase>>")
 endif()
 
-project ("oya")
+project (oya VERSION 0.1.0)
 
+set(APPNAME ${CMAKE_PROJECT_NAME})
+set(APPVERSION ${CMAKE_PROJECT_VERSION})
+
+
+add_subdirectory(configure)
 add_subdirectory(src)

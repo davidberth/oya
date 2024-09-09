@@ -1,8 +1,9 @@
 find_package(OpenGL REQUIRED COMPONENTS OpenGL)
 
-add_executable (oya oya.cpp)
-target_sources(oya PRIVATE FILE_SET CXX_MODULES FILES )
+add_executable (oya "main.cpp")
+target_sources(oya PRIVATE FILE_SET CXX_MODULES FILES "window.ixx" "layer.ixx" "layer_stack.ixx" "world_layer.ixx" "gui_layer.ixx")
 
+include_directories(${CMAKE_BINARY_DIR}/configure)
 include_directories(${CMAKE_SOURCE_DIR}/external/glfw/include)
 include_directories(${CMAKE_SOURCE_DIR}/external/imgui)
 include_directories(${CMAKE_SOURCE_DIR}/external/imgui/backends)

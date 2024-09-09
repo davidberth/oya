@@ -1,4 +1,6 @@
 2024-9-9
 
-- Implement or ingest simple logging module
-- Implement abstracted window module
++ Implement or ingest simple logging module
++ Implement abstracted window module
+- Implement generic layer class
+- Implement layer stack class
