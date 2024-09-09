@@ -141,7 +141,7 @@ export GLFWwindow* get_window()
 	return window;
 }
 
-export void get_window_size(int& width, int& height)
+export inline void get_window_size(int& width, int& height)
 {
 
 	glfwGetWindowSize(window, &width, &height);

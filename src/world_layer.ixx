@@ -8,6 +8,7 @@ module;
 export module world_layer;
 
 import layer;
+import gui_data;
 
 export class WorldLayer : public Layer
 {
@@ -29,7 +30,10 @@ public:
 	virtual void render(int display_w, int display_h) override
 	{
 		glViewport(0, 0, display_w, display_h);
-		glClearColor(0.6f, 0.0f, 0.0f, 1.0f);
+		glClearColor(gui_data.clear_color[0], 
+					 gui_data.clear_color[1],
+					 gui_data.clear_color[2],
+					 gui_data.clear_color[3]);
 		glClear(GL_COLOR_BUFFER_BIT);
 
 	}
@@ -38,5 +42,6 @@ public:
 	}
 	virtual void cleanup() override
 	{
+		__super::cleanup();
 	}
 };

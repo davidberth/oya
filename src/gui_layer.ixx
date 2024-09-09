@@ -12,12 +12,15 @@ module;
 export module gui_layer;
 
 import layer;
+import gui_data;
 
 export class GUILayer : public Layer
 {
 private:
     bool show_demo_window = true;
     bool show_another_window = false;
+
+	const char* font_path = "c:\\Windows\\Fonts\\Arial.ttf";
 public:
 	GUILayer(std::string pname) : Layer(pname) {};
 	~GUILayer() {};
@@ -28,12 +31,11 @@ public:
         IMGUI_CHECKVERSION();
         ImGui::CreateContext();
         ImGuiIO& io = ImGui::GetIO(); (void)io;
-        io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;     // Enable Keyboard Controls
-        // io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // Enable Gamepad Controls
+        io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;     
+        // io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad; 
 
         io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
         io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
-
 
         LOG_F(INFO, "Initialized OpenGL");
 
@@ -46,44 +48,27 @@ public:
         ImGui_ImplGlfw_InitForOpenGL(window, true);
         ImGui_ImplOpenGL3_Init("#version 460");
 
-
-
-        // Load Fonts
-        // - If no fonts are loaded, dear imgui will use the default font. You can also load multiple fonts and use ImGui::PushFont()/PopFont() to select them.
-        // - AddFontFromFileTTF() will return the ImFont* so you can store it if you need to select the font among multiple.
-        // - If the file cannot be loaded, the function will return a nullptr. Please handle those errors in your application (e.g. use an assertion, or display an error and quit).
-        // - The fonts will be rasterized at a given size (w/ oversampling) and stored into a texture when calling ImFontAtlas::Build()/GetTexDataAsXXXX(), which ImGui_ImplXXXX_NewFrame below will call.
-        // - Use '#define IMGUI_ENABLE_FREETYPE' in your imconfig file to use Freetype for higher quality font rendering.
-        // - Read 'docs/FONTS.md' for more instructions and details.
-        // - Remember that in C/C++ if you want to include a backslash \ in a string literal you need to write a double backslash \\ !
-        // - Our Emscripten build process allows embedding fonts to be accessible at runtime from the "fonts/" folder. See Makefile.emscripten for details.
-        //io.Fonts->AddFontDefault();
-        //io.Fonts->AddFontFromFileTTF("c:\\Windows\\Fonts\\segoeui.ttf", 18.0f);
-        //io.Fonts->AddFontFromFileTTF("../../misc/fonts/DroidSans.ttf", 16.0f);
-        //io.Fonts->AddFontFromFileTTF("../../misc/fonts/Roboto-Medium.ttf", 16.0f);
-        //io.Fonts->AddFontFromFileTTF("../../misc/fonts/Cousine-Regular.ttf", 15.0f);
-        ImFont* font = io.Fonts->AddFontFromFileTTF("c:\\Windows\\Fonts\\Arial.ttf", 24.0f);
+        ImFont* font = io.Fonts->AddFontFromFileTTF(font_path, gui_data.font_size);
         IM_ASSERT(font != nullptr);
-
 
 	}
 	virtual void update() override
 	{
-
+   
 	}
 	virtual void begin() override
 	{
         ImGui_ImplOpenGL3_NewFrame();
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
-        //ImGui::DockSpaceOverViewport();
+        // ImGui::DockSpaceOverViewport();
         // ImGui::DockSpaceOverViewport(0, ImGui::GetMainViewport());
 
 	}
 	virtual void render(int display_w, int display_h) override
 	{
-		static float clear_color[4] = { 0.45f, 0.55f, 0.60f, 1.00f };
-        if (show_demo_window)
+	
+		 if (show_demo_window)
             ImGui::ShowDemoWindow(&show_demo_window);
 
         // 2. Show a simple window that we create ourselves. We use a Begin/End pair to create a named window.
@@ -98,14 +83,13 @@ public:
             ImGui::Checkbox("Another Window", &show_another_window);
 
             ImGui::SliderFloat("float", &f, 0.0f, 1.0f);            // Edit 1 float using a slider from 0.0f to 1.0f
-            ImGui::ColorEdit3("clear color", (float*)&clear_color); // Edit 3 floats representing a color
+            ImGui::ColorEdit3("clear color", (float*)&gui_data.clear_color); // Edit 3 floats representing a color
 
             if (ImGui::Button("Button"))                            // Buttons return true when clicked (most widgets return true when edited/activated)
                 counter++;
             ImGui::SameLine();
             ImGui::Text("counter = %d", counter);
 
-            //ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / io.Framerate, io.Framerate);
             ImGui::End();
         }
 
@@ -132,5 +116,18 @@ public:
 	}
 	virtual void cleanup() override
 	{
+        ImGui_ImplOpenGL3_Shutdown();
+        ImGui_ImplGlfw_Shutdown();
+        ImGui::DestroyContext();
+        __super::cleanup();
+	}
+
+	void set_font_size(float size)
+	{
+		ImGuiIO& io = ImGui::GetIO();
+        gui_data.font_size += 2.0f;
+		io.Fonts->ClearFonts();
+        ImFont* font = io.Fonts->AddFontFromFileTTF(font_path, gui_data.font_size);
+		IM_ASSERT(font != nullptr);
 	}
 };

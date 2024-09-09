@@ -23,16 +23,6 @@ public:
 		layers.emplace_back(layer);
 	}
 
-	void cleanup()
-	{
-		LOG_F(INFO, "Cleaning up layer stack");
-		for (Layer* layer : layers)
-		{
-			layer->cleanup();
-			delete layer;
-		}
-	}
-
 	std::vector<Layer*>::iterator begin() { return layers.begin(); }
 	std::vector<Layer*>::iterator end() { return layers.end(); }
 };
