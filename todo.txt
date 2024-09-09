@@ -1,0 +1,4 @@
+2024-9-9
+
+- Implement or ingest simple logging module
+- Implement abstracted window module

@@ -8,7 +8,7 @@
 
 #include "GLFW/glfw3.h"
 
-import logger;
+#include "loguru.hpp"
 
 static void glfw_error_callback(int error, const char* description)
 {
@@ -57,7 +57,7 @@ int main(int, char**)
     io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
 
 
-
+    LOG_F(INFO, "I'm hungry for some %.3f!", 3.14159);
 
 
     // Setup Dear ImGui style
