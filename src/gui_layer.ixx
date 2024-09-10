@@ -13,6 +13,8 @@ export module gui_layer;
 
 import layer;
 import gui_data;
+import keyboard_data;
+import mouse_data;
 
 export class GUILayer : public Layer
 {
@@ -54,6 +56,21 @@ public:
 	}
 	virtual void update() override
 	{
+        // check if we need to change the font size
+        if (keyboard_data.left_control_down && (mouse_data.scroll < -0.1 || mouse_data.scroll > 0.1))
+		{
+			gui_data.font_size += mouse_data.scroll;
+			if (gui_data.font_size < 2.0f)
+			{
+				gui_data.font_size = 2.0f;
+			}
+			if (gui_data.font_size > 100.0f)
+			{
+				gui_data.font_size = 100.0f;
+			}
+			set_font_size(gui_data.font_size);
+
+		}
    
 	}
 	virtual void begin() override
@@ -125,9 +142,9 @@ public:
 	void set_font_size(float size)
 	{
 		ImGuiIO& io = ImGui::GetIO();
-        gui_data.font_size += 2.0f;
 		io.Fonts->ClearFonts();
         ImFont* font = io.Fonts->AddFontFromFileTTF(font_path, gui_data.font_size);
 		IM_ASSERT(font != nullptr);
+        io.Fonts->Build(); 
 	}
 };

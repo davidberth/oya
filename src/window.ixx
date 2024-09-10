@@ -8,6 +8,9 @@ module;
 
 export module window;
 
+import keyboard_data;
+import mouse_data;
+
 GLFWwindow* window;
 int resolution_width;
 int resolution_height;
@@ -38,6 +41,8 @@ void glfw_errorCallback(int error, const char* description)
 	LOG_F(INFO, "GLFW error: %d description: %s", error, description);
 }
 
+
+
 void resize_window()
 {
 
@@ -67,7 +72,7 @@ void resize_window()
 	}
 }
 
-void glfw_keyCallback(GLFWwindow* lwindow, int key, int scancode, int action, int mods)
+void glfw_key_callback(GLFWwindow* lwindow, int key, int scancode, int action, int mods)
 {
 	for (auto& option : size_options)
 	{
@@ -80,7 +85,28 @@ void glfw_keyCallback(GLFWwindow* lwindow, int key, int scancode, int action, in
 	if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
 		glfwSetWindowShouldClose(lwindow, GLFW_TRUE);
 
+	if (action == GLFW_PRESS)
+	{
+		if (key == GLFW_KEY_LEFT_CONTROL) keyboard_data.left_control_down = true;
+		else if (key == GLFW_KEY_LEFT_SHIFT) keyboard_data.left_shift_down = true;
+	
+	}
+	if (action == GLFW_RELEASE)
+	{
+		if (key == GLFW_KEY_LEFT_CONTROL) keyboard_data.left_control_down = false;
+		else if (key == GLFW_KEY_LEFT_SHIFT) keyboard_data.left_shift_down = false;
+	
+	}
+	keyboard_data.log();
+
 }
+
+void glfw_scroll_callback(GLFWwindow* lwindow, double xoffset, double yoffset)
+{
+	mouse_data.scroll = yoffset;
+	mouse_data.log();
+}
+
 
 export void get_mouse_pos(double& xpos, double& ypos)
 {
@@ -127,12 +153,14 @@ export bool init_window()
 	}
 
 	resize_window();
-	glfwSetKeyCallback(window, glfw_keyCallback);
+	glfwSetKeyCallback(window, glfw_key_callback);
+	glfwSetScrollCallback(window, glfw_scroll_callback);
 
 	cursor = glfwCreateStandardCursor(GLFW_CROSSHAIR_CURSOR);
 	glfwSetCursor(window, cursor);
 
 	glfwSwapInterval(1);
+
 	return true;
 }
 
