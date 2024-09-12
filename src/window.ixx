@@ -34,14 +34,12 @@ size_option size_options[] =
   {5, GLFW_KEY_F6, 1.0f, 1.0f, 1},
 };
 
-int current_size = 1;
+int current_size = 2;
 
 void glfw_errorCallback(int error, const char* description)
 {
 	LOG_F(INFO, "GLFW error: %d description: %s", error, description);
 }
-
-
 
 void resize_window()
 {
@@ -108,6 +106,12 @@ void glfw_scroll_callback(GLFWwindow* lwindow, double xoffset, double yoffset)
 	mouse_scroll_data.log();
 }
 
+void glfw_mouse_button_callback(GLFWwindow* lwindow, int button, int action, int mods)
+{
+	mouse_button_data.button = button;
+	mouse_button_data.trigger();
+}
+
 
 export void get_mouse_pos(double& xpos, double& ypos)
 {
@@ -156,6 +160,7 @@ export bool init_window()
 	resize_window();
 	glfwSetKeyCallback(window, glfw_key_callback);
 	glfwSetScrollCallback(window, glfw_scroll_callback);
+	glfwSetMouseButtonCallback(window, glfw_mouse_button_callback);
 
 	cursor = glfwCreateStandardCursor(GLFW_CROSSHAIR_CURSOR);
 	glfwSetCursor(window, cursor);

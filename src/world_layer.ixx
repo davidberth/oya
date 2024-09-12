@@ -1,14 +1,16 @@
 module;
 
 #include <string>
+#include <functional>
 #include "loguru.hpp"
-
 #include <GLFW/glfw3.h>
 
 export module world_layer;
 
 import layer;
 import gui_data;
+import data_listener;
+import mouse_data;
 
 export class WorldLayer : public Layer
 {
@@ -18,7 +20,8 @@ public:
 	virtual void init(GLFWwindow* window) override
 	{
 		__super::init(window);
-
+		add_listener(&mouse_button_data, &WorldLayer::on_mouse_button);
+		
 	}
 	virtual void update() override
 	{
@@ -44,4 +47,13 @@ public:
 	{
 		__super::cleanup();
 	}
+
+	// listeners
+	void on_mouse_button(DataListener* listener)
+	{
+		auto mouse_listener = dynamic_cast<MouseButtonData*>(listener);
+		LOG_F(INFO, "On Mouse Called!");
+		mouse_listener->log();
+	}
+
 };
