@@ -4,18 +4,37 @@ module;
 
 export module mouse_data;
 
-export struct MouseData {
+import data_listener;
+
+export struct MousePointerData : public DataListener {
 	float xpos = 0;
 	float ypos = 0;
 
-	int mouse_button = 0;
-	double scroll = 0;
-
-
 	void log()
 	{
-		LOG_F(INFO, "MouseData: xpos: %f, ypos: %f, button: %d, scroll: %f", xpos, ypos, mouse_button, scroll);
+		LOG_F(INFO, "MouseData: xpos: %f, ypos: %f", xpos, ypos);
 	}
 };
 
-export MouseData mouse_data;
+export struct MouseButtonData : public DataListener {
+	int button = 0;
+	
+	void log()
+	{
+		LOG_F(INFO, "MouseButtonData: button: %d", button);
+	}
+};
+
+export struct MouseScrollData : public DataListener {
+	float yoffset = 0;
+
+	void log()
+	{
+		LOG_F(INFO, "MouseScrollData: yoffset: %f", yoffset);
+	}
+};
+
+
+export MousePointerData mouse_pointer_data;
+export MouseButtonData mouse_button_data;
+export MouseScrollData mouse_scroll_data;

@@ -5,23 +5,20 @@ export module data_listener;
 export class DataListener
 {
 private: 
-	bool change_flagged = false;
-	const char* name;
+	bool triggered = false;
 
 public:
-	DataListener(const char *pname)
-	{
-		name = pname;
-	}
+	DataListener() {}
+	~DataListener() {}
 	virtual void log() {}
 	
-	void changed() {
-		change_flagged = true;
+	void trigger() {
+		triggered = true;
 	}
 	void reset() {
-		change_flagged = false;
+		triggered = false;
 	}
-	bool is_changed() {
-		return change_flagged;
+	bool is_triggered() const {
+		return triggered;
 	}
 };

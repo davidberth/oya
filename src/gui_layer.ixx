@@ -56,23 +56,8 @@ public:
 	}
 	virtual void update() override
 	{
-        // check if we need to change the font size
-        if (keyboard_data.left_control_down && (mouse_data.scroll < -0.1 || mouse_data.scroll > 0.1))
-		{
-			gui_data.font_size += mouse_data.scroll;
-			if (gui_data.font_size < 2.0f)
-			{
-				gui_data.font_size = 2.0f;
-			}
-			if (gui_data.font_size > 100.0f)
-			{
-				gui_data.font_size = 100.0f;
-			}
-			set_font_size(gui_data.font_size);
-
-		}
-   
 	}
+
 	virtual void begin() override
 	{
         ImGui_ImplOpenGL3_NewFrame();

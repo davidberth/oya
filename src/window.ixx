@@ -89,6 +89,7 @@ void glfw_key_callback(GLFWwindow* lwindow, int key, int scancode, int action, i
 	{
 		if (key == GLFW_KEY_LEFT_CONTROL) keyboard_data.left_control_down = true;
 		else if (key == GLFW_KEY_LEFT_SHIFT) keyboard_data.left_shift_down = true;
+		keyboard_data.trigger();
 	
 	}
 	if (action == GLFW_RELEASE)
@@ -103,8 +104,8 @@ void glfw_key_callback(GLFWwindow* lwindow, int key, int scancode, int action, i
 
 void glfw_scroll_callback(GLFWwindow* lwindow, double xoffset, double yoffset)
 {
-	mouse_data.scroll = yoffset;
-	mouse_data.log();
+	mouse_scroll_data.yoffset = yoffset;
+	mouse_scroll_data.log();
 }
 
 
