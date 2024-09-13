@@ -24,8 +24,8 @@ private:
 
 
     const char* font_paths[3] = {"c:\\Windows\\Fonts\\Arial.ttf", 
-                                "c:\\Windows\\Fonts\\Arial.ttf", 
-                                "c:\\Windows\\Fonts\\Arial.ttf"};
+                                "c:\\Windows\\Fonts\\times.ttf", 
+                                "c:\\Windows\\Fonts\\pala.ttf"};
 
     unsigned int font_sizes[3] = { 16, 24, 32 };
 
@@ -48,6 +48,8 @@ public:
         // io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad; 
 
         io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
+        io.ConfigFlags |= ImGuiDockNodeFlags_PassthruCentralNode;
+        io.ConfigFlags |= ImGuiWindowFlags_NoBackground;
         io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
 
         LOG_F(INFO, "Initialized OpenGL");
@@ -85,8 +87,7 @@ public:
         ImGui::NewFrame();
 
         ImGui::PushFont(font[font_index]);
-        // ImGui::DockSpaceOverViewport();
-        // ImGui::DockSpaceOverViewport(0, ImGui::GetMainViewport());
+        ImGui::DockSpaceOverViewport(0, ImGui::GetMainViewport(), ImGuiDockNodeFlags_PassthruCentralNode);
 
 	}
 	virtual void render(int display_w, int display_h) override
