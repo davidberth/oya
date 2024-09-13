@@ -9,7 +9,7 @@ export class DataListener
 {
 private: 
 	bool triggered = false;
-	std::vector<std::function<void(DataListener*)>> listeners;
+	std::vector<std::function<void()>> listeners;
 public:
 	DataListener() {}
 	~DataListener() {}
@@ -26,14 +26,14 @@ public:
 		return triggered;
 	}
 
-	void add_listener(std::function<void(DataListener*)> listener) {
+	void add_listener(std::function<void()> listener) {
 		listeners.push_back(listener);
 	}
 private:
 	void notify_listeners() {
 		for (const auto& listener : listeners)
 		{
-			listener(this);
+			listener();
 		}
 		reset();
 	}

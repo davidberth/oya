@@ -49,11 +49,11 @@ public:
 	}
 
 	// listeners
-	void on_mouse_button(DataListener* listener)
+	void on_mouse_button()
 	{
-		auto mouse_listener = dynamic_cast<MouseButtonData*>(listener);
+		
 		LOG_F(INFO, "On Mouse Called!");
-		mouse_listener->log();
+		mouse_button_data.log();
 	}
 
 };

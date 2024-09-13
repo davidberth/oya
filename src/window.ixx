@@ -103,7 +103,7 @@ void glfw_key_callback(GLFWwindow* lwindow, int key, int scancode, int action, i
 void glfw_scroll_callback(GLFWwindow* lwindow, double xoffset, double yoffset)
 {
 	mouse_scroll_data.yoffset = yoffset;
-	mouse_scroll_data.log();
+	mouse_scroll_data.trigger();
 }
 
 void glfw_mouse_button_callback(GLFWwindow* lwindow, int button, int action, int mods)

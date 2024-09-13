@@ -28,8 +28,8 @@ public:
 	};
 
 	template <typename T>
-	void add_listener(DataListener* listener, void (T::* func)(DataListener*)) {
-		auto bound_func = std::bind(func, static_cast<T*>(this), std::placeholders::_1);
+	void add_listener(DataListener* listener, void (T::*func)()) {
+		auto bound_func = std::bind(func, static_cast<T*>(this));
 		listener->add_listener(bound_func);
 	}
 

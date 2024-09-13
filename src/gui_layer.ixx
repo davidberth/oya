@@ -22,7 +22,18 @@ private:
     bool show_demo_window = true;
     bool show_another_window = false;
 
-	const char* font_path = "c:\\Windows\\Fonts\\Arial.ttf";
+
+    const char* font_paths[3] = {"c:\\Windows\\Fonts\\Arial.ttf", 
+                                "c:\\Windows\\Fonts\\Arial.ttf", 
+                                "c:\\Windows\\Fonts\\Arial.ttf"};
+
+    unsigned int font_sizes[3] = { 16, 24, 32 };
+
+    ImFont* font[3];
+
+    int font_index = gui_data.font_index;
+    
+    
 public:
 	GUILayer(std::string pname) : Layer(pname) {};
 	~GUILayer() {};
@@ -50,8 +61,17 @@ public:
         ImGui_ImplGlfw_InitForOpenGL(window, true);
         ImGui_ImplOpenGL3_Init("#version 460");
 
-        ImFont* font = io.Fonts->AddFontFromFileTTF(font_path, gui_data.font_size);
-        IM_ASSERT(font != nullptr);
+        LOG_F(INFO, "Loading fonts");
+		for (int i = 0; i < 3; ++i)
+		{
+			font[i] = io.Fonts->AddFontFromFileTTF(font_paths[i], font_sizes[i]);
+			IM_ASSERT(font[i] != nullptr);
+		}
+        LOG_F(INFO, "done");
+        
+		add_listener(&mouse_scroll_data, &GUILayer::on_mouse_scroll);
+        //ImGui::PopFont();
+	
 
 	}
 	virtual void update() override
@@ -63,6 +83,8 @@ public:
         ImGui_ImplOpenGL3_NewFrame();
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
+
+        ImGui::PushFont(font[font_index]);
         // ImGui::DockSpaceOverViewport();
         // ImGui::DockSpaceOverViewport(0, ImGui::GetMainViewport());
 
@@ -108,6 +130,7 @@ public:
 	}
 	virtual void end() override
 	{
+        ImGui::PopFont();
         ImGui::Render();
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
@@ -124,12 +147,35 @@ public:
         __super::cleanup();
 	}
 
-	void set_font_size(float size)
+	void set_font_size(int index)
 	{
-		ImGuiIO& io = ImGui::GetIO();
-		io.Fonts->ClearFonts();
-        ImFont* font = io.Fonts->AddFontFromFileTTF(font_path, gui_data.font_size);
-		IM_ASSERT(font != nullptr);
-        io.Fonts->Build(); 
+        font_index = index;
+        if (font_index < 0)
+        {
+            font_index = 0;
+        }
+        if (font_index > 2)
+		{
+			font_index = 2;
+		}
 	}
+
+    // listeners
+
+	void on_mouse_scroll()
+	{
+		LOG_F(INFO, "On Mouse Scroll Called in GUI layer now!");
+		if (keyboard_data.left_control_down && (mouse_scroll_data.yoffset < 0.5 || mouse_scroll_data.yoffset > 0.5))
+		{
+			if (mouse_scroll_data.yoffset > 0.5)
+			{
+				set_font_size(font_index + 1);
+			}
+			else
+			{
+				set_font_size(font_index - 1);
+			}
+		}
+	}
+
 };

@@ -18,10 +18,11 @@ export struct MousePointerData : public DataListener {
 
 export struct MouseButtonData : public DataListener {
 	int button = 0;
+	int action = 0;
 	
 	void log()
 	{
-		LOG_F(INFO, "MouseButtonData: button: %d", button);
+		LOG_F(INFO, "MouseButtonData: button: %d, action: %d", button);
 	}
 };
 
