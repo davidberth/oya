@@ -5,5 +5,5 @@
 + Implement data listener class 
 + Implement derived data classes for mouse, keyboard, and window - connect these to glfw events
 
-- Support changing font size (with listeners!)
-- Render a triangle!
++ Support changing font size (with listeners!)
++ Render a triangle!
