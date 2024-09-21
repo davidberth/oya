@@ -131,6 +131,21 @@ public:
 	}
 	virtual void end() override
 	{
+
+        ImGui::Begin("Viewport");
+
+        // Get the available size within the viewport window
+        ImVec2 viewport_size = ImGui::GetContentRegionAvail();
+
+        // Retrieve the position of the viewport window
+        ImVec2 viewport_pos = ImGui::GetWindowPos();
+        // glViewport(viewport_pos.x, viewport_pos.y, (int)viewport_size.x, (int)viewport_size.y);
+
+		gui_data.viewport_height = (int)viewport_size.y;
+		gui_data.viewport_width = (int)viewport_size.x;
+
+        ImGui::End();
+
         ImGui::PopFont();
         ImGui::Render();
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
@@ -139,6 +154,9 @@ public:
         ImGui::UpdatePlatformWindows();
         ImGui::RenderPlatformWindowsDefault();
         glfwMakeContextCurrent(backup_current_context);
+
+      
+
 	}
 	virtual void cleanup() override
 	{

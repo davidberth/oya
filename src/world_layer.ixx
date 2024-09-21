@@ -130,7 +130,7 @@ public:
 	}
 	virtual void render(int display_w, int display_h) override
 	{
-		glViewport(0, 0, display_w, display_h);
+		// glViewport(0, 0, display_w, display_h);
 		glClearColor(gui_data.clear_color[0], 
 					 gui_data.clear_color[1],
 					 gui_data.clear_color[2],
