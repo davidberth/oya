@@ -5,7 +5,9 @@ module;
 
 export module fbo;
 
-export class FBO
+import listener;
+
+export class FBO : public Listener
 {
 private:
 	unsigned int fbo;
@@ -14,7 +16,7 @@ private:
 	int width;
 	int height;
 public:
-	FBO(int width, int height) : width(width), height(height) {
+	FBO(int width, int height) : Listener(), width(width), height(height) {
 		glGenFramebuffers(1, &fbo);
 		glBindFramebuffer(GL_FRAMEBUFFER, fbo);
 

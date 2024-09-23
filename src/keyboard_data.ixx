@@ -4,9 +4,9 @@ module;
 
 export module keyboard_data;
 
-import data_listener;
+import data_trigger;
 
-export struct KeyboardData : public DataListener {
+export struct KeyboardData : public DataTrigger {
 	bool left_control_down = false;
 	bool left_shift_down = false;
 

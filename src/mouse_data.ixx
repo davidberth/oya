@@ -4,9 +4,9 @@ module;
 
 export module mouse_data;
 
-import data_listener;
+import data_trigger;
 
-export struct MousePointerData : public DataListener {
+export struct MousePointerData : public DataTrigger {
 	float xpos = 0;
 	float ypos = 0;
 
@@ -16,7 +16,7 @@ export struct MousePointerData : public DataListener {
 	}
 };
 
-export struct MouseButtonData : public DataListener {
+export struct MouseButtonData : public DataTrigger {
 	int button = 0;
 	int action = 0;
 	
@@ -26,7 +26,7 @@ export struct MouseButtonData : public DataListener {
 	}
 };
 
-export struct MouseScrollData : public DataListener {
+export struct MouseScrollData : public DataTrigger {
 	float yoffset = 0;
 
 	void log()

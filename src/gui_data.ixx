@@ -1,8 +1,8 @@
 export module gui_data;
 
-import data_listener;
+import data_trigger;
 
-export struct GUIData : public DataListener {
+export struct GUIData : public DataTrigger {
 	float clear_color[4] = { 0.0f, 0.0f, 0.0f, 1.0f };
 
 	int font_index = 1;
