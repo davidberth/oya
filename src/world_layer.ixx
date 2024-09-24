@@ -12,7 +12,7 @@ export module world_layer;
 
 import layer;
 import gui_data;
-import data_listener;
+import data_trigger;
 import mouse_data;
 
 // Vertex data
