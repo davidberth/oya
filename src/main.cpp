@@ -7,7 +7,14 @@ import window;
 import layer;
 import world_layer;
 import gui_layer;
+import background_layer;
 import layer_stack;
+import data_trigger_stack;
+
+import gui_data;
+import keyboard_data;
+import mouse_data;
+import viewport_data;
 
 int main(int argc, char** argv)
 {
@@ -18,12 +25,22 @@ int main(int argc, char** argv)
   
 
     LayerStack layer_stack;
+	Layer* background_layer = new BackgroundLayer("background");
+	layer_stack.add_layer(background_layer);
+
 	Layer* world_layer = new WorldLayer("world");
 	layer_stack.add_layer(world_layer);
 
 	Layer* gui_layer = new GUILayer("gui");
 	layer_stack.add_layer(gui_layer);
 
+	DataTriggerStack data_trigger_stack;
+    data_trigger_stack.add_data_trigger(&keyboard_data);
+	data_trigger_stack.add_data_trigger(&mouse_pointer_data);
+	data_trigger_stack.add_data_trigger(&mouse_button_data);
+	data_trigger_stack.add_data_trigger(&mouse_scroll_data);
+	data_trigger_stack.add_data_trigger(&gui_data);
+	data_trigger_stack.add_data_trigger(&viewport_data[0]);
 
     int display_w = 0;
     int display_h = 0;
@@ -38,6 +55,9 @@ int main(int argc, char** argv)
     {
 		layer->init(window);
 	}
+
+
+    world_layer->add_fbo(0);
  
     while (!window_should_close())
     {
@@ -45,7 +65,14 @@ int main(int argc, char** argv)
         poll_events();
 		get_window_size(display_w, display_h);
 
-        // update 
+        // update data triggers
+		for (auto data_trigger : data_trigger_stack)
+		{
+			data_trigger->update();
+		}
+
+
+        // update layers
         for (auto layer : layer_stack)
         {
             layer->update();
@@ -55,7 +82,7 @@ int main(int argc, char** argv)
 		for (auto layer : layer_stack)
 		{
             layer->begin();
-            layer->render(display_w, display_h);
+            layer->render();
             layer->end();
 		}
 

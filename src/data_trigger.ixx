@@ -16,7 +16,6 @@ public:
 	virtual void log() {}
 	void trigger() {
 		triggered = true;
-		notify_listeners();
 	}
 	void reset() {
 		triggered = false;
@@ -32,11 +31,17 @@ public:
 	void remove_listener(int id) {
 		listeners.erase(id);
 	}
+
+	void update() {
+		if (triggered) {
+			notify_listeners();
+		}
+		reset();
+	}
 private:
 	void notify_listeners() {
 		for (const auto& [id, listener] : listeners) {
 			listener();
 		}
-		reset();
 	}
 };

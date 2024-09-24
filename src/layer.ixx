@@ -23,9 +23,9 @@ public:
 	virtual void init(GLFWwindow *) {
 		LOG_F(INFO, "Layer %s initialized", name.c_str());
 	};
-	void add_fbo()
+	void add_fbo(int index)
 	{
-		fbo = new FBO(800, 800);
+		fbo = new FBO(index);
 	}
 	void remove_fbo()
 	{
@@ -33,11 +33,25 @@ public:
 		fbo = nullptr;
 	}
 	virtual void update() {};
-	virtual void begin() {};
-	virtual void render(int, int) {};
-	virtual void end() {};
+	virtual void begin() {
+		if (fbo)
+		{
+			fbo->bind();
+		}
+	};
+	virtual void render() {};
+	virtual void end() {
+		if (fbo)
+		{
+			fbo->unbind();
+		}
+	};
 	virtual void cleanup() {
 		LOG_F(INFO, "Layer %s cleaned up", name.c_str());
+		if (fbo)
+		{
+			delete fbo;
+		}
 	};
 
 	std::string get_name() { return name; };

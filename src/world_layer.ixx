@@ -61,7 +61,7 @@ public:
 	~WorldLayer() {};
 	virtual void init(GLFWwindow* window) override
 	{
-		__super::init(window);
+		Layer::init(window);
 		add_listener(&mouse_button_data, &WorldLayer::on_mouse_button);
 
         // Build and compile the shader program
@@ -125,10 +125,11 @@ public:
 	{
 
 	}
-	virtual void begin() override
+	virtual void begin()
 	{
+		Layer::begin();
 	}
-	virtual void render(int display_w, int display_h) override
+	virtual void render() override
 	{
 		// glViewport(0, 0, display_w, display_h);
 		glClearColor(gui_data.clear_color[0], 
@@ -144,10 +145,11 @@ public:
 	}
 	virtual void end() override
 	{
+		Layer::end();
 	}
 	virtual void cleanup() override
 	{
-		__super::cleanup();
+		Layer::cleanup();
 	}
 
 	// listeners

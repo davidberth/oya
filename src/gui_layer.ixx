@@ -15,6 +15,7 @@ import layer;
 import gui_data;
 import keyboard_data;
 import mouse_data;
+import viewport_data;
 
 export class GUILayer : public Layer
 {
@@ -82,6 +83,7 @@ public:
 
 	virtual void begin() override
 	{
+		Layer::begin();
         ImGui_ImplOpenGL3_NewFrame();
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
@@ -90,7 +92,7 @@ public:
         ImGui::DockSpaceOverViewport(0, ImGui::GetMainViewport(), ImGuiDockNodeFlags_PassthruCentralNode);
 
 	}
-	virtual void render(int display_w, int display_h) override
+	virtual void render() override
 	{
 	
 		 if (show_demo_window)
@@ -128,23 +130,25 @@ public:
             ImGui::End();
         }
 
-	}
-	virtual void end() override
-	{
-
         ImGui::Begin("Viewport");
 
         // Get the available size within the viewport window
         ImVec2 viewport_size = ImGui::GetContentRegionAvail();
 
-        // Retrieve the position of the viewport window
-        ImVec2 viewport_pos = ImGui::GetWindowPos();
-        // glViewport(viewport_pos.x, viewport_pos.y, (int)viewport_size.x, (int)viewport_size.y);
 
-		gui_data.viewport_height = (int)viewport_size.y;
-		gui_data.viewport_width = (int)viewport_size.x;
+
+        // Display the texture in the ImGui window
+        ImGui::Image((void*)(intptr_t)viewport_data[0].texture_index, viewport_size, ImVec2(0, 1), ImVec2(1, 0));
 
         ImGui::End();
+
+        viewport_data[0].set_size(int(viewport_size.x), int(viewport_size.y));
+
+	}
+	virtual void end()
+	{
+
+  
 
         ImGui::PopFont();
         ImGui::Render();
@@ -155,7 +159,7 @@ public:
         ImGui::RenderPlatformWindowsDefault();
         glfwMakeContextCurrent(backup_current_context);
 
-      
+        Layer::end();
 
 	}
 	virtual void cleanup() override

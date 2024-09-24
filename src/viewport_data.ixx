@@ -8,10 +8,25 @@ import data_trigger;
 
 export class ViewportData : public DataTrigger
 {
-	int size_x = 0;
-	int size_y = 0;
-	int pos_x = 0;
-	int pos_y = 0;
+public:
+	int width = 100;
+	int height = 100;
+	int old_width = 100;
+	int old_height = 100;
+
+	int texture_index = 0;
+
+	void set_size(int w, int h)
+	{
+		width = w;
+		height = h;
+		if (width != old_width || height != old_height)
+		{
+			trigger();
+			old_width = width;
+			old_height = height;
+		}
+	}
 };
 
-std::vector<ViewportData> viewports_data;
+export ViewportData viewport_data[1];
