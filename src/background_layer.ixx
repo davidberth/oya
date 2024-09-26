@@ -7,6 +7,7 @@ export module background_layer;
 
 import layer;
 import gui_data;
+import keyboard_data;
 
 export class BackgroundLayer : public Layer
 {
@@ -17,7 +18,7 @@ public:
     virtual void init(GLFWwindow* window) override
     {
         Layer::init(window);
-
+        add_listener(&function_keyboard_data, &BackgroundLayer::on_function_keyboard, true);
     }
     virtual void update() override
     {
@@ -46,6 +47,22 @@ public:
     {
         Layer::cleanup();
     }
+
+    // listeners
+
+    // persistent
+	void on_function_keyboard()
+	{
+		if (function_keyboard_data.F10_down)
+		{
+			disable();
+
+		}
+		else if (function_keyboard_data.F11_down)
+		{
+			enable();
+		}
+	}
 
 
 };

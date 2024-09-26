@@ -16,6 +16,8 @@ export class Layer : public Listener
 private:
 	std::string name;
 	FBO *fbo = nullptr;
+
+	bool enabled = true;
 	
 public:
 	Layer(std::string pname) : Listener(), name(pname) {}
@@ -25,12 +27,19 @@ public:
 	};
 	void add_fbo(int index)
 	{
+		if (fbo)
+		{
+			delete fbo;
+		}
 		fbo = new FBO(index);
 	}
 	void remove_fbo()
 	{
-		delete fbo;
-		fbo = nullptr;
+		if (fbo)
+		{
+			delete fbo;
+			fbo = nullptr;
+		}
 	}
 	virtual void update() {};
 	virtual void begin() {
@@ -53,6 +62,11 @@ public:
 			delete fbo;
 		}
 	};
+	
+	bool is_enabled() const { return enabled; };
+	void enable() { enabled = true; Listener::listen(); };
+	void disable() { enabled = false; Listener::unlisten(); };
+	
 
 	std::string get_name() { return name; };
 };

@@ -73,6 +73,7 @@ public:
         LOG_F(INFO, "done");
         
 		add_listener(&mouse_scroll_data, &GUILayer::on_mouse_scroll);
+		add_listener(&function_keyboard_data, &GUILayer::on_function_keyboard, true);
         //ImGui::PopFont();
 	
 
@@ -148,8 +149,6 @@ public:
 	virtual void end()
 	{
 
-  
-
         ImGui::PopFont();
         ImGui::Render();
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
@@ -198,6 +197,19 @@ public:
 			{
 				set_font_size(font_index - 1);
 			}
+		}
+	}
+
+    // persistant
+	void on_function_keyboard()
+    {
+		if (function_keyboard_data.F10_down)
+		{
+            disable();
+		}
+        else if (function_keyboard_data.F11_down)
+		{
+			enable();
 		}
 	}
 

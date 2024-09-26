@@ -87,18 +87,23 @@ void glfw_key_callback(GLFWwindow* lwindow, int key, int scancode, int action, i
 
 	if (action == GLFW_PRESS)
 	{
-		if (key == GLFW_KEY_LEFT_CONTROL) keyboard_data.left_control_down = true;
-		else if (key == GLFW_KEY_LEFT_SHIFT) keyboard_data.left_shift_down = true;
-		keyboard_data.trigger();
-	
+		if (key == GLFW_KEY_LEFT_CONTROL) { keyboard_data.left_control_down = true; keyboard_data.trigger(); }
+		
+		if (key == GLFW_KEY_F10) { function_keyboard_data.F10_down = true; function_keyboard_data.trigger(); }
+		if (key == GLFW_KEY_F11) { function_keyboard_data.F11_down = true; function_keyboard_data.trigger(); }
+
 	}
 	if (action == GLFW_RELEASE)
 	{
 		if (key == GLFW_KEY_LEFT_CONTROL) keyboard_data.left_control_down = false;
-		else if (key == GLFW_KEY_LEFT_SHIFT) keyboard_data.left_shift_down = false;
+		
+		if (key == GLFW_KEY_F10) { function_keyboard_data.F10_down = false; }
+		if (key == GLFW_KEY_F11) { function_keyboard_data.F11_down = false; }
+
 	
 	}
-	keyboard_data.log();
+	keyboard_data.log(); 
+	function_keyboard_data.log();
 
 }
 

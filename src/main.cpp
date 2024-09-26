@@ -35,7 +35,10 @@ int main(int argc, char** argv)
 	layer_stack.add_layer(gui_layer);
 
 	DataTriggerStack data_trigger_stack;
+    // TODO: add these automatically when the objects are created
+    // use a global data trigger stack
     data_trigger_stack.add_data_trigger(&keyboard_data);
+	data_trigger_stack.add_data_trigger(&function_keyboard_data);
 	data_trigger_stack.add_data_trigger(&mouse_pointer_data);
 	data_trigger_stack.add_data_trigger(&mouse_button_data);
 	data_trigger_stack.add_data_trigger(&mouse_scroll_data);
@@ -56,9 +59,10 @@ int main(int argc, char** argv)
 		layer->init(window);
 	}
 
+    background_layer->disable();
+    gui_layer->disable();
 
-    world_layer->add_fbo(0);
- 
+
     while (!window_should_close())
     {
         // events
@@ -75,15 +79,18 @@ int main(int argc, char** argv)
         // update layers
         for (auto layer : layer_stack)
         {
-            layer->update();
+            if (layer->is_enabled()) layer->update();
         }
 
         // render
 		for (auto layer : layer_stack)
 		{
-            layer->begin();
-            layer->render();
-            layer->end();
+            if (layer->is_enabled())
+            {
+                layer->begin();
+                layer->render();
+                layer->end();
+            }
 		}
 
         // swap buffers

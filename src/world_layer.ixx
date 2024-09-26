@@ -12,6 +12,7 @@ export module world_layer;
 
 import layer;
 import gui_data;
+import keyboard_data;
 import data_trigger;
 import mouse_data;
 
@@ -63,6 +64,7 @@ public:
 	{
 		Layer::init(window);
 		add_listener(&mouse_button_data, &WorldLayer::on_mouse_button);
+		add_listener(&function_keyboard_data, &WorldLayer::on_function_keyboard);
 
         // Build and compile the shader program
         vertexShader = glCreateShader(GL_VERTEX_SHADER);
@@ -153,6 +155,7 @@ public:
 	}
 
 	// listeners
+
 	void on_mouse_button()
 	{
 		
@@ -160,4 +163,16 @@ public:
 		mouse_button_data.log();
 	}
 
+    void on_function_keyboard()
+    {
+        if (function_keyboard_data.F10_down)
+        {
+            remove_fbo();
+            
+        }
+        else if (function_keyboard_data.F11_down)
+        {
+            add_fbo(0);
+        }
+    }
 };
