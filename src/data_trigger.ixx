@@ -5,6 +5,8 @@ module;
 
 export module data_trigger;
 
+import data_trigger_stack;
+
 struct Callback
 {
 	std::function<void()> callback = nullptr;
@@ -17,7 +19,7 @@ private:
 	bool triggered = false;
 	std::unordered_map<int, Callback> listeners;
 public:
-	DataTrigger() {}
+	DataTrigger() { data_trigger_stack.add_data_trigger(this); }
 	~DataTrigger() {}
 	virtual void log() {}
 	void trigger() {

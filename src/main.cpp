@@ -34,16 +34,16 @@ int main(int argc, char** argv)
 	Layer* gui_layer = new GUILayer("gui");
 	layer_stack.add_layer(gui_layer);
 
-	DataTriggerStack data_trigger_stack;
+	//DataTriggerStack data_trigger_stack;
     // TODO: add these automatically when the objects are created
     // use a global data trigger stack
-    data_trigger_stack.add_data_trigger(&keyboard_data);
-	data_trigger_stack.add_data_trigger(&function_keyboard_data);
-	data_trigger_stack.add_data_trigger(&mouse_pointer_data);
-	data_trigger_stack.add_data_trigger(&mouse_button_data);
-	data_trigger_stack.add_data_trigger(&mouse_scroll_data);
-	data_trigger_stack.add_data_trigger(&gui_data);
-	data_trigger_stack.add_data_trigger(&viewport_data[0]);
+    //data_trigger_stack.add_data_trigger(&keyboard_data);
+	//data_trigger_stack.add_data_trigger(&function_keyboard_data);
+	//data_trigger_stack.add_data_trigger(&mouse_pointer_data);
+	//data_trigger_stack.add_data_trigger(&mouse_button_data);
+	//data_trigger_stack.add_data_trigger(&mouse_scroll_data);
+	//data_trigger_stack.add_data_trigger(&gui_data);
+	//data_trigger_stack.add_data_trigger(&viewport_data[0]);
 
     int display_w = 0;
     int display_h = 0;

@@ -5,7 +5,7 @@ module;
 
 export module data_trigger_stack;
 
-import data_trigger;
+export class DataTrigger;
 
 export class DataTriggerStack
 {
@@ -26,3 +26,5 @@ public:
 	std::vector<DataTrigger*>::iterator begin() { return data_triggers.begin(); }
 	std::vector<DataTrigger*>::iterator end() { return data_triggers.end(); }
 };
+
+export DataTriggerStack data_trigger_stack;
