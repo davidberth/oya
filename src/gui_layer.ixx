@@ -16,6 +16,7 @@ import gui_data;
 import keyboard_data;
 import mouse_data;
 import viewport_data;
+import gui_theme;
 
 export class GUILayer : public Layer
 {
@@ -53,12 +54,12 @@ public:
         io.ConfigFlags |= ImGuiWindowFlags_NoBackground;
         io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
 
-        LOG_F(INFO, "Initialized OpenGL");
-
+        
 
         // Setup Dear ImGui style
-        ImGui::StyleColorsDark();
+        // ImGui::StyleColorsDark();
         // ImGui::StyleColorsLight();
+        setup_gui_theme();
 
         // Setup Platform/Renderer backends
         ImGui_ImplGlfw_InitForOpenGL(window, true);

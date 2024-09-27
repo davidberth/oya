@@ -15,10 +15,9 @@ export class Layer : public Listener
 {
 private:
 	std::string name;
-	FBO *fbo = nullptr;
-
 	bool enabled = true;
-	
+protected:
+	FBO* fbo = nullptr;
 public:
 	Layer(std::string pname) : Listener(), name(pname) {}
 	~Layer() {};

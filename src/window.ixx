@@ -9,6 +9,7 @@ module;
 export module window;
 
 import keyboard_data;
+import viewport_data;
 import mouse_data;
 
 GLFWwindow* window;
@@ -61,6 +62,7 @@ void resize_window()
 		int mheight = mode->height;
 
 		glfwSetWindowMonitor(window, monitors[index], 0, 0, mwidth, mheight, GLFW_DONT_CARE);
+		glViewport(0, 0, mwidth, mheight);
 		return;
 	}
 	else
@@ -68,7 +70,7 @@ void resize_window()
 		int sizex = int(float(resolution_width) * size_options[current_size].size_ratio_x);
 		int sizey = int(float(resolution_height) * size_options[current_size].size_ratio_y);
 		glfwSetWindowMonitor(window, NULL, resolution_width / 2 - sizex / 2, resolution_height / 2 - sizey / 2, sizex, sizey, 0);
-
+		glViewport(0, 0, sizex, sizey);
 	}
 }
 
@@ -122,6 +124,7 @@ void glfw_mouse_button_callback(GLFWwindow* lwindow, int button, int action, int
 void glfw_framebuffer_size_callback(GLFWwindow* lwindow, int width, int height)
 {
 	glViewport(0, 0, width, height);
+
 }
 
 export void get_mouse_pos(double& xpos, double& ypos)
