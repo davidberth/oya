@@ -13,6 +13,7 @@ export module world_layer;
 import layer;
 import gui_data;
 import keyboard_data;
+import window_data;
 import data_trigger;
 import mouse_data;
 
@@ -133,6 +134,7 @@ public:
 	}
 	virtual void render() override
 	{
+
 		glClearColor(gui_data.clear_color[0], 
 					 gui_data.clear_color[1],
 					 gui_data.clear_color[2],
@@ -167,6 +169,7 @@ public:
         if (function_keyboard_data.F10_down)
         {
             remove_fbo();
+            glViewport(0, 0, window_data.width, window_data.height);
             
         }
         else if (function_keyboard_data.F11_down)

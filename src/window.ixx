@@ -10,7 +10,9 @@ export module window;
 
 import keyboard_data;
 import viewport_data;
+import window_data;
 import mouse_data;
+import render;
 
 GLFWwindow* window;
 int resolution_width;
@@ -121,10 +123,23 @@ void glfw_mouse_button_callback(GLFWwindow* lwindow, int button, int action, int
 	mouse_button_data.trigger();
 }
 
-void glfw_framebuffer_size_callback(GLFWwindow* lwindow, int width, int height)
+void glfw_window_size_callback(GLFWwindow* lwindow, int width, int height)
 {
 	glViewport(0, 0, width, height);
+	window_data.width = width;
+	window_data.height = height;
 
+}
+
+export void present()
+{
+	glfwSwapBuffers(window);
+}
+
+void glfw_refresh_callback(GLFWwindow* lwindow)
+{
+	render();
+	present();
 }
 
 export void get_mouse_pos(double& xpos, double& ypos)
@@ -175,7 +190,9 @@ export bool init_window()
 	glfwSetKeyCallback(window, glfw_key_callback);
 	glfwSetScrollCallback(window, glfw_scroll_callback);
 	glfwSetMouseButtonCallback(window, glfw_mouse_button_callback);
-	glfwSetFramebufferSizeCallback(window, glfw_framebuffer_size_callback);
+	glfwSetWindowSizeCallback(window, glfw_window_size_callback);
+	glfwSetWindowRefreshCallback(window, glfw_refresh_callback);
+	
 
 	cursor = glfwCreateStandardCursor(GLFW_CROSSHAIR_CURSOR);
 	glfwSetCursor(window, cursor);
@@ -192,7 +209,6 @@ export GLFWwindow* get_window()
 
 export inline void get_window_size(int& width, int& height)
 {
-
 	glfwGetWindowSize(window, &width, &height);
 }
 
@@ -204,11 +220,6 @@ export bool window_should_close()
 export void poll_events()
 {
 	glfwPollEvents();
-}
-
-export void present()
-{
-	glfwSwapBuffers(window);
 }
 
 export void cleanup_window()

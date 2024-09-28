@@ -71,7 +71,6 @@ public:
 
 	void resize()
 	{
-		LOG_F(INFO, "Resizing FBO");
 		delete_frame_buffer();
 		create_frame_buffer();
 	}

@@ -26,3 +26,5 @@ public:
 	std::vector<Layer*>::iterator begin() { return layers.begin(); }
 	std::vector<Layer*>::iterator end() { return layers.end(); }
 };
+
+export LayerStack layer_stack;
