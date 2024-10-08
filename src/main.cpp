@@ -49,8 +49,9 @@ int main(int argc, char** argv)
 		layer->init(window);
 	}
 
-    background_layer->disable();
-    gui_layer->disable();
+    // background_layer->disable();
+    // gui_layer->disable();
+    world_layer->add_fbo(0);
 
 
     while (!window_should_close())
