@@ -16,6 +16,7 @@ import keyboard_data;
 import window_data;
 import data_trigger;
 import mouse_data;
+import shader;
 
 // Vertex data
 GLfloat vertices[] = {
@@ -25,37 +26,12 @@ GLfloat vertices[] = {
 	0.5f, -0.5f,      0.0f, 0.0f, 1.0f   // Bottom right vertex (Blue)
 };
 
-const char* vertexShaderSource = R"(
-#version 330 core
-layout(location = 0) in vec2 aPos;
-layout(location = 1) in vec3 aColor;
 
-out vec3 ourColor;
-
-void main()
-{
-    gl_Position = vec4(aPos, 0.0, 1.0);
-    ourColor = aColor;
-}
-)";
-
-const char* fragmentShaderSource = R"(
-#version 330 core
-in vec3 ourColor;
-out vec4 FragColor;
-
-void main()
-{
-    FragColor = vec4(ourColor, 1.0);
-}
-)";
 
 
 export class WorldLayer : public Layer
 {
-    GLuint vertexShader;
-	GLuint fragmentShader;
-	GLuint shaderProgram;
+    Shader *shader;
 	GLuint VBO, VAO;
 
 public:
@@ -67,45 +43,10 @@ public:
 		add_listener(&mouse_button_data, &WorldLayer::on_mouse_button);
 		add_listener(&function_keyboard_data, &WorldLayer::on_function_keyboard);
 
+		shader = new Shader("shaders/vertex.glsl", "shaders/fragment.glsl");
+
         // Build and compile the shader program
-        vertexShader = glCreateShader(GL_VERTEX_SHADER);
-        glShaderSource(vertexShader, 1, &vertexShaderSource, nullptr);
-        glCompileShader(vertexShader);
-
-        GLint success;
-        GLchar infoLog[512];
-        glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &success);
-        if (!success)
-        {
-            glGetShaderInfoLog(vertexShader, 512, nullptr, infoLog);
-            std::cerr << "ERROR::SHADER::VERTEX::COMPILATION_FAILED\n" << infoLog << std::endl;
-        }
-
-        fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
-        glShaderSource(fragmentShader, 1, &fragmentShaderSource, nullptr);
-        glCompileShader(fragmentShader);
-
-        glGetShaderiv(fragmentShader, GL_COMPILE_STATUS, &success);
-        if (!success)
-        {
-            glGetShaderInfoLog(fragmentShader, 512, nullptr, infoLog);
-            std::cerr << "ERROR::SHADER::FRAGMENT::COMPILATION_FAILED\n" << infoLog << std::endl;
-        }
-
-        shaderProgram = glCreateProgram();
-        glAttachShader(shaderProgram, vertexShader);
-        glAttachShader(shaderProgram, fragmentShader);
-        glLinkProgram(shaderProgram);
-
-        glGetProgramiv(shaderProgram, GL_LINK_STATUS, &success);
-        if (!success)
-        {
-            glGetProgramInfoLog(shaderProgram, 512, nullptr, infoLog);
-            std::cerr << "ERROR::SHADER::PROGRAM::LINKING_FAILED\n" << infoLog << std::endl;
-        }
-
-        glDeleteShader(vertexShader);
-        glDeleteShader(fragmentShader);
+       
 
         // Set up vertex data and buffers and configure vertex attributes
  
@@ -141,7 +82,7 @@ public:
 					 gui_data.clear_color[3]);
 		glClear(GL_COLOR_BUFFER_BIT);
 
-        glUseProgram(shaderProgram);
+		shader->use();
         glBindVertexArray(VAO);
         glDrawArrays(GL_TRIANGLES, 0, 3);
 
@@ -153,6 +94,7 @@ public:
 	virtual void cleanup() override
 	{
 		Layer::cleanup();
+		delete shader;
 	}
 
 	// listeners

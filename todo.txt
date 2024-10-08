@@ -1,9 +1,0 @@
-+ Implement or ingest simple logging module
-+ Implement abstracted window module
-+ Implement generic layer class
-+ Implement layer stack class
-+ Implement data listener class 
-+ Implement derived data classes for mouse, keyboard, and window - connect these to glfw events
-
-+ Support changing font size (with listeners!)
-+ Render a triangle!

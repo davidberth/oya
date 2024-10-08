@@ -1,7 +1,7 @@
 find_package(OpenGL REQUIRED COMPONENTS OpenGL)
 
 add_executable (oya "main.cpp")
-target_sources(oya PRIVATE FILE_SET CXX_MODULES FILES "window.ixx" "layer.ixx" "layer_stack.ixx" "world_layer.ixx" "gui_layer.ixx" "gui_data.ixx" "keyboard_data.ixx" "mouse_data.ixx" "data_trigger.ixx" "fbo.ixx" "viewport_data.ixx" "listener.ixx" "background_layer.ixx" "data_trigger_stack.ixx" "gui_theme.ixx" "window_data.ixx" "render.ixx")
+target_sources(oya PRIVATE FILE_SET CXX_MODULES FILES "window.ixx" "layer.ixx" "layer_stack.ixx" "world_layer.ixx" "gui_layer.ixx" "gui_data.ixx" "keyboard_data.ixx" "mouse_data.ixx" "data_trigger.ixx" "fbo.ixx" "viewport_data.ixx" "listener.ixx" "background_layer.ixx" "data_trigger_stack.ixx" "gui_theme.ixx" "window_data.ixx" "render.ixx" "shader.ixx")
 
 include_directories(${CMAKE_BINARY_DIR}/configure)
 include_directories(${CMAKE_SOURCE_DIR}/external/glfw/include)
@@ -23,3 +23,11 @@ target_compile_definitions(oya PUBLIC GLEW_STATIC)
 target_link_libraries(oya ${glfw_lib} ${imgui_lib} ${glew_lib} ${logoru_lib} OpenGL32) 
 set_property(TARGET oya PROPERTY CXX_STANDARD 23)
 set_target_properties(oya PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
+
+set(SHADER_FILES
+    ${CMAKE_SOURCE_DIR}/shaders/vertex.glsl
+    ${CMAKE_SOURCE_DIR}/shaders/fragment.glsl
+)
+
+# Copy shader files to the binary directory
+file(COPY ${SHADER_FILES} DESTINATION ${CMAKE_BINARY_DIR}/shaders)

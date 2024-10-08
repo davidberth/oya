@@ -10,6 +10,7 @@ import gui_layer;
 import background_layer;
 import layer_stack;
 import data_trigger_stack;
+import render;
 
 import gui_data;
 import keyboard_data;
@@ -18,13 +19,13 @@ import viewport_data;
 
 int main(int argc, char** argv)
 {
+
     loguru::g_preamble_date = false;
     loguru::g_preamble_thread = false;
     loguru::g_preamble_time = false;
     loguru::init(argc, argv);
-  
 
-    LayerStack layer_stack;
+ 
 	Layer* background_layer = new BackgroundLayer("background");
 	layer_stack.add_layer(background_layer);
 
@@ -33,17 +34,6 @@ int main(int argc, char** argv)
 
 	Layer* gui_layer = new GUILayer("gui");
 	layer_stack.add_layer(gui_layer);
-
-	//DataTriggerStack data_trigger_stack;
-    // TODO: add these automatically when the objects are created
-    // use a global data trigger stack
-    //data_trigger_stack.add_data_trigger(&keyboard_data);
-	//data_trigger_stack.add_data_trigger(&function_keyboard_data);
-	//data_trigger_stack.add_data_trigger(&mouse_pointer_data);
-	//data_trigger_stack.add_data_trigger(&mouse_button_data);
-	//data_trigger_stack.add_data_trigger(&mouse_scroll_data);
-	//data_trigger_stack.add_data_trigger(&gui_data);
-	//data_trigger_stack.add_data_trigger(&viewport_data[0]);
 
     int display_w = 0;
     int display_h = 0;
@@ -82,18 +72,7 @@ int main(int argc, char** argv)
             if (layer->is_enabled()) layer->update();
         }
 
-        // render
-		for (auto layer : layer_stack)
-		{
-            if (layer->is_enabled())
-            {
-                layer->begin();
-                layer->render();
-                layer->end();
-            }
-		}
-
-        // swap buffers
+        render();
         present();
     }
 
