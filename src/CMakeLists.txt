@@ -1,10 +1,11 @@
 find_package(OpenGL REQUIRED COMPONENTS OpenGL)
 
 add_executable (oya "main.cpp")
-target_sources(oya PRIVATE FILE_SET CXX_MODULES FILES "window.ixx" "layer.ixx" "layer_stack.ixx" "world_layer.ixx" "gui_layer.ixx" "gui_data.ixx" "keyboard_data.ixx" "mouse_data.ixx" "data_trigger.ixx" "fbo.ixx" "viewport_data.ixx" "listener.ixx" "background_layer.ixx" "data_trigger_stack.ixx" "gui_theme.ixx" "window_data.ixx" "render.ixx" "shader.ixx")
+target_sources(oya PRIVATE FILE_SET CXX_MODULES FILES "window.ixx" "layer.ixx" "layer_stack.ixx" "world_layer.ixx" "gui_layer.ixx" "gui_data.ixx" "keyboard_data.ixx" "mouse_data.ixx" "data_trigger.ixx" "fbo.ixx" "viewport_data.ixx" "listener.ixx" "background_layer.ixx" "data_trigger_stack.ixx" "gui_theme.ixx" "window_data.ixx" "render.ixx" "shader.ixx" "camera.ixx")
 
 include_directories(${CMAKE_BINARY_DIR}/configure)
 include_directories(${CMAKE_SOURCE_DIR}/external/glfw/include)
+include_directories(${CMAKE_SOURCE_DIR}/external/glm)
 include_directories(${CMAKE_SOURCE_DIR}/external/imgui)
 include_directories(${CMAKE_SOURCE_DIR}/external/imgui/backends)
 include_directories(${CMAKE_SOURCE_DIR}/external/glew-2.2.0/include)
@@ -29,5 +30,17 @@ set(SHADER_FILES
     ${CMAKE_SOURCE_DIR}/shaders/fragment.glsl
 )
 
-# Copy shader files to the binary directory
-file(COPY ${SHADER_FILES} DESTINATION ${CMAKE_BINARY_DIR}/shaders)
+# Custom command to copy shader files
+add_custom_command(
+    OUTPUT ${CMAKE_BINARY_DIR}/shaders/vertex.glsl ${CMAKE_BINARY_DIR}/shaders/fragment.glsl
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different ${CMAKE_SOURCE_DIR}/shaders/vertex.glsl ${CMAKE_BINARY_DIR}/shaders/vertex.glsl
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different ${CMAKE_SOURCE_DIR}/shaders/fragment.glsl ${CMAKE_BINARY_DIR}/shaders/fragment.glsl
+    DEPENDS ${SHADER_FILES}
+    COMMENT "Copying shader files..."
+)
+
+# Custom target that depends on the shader files
+add_custom_target(copy_shaders ALL DEPENDS ${CMAKE_BINARY_DIR}/shaders/vertex.glsl ${CMAKE_BINARY_DIR}/shaders/fragment.glsl)
+
+# Make the main target depend on the custom target
+add_dependencies(oya copy_shaders)

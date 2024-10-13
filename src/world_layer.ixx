@@ -5,6 +5,8 @@ module;
 #include "loguru.hpp"
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
+#include <glm/mat4x4.hpp>
+#include <glm/gtc/type_ptr.hpp>
 
 #include <iostream>
 
@@ -17,6 +19,7 @@ import window_data;
 import data_trigger;
 import mouse_data;
 import shader;
+import camera;
 
 // Vertex data
 GLfloat vertices[] = {
@@ -83,6 +86,12 @@ public:
 		glClear(GL_COLOR_BUFFER_BIT);
 
 		shader->use();
+
+		glm::mat4 view = camera.getViewMatrix();
+		GLuint viewLoc = glGetUniformLocation(shader->programID, "view");
+		std::cout << viewLoc << std::endl;
+		glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
+
         glBindVertexArray(VAO);
         glDrawArrays(GL_TRIANGLES, 0, 3);
 

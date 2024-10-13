@@ -96,6 +96,11 @@ void glfw_key_callback(GLFWwindow* lwindow, int key, int scancode, int action, i
 		if (key == GLFW_KEY_F10) { function_keyboard_data.F10_down = true; function_keyboard_data.trigger(); }
 		if (key == GLFW_KEY_F11) { function_keyboard_data.F11_down = true; function_keyboard_data.trigger(); }
 
+		if (key == GLFW_KEY_A) { keyboard_data.left_down = true; keyboard_data.trigger(); }
+		if (key == GLFW_KEY_D) { keyboard_data.right_down = true; keyboard_data.trigger(); }
+		if (key == GLFW_KEY_W) { keyboard_data.up_down = true; keyboard_data.trigger(); }
+		if (key == GLFW_KEY_S) { keyboard_data.down_down = true; keyboard_data.trigger(); }
+
 	}
 	if (action == GLFW_RELEASE)
 	{
@@ -103,6 +108,11 @@ void glfw_key_callback(GLFWwindow* lwindow, int key, int scancode, int action, i
 		
 		if (key == GLFW_KEY_F10) { function_keyboard_data.F10_down = false; }
 		if (key == GLFW_KEY_F11) { function_keyboard_data.F11_down = false; }
+
+		if (key == GLFW_KEY_A) keyboard_data.left_down = false;
+		if (key == GLFW_KEY_D) keyboard_data.right_down = false;
+		if (key == GLFW_KEY_W) keyboard_data.up_down = false;
+		if (key == GLFW_KEY_S) keyboard_data.down_down = false;
 
 	
 	}
