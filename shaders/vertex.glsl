@@ -2,12 +2,12 @@
 layout(location = 0) in vec2 aPos;
 layout(location = 1) in vec3 aColor;
 
-out vec3 color;
+out vec3 ourColor;
 
-uniform mat4 view;
+uniform mat4 view_proj;
 
 void main()
 {
-    gl_Position = view * vec4(aPos, 0.0, 1.0);
-    color = aColor;
+    gl_Position = view_proj * vec4(aPos, 0.0, 1.0);
+    ourColor = aColor;
 }

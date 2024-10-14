@@ -36,6 +36,7 @@ export class WorldLayer : public Layer
 {
     Shader *shader;
 	GLuint VBO, VAO;
+	GLuint viewLoc;
 
 public:
 	WorldLayer(std::string pname) : Layer(pname) {};
@@ -47,12 +48,9 @@ public:
 		add_listener(&function_keyboard_data, &WorldLayer::on_function_keyboard);
 
 		shader = new Shader("shaders/vertex.glsl", "shaders/fragment.glsl");
-
-        // Build and compile the shader program
-       
+		viewLoc = glGetUniformLocation(shader->programID, "view_proj");
 
         // Set up vertex data and buffers and configure vertex attributes
- 
         glGenVertexArrays(1, &VAO);
         glGenBuffers(1, &VBO);
 
@@ -88,9 +86,11 @@ public:
 		shader->use();
 
 		glm::mat4 view = camera.getViewMatrix();
-		GLuint viewLoc = glGetUniformLocation(shader->programID, "view");
-		std::cout << viewLoc << std::endl;
-		glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
+		glm::mat4 projection = glm::perspective(glm::radians(45.0f), 800.0f / 600.0f, 0.1f, 100.0f);
+		glm::mat4 vp = projection * view; 
+		
+		
+		glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(vp));
 
         glBindVertexArray(VAO);
         glDrawArrays(GL_TRIANGLES, 0, 3);

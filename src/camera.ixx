@@ -17,13 +17,11 @@ public:
 
     glm::mat4 getViewMatrix() const {
         glm::mat4 view = glm::mat4(1.0f);
-        view = glm::translate(view, glm::vec3(-position, -height));
-        //view = glm::rotate(view, glm::radians(rotation), glm::vec3(0.0f, 0.0f, 1.0f));
-
-        
+        view = glm::translate(view, glm::vec3(-position.x, -position.y, -height));
+        view = glm::rotate(view, glm::radians(rotation), glm::vec3(0.0f, 0.0f, 1.0f));
 
         return view;
     }
 };
 
-export Camera camera(glm::vec2(0.0f, 0.0f), 3.0f, 0.0f);
+export Camera camera(glm::vec2(0.0f, 0.0f), 8.0f, 15.0f);
