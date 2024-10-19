@@ -120,6 +120,7 @@ public:
         if (function_keyboard_data.F10_down)
         {
             remove_fbo();
+			LOG_F(INFO, "window width %d, window height %d", window_data.width, window_data.height);
             glViewport(0, 0, window_data.width, window_data.height);
             
         }

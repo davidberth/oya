@@ -42,5 +42,6 @@ add_library(imgui STATIC
 )
 
 target_include_directories(imgui PUBLIC ${CMAKE_SOURCE_DIR}/imgui)
+target_include_directories(imgui PUBLIC ${CMAKE_SOURCE_DIR}/glfw/include)
 
 file(REMOVE ${GLEW_ZIP})

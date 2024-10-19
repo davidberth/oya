@@ -65,6 +65,8 @@ void resize_window()
 
 		glfwSetWindowMonitor(window, monitors[index], 0, 0, mwidth, mheight, GLFW_DONT_CARE);
 		glViewport(0, 0, mwidth, mheight);
+		window_data.width = mwidth;
+		window_data.height = mheight;
 		return;
 	}
 	else
@@ -73,6 +75,8 @@ void resize_window()
 		int sizey = int(float(resolution_height) * size_options[current_size].size_ratio_y);
 		glfwSetWindowMonitor(window, NULL, resolution_width / 2 - sizex / 2, resolution_height / 2 - sizey / 2, sizex, sizey, 0);
 		glViewport(0, 0, sizex, sizey);
+		window_data.width = sizex;
+		window_data.height = sizey;
 	}
 }
 
