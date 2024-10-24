@@ -13,6 +13,7 @@ import viewport_data;
 import window_data;
 import mouse_data;
 import render;
+import persistent_data;
 
 GLFWwindow* window;
 int resolution_width;
@@ -48,7 +49,7 @@ void glfw_errorCallback(int error, const char* description)
 
 void resize_window()
 {
-
+	persistent_data.window_size = current_size;
 	float size_rat = size_options[current_size].size_ratio_x;
 
 	if (size_rat > 0.9f)
@@ -187,6 +188,7 @@ export bool init_window()
 
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
+	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
 	window = glfwCreateWindow(1280, 720, caption.c_str(), nullptr, nullptr);
 	if (window == nullptr)
@@ -200,6 +202,7 @@ export bool init_window()
 		return 1;
 	}
 
+	current_size = persistent_data.window_size;
 	resize_window();
 	glfwSetKeyCallback(window, glfw_key_callback);
 	glfwSetScrollCallback(window, glfw_scroll_callback);

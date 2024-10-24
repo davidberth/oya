@@ -5,7 +5,7 @@ module;
 #include "loguru.hpp"
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
-#include <glm/mat4x4.hpp>
+
 #include <glm/gtc/type_ptr.hpp>
 
 #include <iostream>
@@ -20,6 +20,7 @@ import data_trigger;
 import mouse_data;
 import shader;
 import camera;
+import persistent_data;
 
 // Vertex data
 GLfloat vertices[] = {
@@ -85,12 +86,9 @@ public:
 
 		shader->use();
 
-		glm::mat4 view = camera.getViewMatrix();
-		glm::mat4 projection = glm::perspective(glm::radians(45.0f), 800.0f / 600.0f, 0.1f, 100.0f);
-		glm::mat4 vp = projection * view; 
-		
-		
-		glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(vp));
+		glm::mat4 view_proj = camera.get_view_proj_matrix();
+
+		glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view_proj));
 
         glBindVertexArray(VAO);
         glDrawArrays(GL_TRIANGLES, 0, 3);
@@ -122,11 +120,13 @@ public:
             remove_fbo();
 			LOG_F(INFO, "window width %d, window height %d", window_data.width, window_data.height);
             glViewport(0, 0, window_data.width, window_data.height);
+			persistent_data.gui_on = false;
             
         }
         else if (function_keyboard_data.F11_down)
         {
             add_fbo(0);
+			persistent_data.gui_on = true;
         }
     }
 };

@@ -103,7 +103,7 @@ public:
             static float f = 0.0f;
             static int counter = 0;
 
-            ImGui::Begin("World Window");                          // Create a window called "Hello, world!" and append into it.
+            ImGui::Begin("World properties");                          // Create a window called "Hello, world!" and append into it.
 
             ImGui::Text("Background properties");               // Display some text (you can use a format strings too)
           

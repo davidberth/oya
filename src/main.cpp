@@ -16,6 +16,7 @@ import gui_data;
 import keyboard_data;
 import mouse_data;
 import viewport_data;
+import persistent_data;
 
 int main(int argc, char** argv)
 {
@@ -49,10 +50,17 @@ int main(int argc, char** argv)
 		layer->init(window);
 	}
 
-    // background_layer->disable();
-    // gui_layer->disable();
-    world_layer->add_fbo(0);
+    persistent_data.load();
 
+    if (persistent_data.gui_on)
+    {
+       world_layer->add_fbo(0);
+    }
+    else
+	{
+        background_layer->disable();
+        gui_layer->disable();
+	}
 
     while (!window_should_close())
     {
@@ -83,5 +91,6 @@ int main(int argc, char** argv)
 	}
     
     cleanup_window();
+    persistent_data.save();
     return 0;
 }
