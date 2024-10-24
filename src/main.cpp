@@ -17,6 +17,8 @@ import keyboard_data;
 import mouse_data;
 import viewport_data;
 import persistent_data;
+import updatable_manager;
+import camera;
 
 int main(int argc, char** argv)
 {
@@ -51,6 +53,7 @@ int main(int argc, char** argv)
 	}
 
     persistent_data.load();
+    updatable_manager.add_updatable(&camera);
 
     if (persistent_data.gui_on)
     {
@@ -66,6 +69,8 @@ int main(int argc, char** argv)
     {
         // events
         poll_events();
+
+        updatable_manager.update_all();
 		get_window_size(display_w, display_h);
 
         // update data triggers

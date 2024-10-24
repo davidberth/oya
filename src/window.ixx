@@ -105,6 +105,8 @@ void glfw_key_callback(GLFWwindow* lwindow, int key, int scancode, int action, i
 		if (key == GLFW_KEY_D) { keyboard_data.right_down = true; keyboard_data.trigger(); }
 		if (key == GLFW_KEY_W) { keyboard_data.up_down = true; keyboard_data.trigger(); }
 		if (key == GLFW_KEY_S) { keyboard_data.down_down = true; keyboard_data.trigger(); }
+		if (key == GLFW_KEY_Q) { keyboard_data.rotate_left_down = true; keyboard_data.trigger(); }
+		if (key == GLFW_KEY_E) { keyboard_data.rotate_right_down = true; keyboard_data.trigger(); }
 
 	}
 	if (action == GLFW_RELEASE)
@@ -118,6 +120,8 @@ void glfw_key_callback(GLFWwindow* lwindow, int key, int scancode, int action, i
 		if (key == GLFW_KEY_D) keyboard_data.right_down = false;
 		if (key == GLFW_KEY_W) keyboard_data.up_down = false;
 		if (key == GLFW_KEY_S) keyboard_data.down_down = false;
+		if (key == GLFW_KEY_Q) keyboard_data.rotate_left_down = false;
+		if (key == GLFW_KEY_E) keyboard_data.rotate_right_down = false;
 
 	
 	}

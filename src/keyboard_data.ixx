@@ -14,6 +14,8 @@ export struct KeyboardData : public DataTrigger {
 	bool right_down = false;
 	bool up_down = false;
 	bool down_down = false;
+	bool rotate_left_down = false;
+	bool rotate_right_down = false;
 
 	void log()
 	{

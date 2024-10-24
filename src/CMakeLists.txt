@@ -1,7 +1,7 @@
 find_package(OpenGL REQUIRED COMPONENTS OpenGL)
 
 add_executable (oya "main.cpp")
-target_sources(oya PRIVATE FILE_SET CXX_MODULES FILES "window.ixx" "layer.ixx" "layer_stack.ixx" "world_layer.ixx" "gui_layer.ixx" "gui_data.ixx" "keyboard_data.ixx" "mouse_data.ixx" "data_trigger.ixx" "fbo.ixx" "viewport_data.ixx" "listener.ixx" "background_layer.ixx" "data_trigger_stack.ixx" "gui_theme.ixx" "window_data.ixx" "render.ixx" "shader.ixx" "camera.ixx" "persistent_data.ixx")
+target_sources(oya PRIVATE FILE_SET CXX_MODULES FILES "window.ixx" "layer.ixx" "layer_stack.ixx" "world_layer.ixx" "gui_layer.ixx" "gui_data.ixx" "keyboard_data.ixx" "mouse_data.ixx" "data_trigger.ixx" "fbo.ixx" "viewport_data.ixx" "listener.ixx" "background_layer.ixx" "data_trigger_stack.ixx" "gui_theme.ixx" "window_data.ixx" "render.ixx" "shader.ixx" "camera.ixx" "persistent_data.ixx" "updatable.ixx" "update_manager.ixx")
 
 include_directories(${CMAKE_BINARY_DIR}/configure)
 include_directories(${CMAKE_SOURCE_DIR}/external/glfw/include)

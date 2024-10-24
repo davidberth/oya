@@ -8,8 +8,10 @@ module;
 export module camera;
 
 import window_data;
+import keyboard_data;
+import updatable;
 
-export class Camera {
+export class Camera  : public Updatable {
 public:
     glm::vec2 position;
     float height;
@@ -27,6 +29,27 @@ public:
 
         return projection * view;
     }
+
+	void update() override {
+		if (keyboard_data.up_down) {
+			position.y += 0.1f;
+		}
+		if (keyboard_data.down_down) {
+			position.y -= 0.1f;
+		}
+		if (keyboard_data.left_down) {
+			position.x -= 0.1f;
+		}
+		if (keyboard_data.right_down) {
+			position.x += 0.1f;
+		}
+		if (keyboard_data.rotate_right_down) {
+			rotation += 1.0f;
+		}
+		if (keyboard_data.rotate_left_down) {
+			rotation -= 1.0f;
+		}
+	}
 };
 
 export Camera camera(glm::vec2(0.0f, 0.0f), 8.0f, 15.0f);
