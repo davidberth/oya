@@ -25,9 +25,9 @@ import persistent_data;
 // Vertex data
 GLfloat vertices[] = {
 	// Positions      // Colors
-	0.0f,  0.5f,      1.0f, 0.0f, 0.0f,  // Top vertex (Red)
-   -0.5f, -0.5f,      0.0f, 1.0f, 0.0f,  // Bottom left vertex (Green)
-	0.5f, -0.5f,      0.0f, 0.0f, 1.0f   // Bottom right vertex (Blue)
+	0.5f, 0.0f,      1.0f, 0.0f, 0.0f,  
+   -0.5f, -0.5f,      1.0f, 1.0f, 1.0f, 
+   -0.5f, 0.5f,      1.0f, 1.0f, 1.0f   
 };
 
 

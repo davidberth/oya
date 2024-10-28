@@ -16,6 +16,8 @@ export struct KeyboardData : public DataTrigger {
 	bool down_down = false;
 	bool rotate_left_down = false;
 	bool rotate_right_down = false;
+	bool zoom_out_down = false;
+	bool zoom_in_down = false;
 
 	void log()
 	{

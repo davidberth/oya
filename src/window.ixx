@@ -108,6 +108,9 @@ void glfw_key_callback(GLFWwindow* lwindow, int key, int scancode, int action, i
 		if (key == GLFW_KEY_Q) { keyboard_data.rotate_left_down = true; keyboard_data.trigger(); }
 		if (key == GLFW_KEY_E) { keyboard_data.rotate_right_down = true; keyboard_data.trigger(); }
 
+		if (key == GLFW_KEY_R) { keyboard_data.zoom_out_down = true; keyboard_data.trigger(); }
+		if (key == GLFW_KEY_F) { keyboard_data.zoom_in_down = true; keyboard_data.trigger(); }
+
 	}
 	if (action == GLFW_RELEASE)
 	{
@@ -122,6 +125,9 @@ void glfw_key_callback(GLFWwindow* lwindow, int key, int scancode, int action, i
 		if (key == GLFW_KEY_S) keyboard_data.down_down = false;
 		if (key == GLFW_KEY_Q) keyboard_data.rotate_left_down = false;
 		if (key == GLFW_KEY_E) keyboard_data.rotate_right_down = false;
+
+		if (key == GLFW_KEY_R) keyboard_data.zoom_out_down = false;
+		if (key == GLFW_KEY_F) keyboard_data.zoom_in_down = false;
 
 	
 	}
