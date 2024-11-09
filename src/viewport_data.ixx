@@ -1,6 +1,8 @@
 module;
 
-#include <vector>
+
+#include <iostream>
+#include <glm/glm.hpp>
 
 export module viewport_data;
 
@@ -15,6 +17,16 @@ public:
 	int old_height = 100;
 
 	int texture_index = 0;
+
+	glm::vec2 win_to_ndc(glm::vec2 win_pos)
+	{
+		float ndc_x = (2.0f * win_pos.x) / width - 1.0f;
+		float ndc_y = 1.0f - (2.0f * win_pos.y) / height;
+
+		std::cout << ndc_x << " " << ndc_y << std::endl;
+		return glm::vec2(ndc_x, ndc_y);
+
+	}
 
 	void set_size(int w, int h)
 	{

@@ -27,7 +27,7 @@ GLfloat vertices[] = {
 	// Positions      // Colors
 	0.5f, 0.0f,      1.0f, 0.0f, 0.0f,  
    -0.5f, -0.5f,      1.0f, 1.0f, 1.0f, 
-   -0.5f, 0.5f,      1.0f, 1.0f, 1.0f   
+   -0.5f, 0.5f,      1.0f, 1.0f, 0.0f   
 };
 
 
@@ -86,9 +86,7 @@ public:
 
 		shader->use();
 
-		glm::mat4 view_proj = camera.get_view_proj_matrix();
-
-		glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view_proj));
+		glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(camera.view_proj));
 
         glBindVertexArray(VAO);
         glDrawArrays(GL_TRIANGLES, 0, 3);

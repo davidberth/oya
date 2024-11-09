@@ -6,6 +6,7 @@ module;
 #include "imgui.h"
 #include "imgui_impl_glfw.h"
 #include "imgui_impl_opengl3.h"
+#include <glm/glm.hpp>
 
 #include "GLFW/glfw3.h"
 
@@ -17,6 +18,7 @@ import keyboard_data;
 import mouse_data;
 import viewport_data;
 import gui_theme;
+import camera;
 
 export class GUILayer : public Layer
 {
@@ -61,7 +63,7 @@ public:
         // ImGui::StyleColorsLight();
         setup_gui_theme();
 
-        // Setup Platform/Renderer backends
+       
         ImGui_ImplGlfw_InitForOpenGL(window, true);
         ImGui_ImplOpenGL3_Init("#version 460");
 
@@ -75,7 +77,7 @@ public:
         
 		add_listener(&mouse_scroll_data, &GUILayer::on_mouse_scroll);
 		add_listener(&function_keyboard_data, &GUILayer::on_function_keyboard, true);
-        //ImGui::PopFont();
+      
 	
 
 	}
@@ -96,10 +98,8 @@ public:
 	}
 	virtual void render() override
 	{
-	
 
-        // 2. Show a simple window that we create ourselves. We use a Begin/End pair to create a named window.
-        {
+         {
             static float f = 0.0f;
             static int counter = 0;
 
@@ -108,25 +108,31 @@ public:
             ImGui::Text("Background properties");               // Display some text (you can use a format strings too)
           
             ImGui::ColorEdit3("clear color", (float*)&gui_data.clear_color); // Edit 3 floats representing a color
+            
+			ImGui::Text("Window pos: x: %.3f, y: %.3f", mouse_pointer_data.xpos, mouse_pointer_data.ypos);
+            
+            // get the world coorindates at the mouse pointer
+            
+			glm::vec2 ndc_coords = viewport_data[0].win_to_ndc(glm::vec2(mouse_pointer_data.xpos, mouse_pointer_data.ypos));
+            ImGui::Text("NDC pos  : x: %.3f, y: %.3f", ndc_coords.x, ndc_coords.y);
+			glm::vec2 world_pos = camera.ndc_to_world(ndc_coords);
+            
+            ImGui::Text("World pos: x: %.3f, y: %.3f", world_pos.x, world_pos.y);
 
-            if (ImGui::Button("Button"))                            // Buttons return true when clicked (most widgets return true when edited/activated)
-                counter++;
-            ImGui::SameLine();
-            ImGui::Text("counter = %d", counter);
+
+
 
             ImGui::End();
         }
 
+
        
         ImGui::Begin("Viewport");
-
         // Get the available size within the viewport window
         ImVec2 viewport_size = ImGui::GetContentRegionAvail();
 
-
         // Display the texture in the ImGui window
         ImGui::Image((void*)(intptr_t)viewport_data[0].texture_index, viewport_size, ImVec2(0, 1), ImVec2(1, 0));
-
         ImGui::End();
 
         viewport_data[0].set_size(int(viewport_size.x), int(viewport_size.y));

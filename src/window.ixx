@@ -131,8 +131,6 @@ void glfw_key_callback(GLFWwindow* lwindow, int key, int scancode, int action, i
 
 	
 	}
-	keyboard_data.log(); 
-	function_keyboard_data.log();
 
 }
 
@@ -165,6 +163,12 @@ void glfw_refresh_callback(GLFWwindow* lwindow)
 {
 	render();
 	present();
+}
+
+void glfw_cursor_position_callback(GLFWwindow* lwindow, double xpos, double ypos)
+{
+	mouse_pointer_data.xpos = xpos;
+	mouse_pointer_data.ypos = ypos;
 }
 
 export void get_mouse_pos(double& xpos, double& ypos)
@@ -219,6 +223,7 @@ export bool init_window()
 	glfwSetMouseButtonCallback(window, glfw_mouse_button_callback);
 	glfwSetWindowSizeCallback(window, glfw_window_size_callback);
 	glfwSetWindowRefreshCallback(window, glfw_refresh_callback);
+	glfwSetCursorPosCallback(window, glfw_cursor_position_callback);
 	
 
 	cursor = glfwCreateStandardCursor(GLFW_CROSSHAIR_CURSOR);
