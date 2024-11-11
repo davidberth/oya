@@ -103,7 +103,6 @@ public:
 	}
 
 	// listeners
-
 	void on_mouse_button()
 	{
 		

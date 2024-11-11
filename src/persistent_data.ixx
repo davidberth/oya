@@ -10,8 +10,9 @@ export class PersistentData {
 public:
     int window_size;
     bool gui_on;
+    int font_size;
 
-    PersistentData() : window_size(2), gui_on(true) {
+    PersistentData() : window_size(2), gui_on(true), font_size(0) {
         load();
     }
 
@@ -22,7 +23,7 @@ public:
     void load() {
         std::ifstream infile("preferences.txt");
         if (infile.is_open()) {
-            infile >> window_size >> gui_on;
+            infile >> window_size >> gui_on >> font_size;
             infile.close();
         }
         else {
@@ -33,7 +34,7 @@ public:
     void save() const {
         std::ofstream outfile("preferences.txt");
         if (outfile.is_open()) {
-            outfile << window_size << " " << gui_on;
+            outfile << window_size << " " << gui_on << " " << font_size;
             outfile.close();
         }
         else {

@@ -1,6 +1,7 @@
 module;
 
 #include <glm/glm.hpp>
+#include <glm/ext/matrix_projection.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 #include <glm/mat4x4.hpp>
@@ -14,6 +15,7 @@ import window_data;
 import keyboard_data;
 import updatable;
 import viewport_data;
+import mouse_data;
 
 export class Camera  : public Updatable {
 public:
@@ -28,6 +30,9 @@ public:
 	float rot_speed = 0.03f;
 	float zoom_speed = 0.09f;
 
+	float near_clip = 0.1f;
+	float far_clip = 100.0f;
+
 	glm::mat4 projection;
 	glm::mat4 view;
 	glm::mat4 view_proj;
@@ -36,22 +41,27 @@ public:
     Camera(glm::vec2 start_pos, float start_height, float start_rotation)
         : position(start_pos), height(start_height), rotation(start_rotation) 
 	{
-		
 	}
 
-	glm::vec2 ndc_to_world(glm::vec2 ndc_pos)
+	glm::vec2 ndc_to_world_at_z(glm::vec2 ndc_pos, float target_z)
 	{
+		// Get camera position in world space
+		// The camera position is the negative of the translation part of the view matrix
+		glm::vec3 camera_pos = -glm::vec3(position.x, position.y, -height);
+			
 
+		// Distance from camera to target z-plane
+		float z_eye = camera_pos.z - target_z;  // Note: camera_pos.z is negative in your setup
 
-		// convert NDC to homogeneous clip coordinates
-		glm::vec4 clip_pos = glm::vec4(ndc_pos.x, ndc_pos.y, 0.0f, 1.0f);
+		// Compute the NDC z for the target z-plane
+		float z_ndc = ((1.0f / z_eye) - (1.0f / near_clip)) / ((1.0f / far_clip) - (1.0f / near_clip)) * 2.0f - 1.0f;
 
-	
-		// convert clip coordinates to world coordinates
+		// Create clip space point
+		glm::vec4 clip_pos(ndc_pos.x, ndc_pos.y, z_ndc, 1.0f);
+
+		// Transform to world space
 		glm::vec4 world_pos = view_proj_inv * clip_pos;
-
-		// perform perspective divide
-		// world_pos /= world_pos.w;
+		world_pos /= world_pos.w;
 
 		return glm::vec2(world_pos.x, world_pos.y);
 	}
@@ -60,7 +70,7 @@ public:
 
 		// update the matrices
 		float asp_ratio = float(viewport_data[0].width) / float(viewport_data[0].height);
-		projection = glm::perspective(glm::radians(45.0f), asp_ratio, 0.1f, 100.0f);
+		projection = glm::perspective(glm::radians(45.0f), asp_ratio, near_clip, far_clip);
 		view = glm::mat4(1.0f);
 		view = glm::translate(view, glm::vec3(-position.x, -position.y, -height));
 		view = glm::rotate(view, rotation, glm::vec3(0.0f, 0.0f, 1.0f));
@@ -75,10 +85,24 @@ public:
 		}
 		if (keyboard_data.zoom_out_down)
 		{
+			
 			height += zoom_speed;
+			if (height > 50.f) height = 50.0f;
+		}
+
+		if (mouse_scroll_data.yoffset > 0.0f)
+		{
+			height -= zoom_speed * 5.0;
+			mouse_scroll_data.yoffset = 0.0f;
+			if (height < 1.0f) height = 1.0f;
+		}
+		if (mouse_scroll_data.yoffset < 0.0f)
+		{
+			height += zoom_speed * 5.0;
+			mouse_scroll_data.yoffset = 0.0f;
 			if (height > 50.f) height = 50.0f;
 		}
 	}
 };
 
-export Camera camera(glm::vec2(0.0f, 0.0f), 8.0f, glm::radians(90.0f));
+export Camera camera(glm::vec2(0.0f, 0.0f), 8.0f, glm::radians(0.0f));

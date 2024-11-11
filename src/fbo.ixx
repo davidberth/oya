@@ -71,6 +71,7 @@ public:
 
 	void resize()
 	{
+		LOG_F(INFO, "Resizing FBO %d %d %d", viewport_index, get_width(), get_height());
 		delete_frame_buffer();
 		create_frame_buffer();
 	}

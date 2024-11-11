@@ -13,7 +13,9 @@ import viewport_data;
 import window_data;
 import mouse_data;
 import render;
+import update;
 import persistent_data;
+
 
 GLFWwindow* window;
 int resolution_width;
@@ -161,6 +163,7 @@ export void present()
 
 void glfw_refresh_callback(GLFWwindow* lwindow)
 {
+	update();
 	render();
 	present();
 }

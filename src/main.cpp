@@ -11,7 +11,7 @@ import background_layer;
 import layer_stack;
 import data_trigger_stack;
 import render;
-
+import update;
 import gui_data;
 import keyboard_data;
 import mouse_data;
@@ -38,8 +38,6 @@ int main(int argc, char** argv)
 	Layer* gui_layer = new GUILayer("gui");
 	layer_stack.add_layer(gui_layer);
 
-    int display_w = 0;
-    int display_h = 0;
 
     if (!init_window())
     {
@@ -70,22 +68,7 @@ int main(int argc, char** argv)
         // events
         poll_events();
 
-        updatable_manager.update_all();
-		get_window_size(display_w, display_h);
-
-        // update data triggers
-		for (auto data_trigger : data_trigger_stack)
-		{
-			data_trigger->update();
-		}
-
-
-        // update layers
-        for (auto layer : layer_stack)
-        {
-            if (layer->is_enabled()) layer->update();
-        }
-
+        update();
         render();
         present();
     }
