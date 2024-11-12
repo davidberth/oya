@@ -11,7 +11,7 @@ export void setup_gui_theme()
 
 	style.Alpha = 1.0f;
 	style.DisabledAlpha = 0.6000000238418579f;
-	style.WindowPadding = ImVec2(8.0f, 8.0f);
+	style.WindowPadding = ImVec2(4.0f, 4.0f);
 	style.WindowRounding = 3.0f;
 	style.WindowBorderSize = 1.0f;
 	style.WindowMinSize = ImVec2(32.0f, 32.0f);

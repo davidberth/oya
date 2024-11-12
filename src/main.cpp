@@ -19,6 +19,7 @@ import viewport_data;
 import persistent_data;
 import updatable_manager;
 import camera;
+import window_data;
 
 int main(int argc, char** argv)
 {
@@ -55,12 +56,16 @@ int main(int argc, char** argv)
 
     if (persistent_data.gui_on)
     {
-       world_layer->add_fbo(0);
+       world_layer->add_fbo();
+	   viewport_data.active = true;
     }
     else
 	{
         background_layer->disable();
         gui_layer->disable();
+        viewport_data.active = false;
+        viewport_data.height = window_data.height;
+		viewport_data.width = window_data.width;
 	}
 
     while (!window_should_close())
@@ -80,5 +85,10 @@ int main(int argc, char** argv)
     
     cleanup_window();
     persistent_data.save();
+
+	delete background_layer;
+	delete world_layer;
+	delete gui_layer;
+
     return 0;
 }

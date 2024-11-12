@@ -17,6 +17,7 @@ public:
 	int old_height = 100;
 
 	int texture_index = 0;
+	bool active = true;
 
 	glm::vec2 win_to_ndc(glm::vec2 win_pos) const
 	{
@@ -40,4 +41,4 @@ public:
 	}
 };
 
-export ViewportData viewport_data[1];
+export ViewportData viewport_data;

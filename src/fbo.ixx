@@ -15,12 +15,11 @@ private:
 	unsigned int texture;
 	unsigned int rbo;
 
-	int viewport_index;
 public:
-	FBO(int vindex) : Listener(), viewport_index(vindex) {
+	FBO() : Listener() {
 
 		create_frame_buffer();
-		attach_to_viewport(viewport_index);
+		attach_to_viewport();
 	}
 	~FBO() {
 		delete_frame_buffer();
@@ -34,6 +33,7 @@ public:
 		glGenTextures(1, &texture);
 		glBindTexture(GL_TEXTURE_2D, texture);
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, get_width(), get_height(), 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
+		DLOG_F(INFO, "Creating FBO height %d width %d", get_width(), get_height());
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texture, 0);
@@ -71,21 +71,20 @@ public:
 
 	void resize()
 	{
-		LOG_F(INFO, "Resizing FBO %d %d %d", viewport_index, get_width(), get_height());
+		LOG_F(INFO, "Resizing FBO %d %d", get_width(), get_height());
 		delete_frame_buffer();
 		create_frame_buffer();
 	}
 
-	void attach_to_viewport(int index) {
-		viewport_index = index;
-		add_listener(&viewport_data[viewport_index], &FBO::resize);
+	void attach_to_viewport() {
+		add_listener(&viewport_data, &FBO::resize);
 	}
 
 	void set_texture_index(int id) { 
-		viewport_data[viewport_index].texture_index = id; 
+		viewport_data.texture_index = id; 
 	}
 
-	int get_width() { return viewport_data[viewport_index].width; }
-	int get_height() { return viewport_data[viewport_index].height; }
+	int get_width() { return viewport_data.width; }
+	int get_height() { return viewport_data.height; }
 
 };

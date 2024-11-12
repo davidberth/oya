@@ -32,7 +32,6 @@ GLfloat vertices[] = {
 
 
 
-
 export class WorldLayer : public Layer
 {
     Shader *shader;
@@ -122,8 +121,9 @@ public:
         }
         else if (function_keyboard_data.F11_down)
         {
-            add_fbo(0);
+            add_fbo();
 			persistent_data.gui_on = true;
         }
     }
 };
+

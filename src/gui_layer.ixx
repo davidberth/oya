@@ -20,6 +20,7 @@ import viewport_data;
 import gui_theme;
 import camera;
 import persistent_data;
+import window_data;
 
 export class GUILayer : public Layer
 {
@@ -106,11 +107,11 @@ public:
             mouse_pos_screen.y - (viewport_pos.y + window_pos.y));
 
         // Display the texture in the ImGui window
-        ImGui::Image((void*)(intptr_t)viewport_data[0].texture_index, viewport_size, ImVec2(0, 1), ImVec2(1, 0));
+        ImGui::Image((void*)(intptr_t)viewport_data.texture_index, viewport_size, ImVec2(0, 1), ImVec2(1, 0));
         ImGui::End();
 
-        viewport_data[0].set_size(int(viewport_size.x), int(viewport_size.y));
-        glm::vec2 ndc_coords = viewport_data[0].win_to_ndc(glm::vec2(mouse_pos_viewport.x, mouse_pos_viewport.y));
+        viewport_data.set_size(int(viewport_size.x), int(viewport_size.y));
+        glm::vec2 ndc_coords = viewport_data.win_to_ndc(glm::vec2(mouse_pos_viewport.x, mouse_pos_viewport.y));
         glm::vec2 world_pos = camera.ndc_to_world_at_z(ndc_coords, 0.0f);
 
         ImGuiIO& io = ImGui::GetIO();
@@ -200,11 +201,16 @@ public:
 		if (function_keyboard_data.F10_down)
 		{
             disable();
+			viewport_data.active = false;
+            viewport_data.height = window_data.height;
+			viewport_data.width = window_data.width;
 		}
         else if (function_keyboard_data.F11_down)
 		{
 			enable();
+			viewport_data.active = true;
 		}
 	}
 
 };
+

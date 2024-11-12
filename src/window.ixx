@@ -70,7 +70,7 @@ void resize_window()
 		glViewport(0, 0, mwidth, mheight);
 		window_data.width = mwidth;
 		window_data.height = mheight;
-		return;
+
 	}
 	else
 	{
@@ -81,6 +81,7 @@ void resize_window()
 		window_data.width = sizex;
 		window_data.height = sizey;
 	}
+
 }
 
 void glfw_key_callback(GLFWwindow* lwindow, int key, int scancode, int action, int mods)
@@ -133,7 +134,6 @@ void glfw_key_callback(GLFWwindow* lwindow, int key, int scancode, int action, i
 
 	
 	}
-
 }
 
 void glfw_scroll_callback(GLFWwindow* lwindow, double xoffset, double yoffset)
@@ -153,6 +153,10 @@ void glfw_window_size_callback(GLFWwindow* lwindow, int width, int height)
 	glViewport(0, 0, width, height);
 	window_data.width = width;
 	window_data.height = height;
+	if (!viewport_data.active)
+	{
+		viewport_data.set_size(window_data.width, window_data.height);
+	}
 
 }
 

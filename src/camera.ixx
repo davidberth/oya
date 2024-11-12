@@ -7,6 +7,7 @@ module;
 #include <glm/mat4x4.hpp>
 #include <math.h>
 
+
 #include <iostream>
 
 export module camera;
@@ -69,7 +70,7 @@ public:
 	void update() override {
 
 		// update the matrices
-		float asp_ratio = float(viewport_data[0].width) / float(viewport_data[0].height);
+		float asp_ratio = float(viewport_data.width) / float(viewport_data.height);
 		projection = glm::perspective(glm::radians(45.0f), asp_ratio, near_clip, far_clip);
 		view = glm::mat4(1.0f);
 		view = glm::translate(view, glm::vec3(-position.x, -position.y, -height));
@@ -78,6 +79,9 @@ public:
 		view_proj_inv = glm::inverse(view_proj);
 
 
+		// rotate the camera
+		rotation += rot_speed;
+        if (rotation > 6.283f) rotation -= 2 * 6.283f;
 		if (keyboard_data.zoom_in_down)
 		{
 			height -= zoom_speed;

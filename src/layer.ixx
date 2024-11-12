@@ -24,13 +24,13 @@ public:
 	virtual void init(GLFWwindow *) {
 		LOG_F(INFO, "Layer %s initialized", name.c_str());
 	};
-	void add_fbo(int index)
+	void add_fbo()
 	{
 		if (fbo)
 		{
 			delete fbo;
 		}
-		fbo = new FBO(index);
+		fbo = new FBO();
 	}
 	void remove_fbo()
 	{
@@ -69,3 +69,4 @@ public:
 
 	std::string get_name() { return name; };
 };
+

@@ -32,7 +32,6 @@ public:
 		if (!persist) triggers.push_back(trigger);
 	}
 
-
 	template <typename T>
 	void remove_listener(DataTrigger* trigger) {
 		trigger->remove_listener(get_id());
