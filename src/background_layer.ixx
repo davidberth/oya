@@ -36,8 +36,6 @@ public:
             gui_data.clear_color[3]);
         glClear(GL_COLOR_BUFFER_BIT);
 
-   
-
     }
     virtual void end() override
     {
@@ -48,7 +46,7 @@ public:
         Layer::cleanup();
     }
 
-    // listeners
+    // listener
 
     // persistent
 	void on_function_keyboard()
