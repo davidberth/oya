@@ -8,30 +8,31 @@ import vertex;
 
 export class Node
 {
-private:
-	Vertex* vertices = NULL;
-	unsigned int *indices = NULL;
-
-	unsigned num_vertices = 0;
-	unsigned num_indices = 0;
-
 public:
-	Node(Vertex* start_vertex, unsigned int *start_index, int num_verticesl, int num_indicesl) {
-		vertices = start_vertex;
-		indices = start_index;
-		num_vertices = num_verticesl;
-		num_indices = num_indicesl;
+	std::vector<Vertex> vertices;
+	std::vector<unsigned int> indices;
+
+	Node* parent;
+	std::vector<Node*> children;
+
+
+	Node() {
+		vertices.clear();
+		indices.clear();
 	};
 	~Node() {};
 
-	
+	void add_vertex(Vertex vertex)
+	{
+		vertices.push_back(vertex);
+	}
 	int get_num_vertices()
 	{
-		return num_vertices;
+		return vertices.size();
 	}
 
 	int get_num_indices()
 	{
-		return num_indices;
+		return indices.size();
 	}
 };

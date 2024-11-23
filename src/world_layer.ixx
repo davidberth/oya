@@ -20,7 +20,8 @@ import mouse_data;
 import shader;
 import camera;
 import persistent_data;
-import geometry;
+import geometry_buffer;
+import scene;
 
 
 
@@ -28,7 +29,7 @@ export class WorldLayer : public Layer
 {
     Shader *shader;
 	GLuint viewLoc;
-	Geometry geom;
+	Scene scene;
 
 public:
 	WorldLayer(std::string pname) : Layer(pname) {};
@@ -52,20 +53,20 @@ public:
 			Vertex{-0.5f, 0.5f, 1.0f, 1.0f, 1.0f}
 		};
 		unsigned int indices[] = { 0, 1, 2, 2, 3, 0 };
-		geom.add_node(vertices, indices, 4, 6);
+		scene.add_node(vertices, indices, 4, 6);
 		
 		
 
 		// add 1.0 to the x coordinates of the vertices to move the square to the right
-		vertices[0].pos[0]  += 2.0f;
-		vertices[1].pos[0]  += 2.0f;
-		vertices[2].pos[0] += 2.0f;
-		vertices[3].pos[0] += 2.0f;
+		vertices[0].x  += 2.0f;
+		vertices[1].x  += 2.0f;
+		vertices[2].x += 2.0f;
+		vertices[3].x += 2.0f;
 		unsigned int indices2[] = { 4, 5, 6, 6, 7, 4 };
-		geom.add_node(vertices, indices2, 4, 6);
+		scene.add_node(vertices, indices2, 4, 6);
 		
 		
-		geom.setup_vbo();
+		scene.setup();
   
 		
 	}
@@ -89,7 +90,7 @@ public:
 		shader->use();
 
 		glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(camera.view_proj));
-		geom.render();
+		scene.render();
 
         
 	}
