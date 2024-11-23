@@ -3,8 +3,7 @@ module;
 #include <string>
 #include <functional>
 #include "loguru.hpp"
-#include <GL/glew.h>
-#include <GLFW/glfw3.h>
+#include "GL/glew.h"
 
 #include <glm/gtc/type_ptr.hpp>
 
@@ -21,20 +20,15 @@ import mouse_data;
 import shader;
 import camera;
 import persistent_data;
+import geometry;
 
-// Vertex data
-GLfloat vertices[] = {
-	// Positions      // Colors
-	0.5f, 0.0f,      1.0f, 0.0f, 0.0f,  
-   -0.5f, -0.5f,      1.0f, 1.0f, 1.0f, 
-   -0.5f, 0.5f,      1.0f, 1.0f, 0.0f   
-};
+
 
 export class WorldLayer : public Layer
 {
     Shader *shader;
-	GLuint VBO, VAO;
 	GLuint viewLoc;
+	Geometry geom;
 
 public:
 	WorldLayer(std::string pname) : Layer(pname) {};
@@ -48,20 +42,31 @@ public:
 		shader = new Shader("shaders/vertex.glsl", "shaders/fragment.glsl");
 		viewLoc = glGetUniformLocation(shader->programID, "view_proj");
 
-        // Set up vertex data and buffers and configure vertex attributes
-        glGenVertexArrays(1, &VAO);
-        glGenBuffers(1, &VBO);
 
-        glBindVertexArray(VAO);
 
-        glBindBuffer(GL_ARRAY_BUFFER, VBO);
-        glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+		// set up the geometry for the scene
+		Vertex vertices[] = {
+			Vertex{-0.5f, -0.5f, 1.0f, 0.0f, 0.0f},
+			Vertex{0.5f, -0.5f, 0.0f, 1.0f, 0.0f},
+			Vertex{0.5f, 0.5f, 0.0f, 0.0f, 1.0f},
+			Vertex{-0.5f, 0.5f, 1.0f, 1.0f, 1.0f}
+		};
+		unsigned int indices[] = { 0, 1, 2, 2, 3, 0 };
+		geom.add_node(vertices, indices, 4, 6);
+		
+		
 
-        glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat), (void*)0);
-        glEnableVertexAttribArray(0);
-
-        glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat), (void*)(2 * sizeof(GLfloat)));
-        glEnableVertexAttribArray(1);
+		// add 1.0 to the x coordinates of the vertices to move the square to the right
+		vertices[0].pos[0]  += 2.0f;
+		vertices[1].pos[0]  += 2.0f;
+		vertices[2].pos[0] += 2.0f;
+		vertices[3].pos[0] += 2.0f;
+		unsigned int indices2[] = { 4, 5, 6, 6, 7, 4 };
+		geom.add_node(vertices, indices2, 4, 6);
+		
+		
+		geom.setup_vbo();
+  
 		
 	}
 	virtual void update() override
@@ -84,10 +89,9 @@ public:
 		shader->use();
 
 		glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(camera.view_proj));
+		geom.render();
 
-        glBindVertexArray(VAO);
-        glDrawArrays(GL_TRIANGLES, 0, 3);
-
+        
 	}
 	virtual void end() override
 	{
