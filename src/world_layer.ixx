@@ -5,8 +5,8 @@ module;
 #include "loguru.hpp"
 #include "GL/glew.h"
 
+#include <glm/glm.hpp>
 #include <glm/gtc/type_ptr.hpp>
-
 #include <iostream>
 
 export module world_layer;
@@ -43,29 +43,22 @@ public:
 		shader = new Shader("shaders/vertex.glsl", "shaders/fragment.glsl");
 		viewLoc = glGetUniformLocation(shader->programID, "view_proj");
 
-
-
 		// set up the geometry for the scene
-		Vertex vertices[] = {
-			Vertex{-0.5f, -0.5f, 1.0f, 0.0f, 0.0f},
-			Vertex{0.5f, -0.5f, 0.0f, 1.0f, 0.0f},
-			Vertex{0.5f, 0.5f, 0.0f, 0.0f, 1.0f},
-			Vertex{-0.5f, 0.5f, 1.0f, 1.0f, 1.0f}
+		glm::vec2 vertices[] = {
+			glm::vec2{-0.5f, -0.5f},
+			glm::vec2{0.5f, -0.5f},
+			glm::vec2{0.5f, 0.5f},
+			glm::vec2{-0.5f, 0.5f}
 		};
-		unsigned int indices[] = { 0, 1, 2, 2, 3, 0 };
-		scene.add_node(vertices, indices, 4, 6);
 		
-		
+		scene.add_node(vertices, 4, 1.0f, 0.0f, 0.0f, 0.1f);
 
-		// add 1.0 to the x coordinates of the vertices to move the square to the right
-		vertices[0].x  += 2.0f;
-		vertices[1].x  += 2.0f;
+		vertices[0].x += 2.0f;
+		vertices[1].x += 2.0f;
 		vertices[2].x += 2.0f;
 		vertices[3].x += 2.0f;
-		unsigned int indices2[] = { 4, 5, 6, 6, 7, 4 };
-		scene.add_node(vertices, indices2, 4, 6);
 		
-		
+		scene.add_node(vertices, 4, 0.0f, 0.0f, 1.0f, 0.1f);
 		scene.setup();
   
 		

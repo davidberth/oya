@@ -9,12 +9,15 @@ import vertex;
 export class Node
 {
 public:
+	std::vector<glm::vec2> outline;
 	std::vector<Vertex> vertices;
 	std::vector<unsigned int> indices;
+	glm::vec3 color;
+	glm::vec3 outline_color = { 1.0f, 1.0f, 1.0f };
+	float outline_width;
 
 	Node* parent;
 	std::vector<Node*> children;
-
 
 	Node() {
 		vertices.clear();
@@ -22,10 +25,11 @@ public:
 	};
 	~Node() {};
 
-	void add_vertex(Vertex vertex)
+	void add_vertex(glm::vec2 pos)
 	{
-		vertices.push_back(vertex);
+		outline.push_back(pos);
 	}
+
 	int get_num_vertices()
 	{
 		return vertices.size();

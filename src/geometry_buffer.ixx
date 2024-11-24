@@ -17,6 +17,7 @@ private:
 	std::vector<unsigned int> indices;
 	int vertex_buffer_size = 200;
 	int index_buffer_size = 200;
+	int current_offset = 0;
 
 	GLuint VBO, VAO;
 	GLuint EBO;
@@ -28,6 +29,7 @@ public:
 	{
 		vertices.clear();
 		indices.clear();
+		current_offset = 0;
 	}
 
 	void add_node(Node *node)
@@ -38,8 +40,9 @@ public:
 		}
 		for (int i = 0; i < node->get_num_indices(); i++)
 		{
-			indices.push_back(node->indices.at(i));
+			indices.push_back(node->indices.at(i) + current_offset);
 		}
+		current_offset += node->get_num_vertices();
 	}
 
 	int get_num_vertices()

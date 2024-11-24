@@ -1,9 +1,13 @@
 module;
 
+#include <glm/glm.hpp>
+
 export module scene;
 
 import node;
 import geometry_buffer;
+import polygon;
+import outline;
 
 export class Scene
 {
@@ -24,17 +28,21 @@ public:
 		delete root;
 	};
 
-	void add_node(Vertex vertices[], unsigned int indices[], int num_vertices, int num_indices)
+	void add_node(glm::vec2 vertices[], int num_vertices, float outline_width,
+		float red, float green, float blue)
 	{
 		Node* node = new Node();
 		for (int i = 0; i < num_vertices; i++)
 		{
 			node->add_vertex(vertices[i]);
 		}
-		for (int i = 0; i < num_indices; i++)
-		{
-			node->indices.push_back(indices[i]);
-		}
+		node->outline_width = outline_width;
+		node->color = glm::vec3(red, green, blue);
+
+		generate_indices(node);
+		generate_vertices(node);
+		add_outline(node);
+		
 		root->children.push_back(node);
 	}
 
