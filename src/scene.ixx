@@ -29,7 +29,8 @@ public:
 	};
 
 	void add_node(glm::vec2 vertices[], int num_vertices, float outline_width,
-		float red, float green, float blue)
+		float red, float green, float blue,
+		float ored, float ogreen, float oblue)
 	{
 		Node* node = new Node();
 		for (int i = 0; i < num_vertices; i++)
@@ -38,11 +39,13 @@ public:
 		}
 		node->outline_width = outline_width;
 		node->color = glm::vec3(red, green, blue);
+		node->outline_color = glm::vec3(ored, ogreen, oblue);
 
 		generate_indices(node);
-		generate_vertices(node);
-		add_outline(node);
 		
+		add_outline(node, outline_width);
+		generate_outline_indices(node);
+		generate_vertices(node);
 		root->children.push_back(node);
 	}
 

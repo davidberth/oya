@@ -14,7 +14,8 @@ static bool point_in_triangle(const glm::vec2& p, const glm::vec2& a, const glm:
 }
 
 // Helper function to check if an ear is valid (no other vertices inside it)
-static bool is_valid_ear(std::vector<glm::vec2>& position, size_t prev, size_t curr, size_t next, const std::vector<unsigned int>& remaining_vertices) {
+static bool is_valid_ear(std::vector<glm::vec2>& position, size_t prev, size_t curr, 
+    size_t next, const std::vector<unsigned int>& remaining_vertices) {
     glm::vec2 a = position[remaining_vertices[prev]];
     glm::vec2 b = position[remaining_vertices[curr]];
     glm::vec2 c = position[remaining_vertices[next]];
@@ -87,9 +88,19 @@ export void generate_indices(Node *node)
 export void generate_vertices(Node *node)
 {
     node->vertices.clear();
-    node->vertices.reserve(node->outline.size()); 
+    node->vertices.reserve(node->outline.size() * 2 + node->buffer.size()); 
     for (const auto& point : node->outline)
     {
         node->vertices.push_back(Vertex{ point.x, point.y, node->color.x, node->color.y, node->color.z });
     }
+    for (const auto& point : node->outline)
+    {
+        node->vertices.push_back(Vertex{ point.x, point.y, node->outline_color.x, node->outline_color.y, node->outline_color.z });
+    }
+
+
+	for (const auto& point : node->buffer)
+	{
+		node->vertices.push_back(Vertex{ point.x, point.y, node->outline_color.x, node->outline_color.y, node->outline_color.z });
+	}
 }

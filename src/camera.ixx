@@ -28,7 +28,7 @@ public:
 	glm::vec2 side;
 
 	float speed = 0.03f;
-	float rot_speed = 0.03f;
+	float rot_speed = 0.005f;
 	float zoom_speed = 0.09f;
 
 	float near_clip = 0.1f;
@@ -51,16 +51,16 @@ public:
 		glm::vec3 camera_pos = -glm::vec3(position.x, position.y, -height);
 			
 
-		// Distance from camera to target z-plane
-		float z_eye = camera_pos.z - target_z;  // Note: camera_pos.z is negative in your setup
+		// distance from camera to target z-plane
+		float z_eye = camera_pos.z - target_z;  
 
-		// Compute the NDC z for the target z-plane
+		// compute the NDC z for the target z-plane
 		float z_ndc = ((1.0f / z_eye) - (1.0f / near_clip)) / ((1.0f / far_clip) - (1.0f / near_clip)) * 2.0f - 1.0f;
 
-		// Create clip space point
+		// create clip space point
 		glm::vec4 clip_pos(ndc_pos.x, ndc_pos.y, z_ndc, 1.0f);
 
-		// Transform to world space
+		// transform to world space
 		glm::vec4 world_pos = view_proj_inv * clip_pos;
 		world_pos /= world_pos.w;
 

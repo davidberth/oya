@@ -10,8 +10,11 @@ export class Node
 {
 public:
 	std::vector<glm::vec2> outline;
+	std::vector<glm::vec2> buffer;
+	
 	std::vector<Vertex> vertices;
 	std::vector<unsigned int> indices;
+	
 	glm::vec3 color;
 	glm::vec3 outline_color = { 1.0f, 1.0f, 1.0f };
 	float outline_width;

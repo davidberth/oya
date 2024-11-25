@@ -43,7 +43,7 @@ public:
 		shader = new Shader("shaders/vertex.glsl", "shaders/fragment.glsl");
 		viewLoc = glGetUniformLocation(shader->programID, "view_proj");
 
-		// set up the geometry for the scene
+		
 		glm::vec2 vertices[] = {
 			glm::vec2{-0.5f, -0.5f},
 			glm::vec2{0.5f, -0.5f},
@@ -51,16 +51,24 @@ public:
 			glm::vec2{-0.5f, 0.5f}
 		};
 		
-		scene.add_node(vertices, 4, 1.0f, 0.0f, 0.0f, 0.1f);
+		scene.add_node(vertices, 4, 0.02f, 1.0f, 0.0f, 0.0f, 0.9f, 0.9f, 0.9f);
 
 		vertices[0].x += 2.0f;
 		vertices[1].x += 2.0f;
 		vertices[2].x += 2.0f;
 		vertices[3].x += 2.0f;
 		
-		scene.add_node(vertices, 4, 0.0f, 0.0f, 1.0f, 0.1f);
+		scene.add_node(vertices, 4, 0.02f, 0.0f, 1.0f, 0.0f, 0.9f, 0.9f, 0.9f);
+		
+		glm::vec2 vertices2[] = {
+			glm::vec2{0.0f, 0.0f},
+			glm::vec2{-1.0f, 0.0f},
+			glm::vec2{-1.0f, 1.0f},
+		};
+
+		scene.add_node(vertices2, 3, 0.02f, 0.0f, 0.0f, 1.0f, 0.9f, 0.9f, 0.9f);
 		scene.setup();
-  
+
 		
 	}
 	virtual void update() override
