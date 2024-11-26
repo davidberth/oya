@@ -1,6 +1,8 @@
 module;
 
 #include <glm/glm.hpp>
+#include <string>
+#include <loguru.hpp>
 
 export module scene;
 
@@ -8,6 +10,7 @@ import node;
 import geometry_buffer;
 import polygon;
 import outline;
+import scene_loader;
 
 export class Scene
 {
@@ -63,5 +66,48 @@ public:
 	{
 		// eventually I will add recursive traversal and transformations
 		geom.render();
+	}
+
+	void load_from_file(const std::string& filename) {
+		SceneLoader loader;
+		try {
+			auto nodes = loader.loadFromFile(filename);
+
+			// recursive function to process nodes
+			std::function<void(const std::shared_ptr<SceneLoader::NodeData>&)> processNode =
+				[&](const std::shared_ptr<SceneLoader::NodeData>& node) {
+				// add current node to scene
+				if (node->type == "polygon" && !node->vertices.empty()) {
+					add_node(
+						node->vertices.data(),           // vertex array
+						node->vertices.size(),           // vertex count
+						node->outlineWidth,              // outline width
+						node->fillColor.r,               // fill color r
+						node->fillColor.g,               // fill color g
+						node->fillColor.b,               // fill color b
+						node->outlineColor.r,            // outline color r
+						node->outlineColor.g,            // outline color g
+						node->outlineColor.b             // outline color b
+					);
+				}
+
+				// process all children
+				for (const auto& child : node->children) {
+					processNode(child);
+				}
+				};
+
+			// process all root nodes
+			for (const auto& node : nodes) {
+				processNode(node);
+			}
+
+			setup();
+
+		}
+		catch (const std::exception& e) {
+			LOG_F(ERROR, "Failed to load scene from %s: %s", filename.c_str(), e.what());
+			throw;
+		}
 	}
 };

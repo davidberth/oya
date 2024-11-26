@@ -181,8 +181,7 @@ public:
 
 	void on_mouse_scroll()
 	{
-		LOG_F(INFO, "On Mouse Scroll Called in GUI layer now!");
-		if (keyboard_data.left_control_down && (mouse_scroll_data.yoffset < 0.5 || mouse_scroll_data.yoffset > 0.5))
+			if (keyboard_data.left_control_down && (mouse_scroll_data.yoffset < 0.5 || mouse_scroll_data.yoffset > 0.5))
 		{
 			if (mouse_scroll_data.yoffset > 0.5)
 			{
