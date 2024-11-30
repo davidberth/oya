@@ -3,6 +3,8 @@ find_package(OpenGL REQUIRED COMPONENTS OpenGL)
 add_executable (oya "main.cpp" "update.ixx")
 target_sources(oya PRIVATE FILE_SET CXX_MODULES FILES "window.ixx" "layer.ixx" "layer_stack.ixx" "world_layer.ixx" "gui_layer.ixx" "gui_data.ixx" "keyboard_data.ixx" "mouse_data.ixx" "data_trigger.ixx" "fbo.ixx" "viewport_data.ixx" "listener.ixx" "background_layer.ixx" "data_trigger_stack.ixx" "gui_theme.ixx" "window_data.ixx" "render.ixx" "shader.ixx" "camera.ixx" "persistent_data.ixx" "updatable.ixx" "update_manager.ixx" "update.ixx" "node.ixx" "geometry_buffer.ixx" "vertex.ixx" "scene.ixx" "polygon.ixx" "outline.ixx" "scene_loader.ixx")
 
+target_compile_options(oya PUBLIC /ifcSearchDir${CMAKE_SOURCE_DIR}/build/src/CMakeFiles/oya.dir)
+
 include_directories(${CMAKE_BINARY_DIR}/configure)
 include_directories(${CMAKE_SOURCE_DIR}/external/glfw/include)
 include_directories(${CMAKE_SOURCE_DIR}/external/glm)
@@ -14,10 +16,11 @@ include_directories(${CMAKE_SOURCE_DIR}/external/loguru)
 set(glfw_lib "${CMAKE_SOURCE_DIR}/external/build/glfw/src/${CMAKE_BUILD_TYPE}/glfw3.lib")
 set(imgui_lib "${CMAKE_SOURCE_DIR}/external/build/${CMAKE_BUILD_TYPE}/imgui.lib")
 set(glew_lib "${CMAKE_SOURCE_DIR}/external/build/${CMAKE_BUILD_TYPE}/glew.lib")
-if (${CMAKE_BUILD_TYPE} STREQUAL "Debug")
-	set(logoru_lib "${CMAKE_SOURCE_DIR}/external/build/loguru/Debug/logurud.lib")
+
+if (CMAKE_BUILD_TYPE STREQUAL "Debug")
+    set(logoru_lib "${CMAKE_SOURCE_DIR}/external/build/loguru/Debug/logurud.lib")
 else()
-	set(logoru_lib "${CMAKE_SOURCE_DIR}/external/build/loguru/Release/loguru.lib")
+    set(logoru_lib "${CMAKE_SOURCE_DIR}/external/build/loguru/Release/loguru.lib")
 endif()
 	
 target_compile_definitions(oya PUBLIC GLEW_STATIC)
@@ -44,4 +47,5 @@ add_custom_target(copy_shaders ALL DEPENDS ${CMAKE_BINARY_DIR}/shaders/vertex.gl
 
 # Make the main target depend on the custom target
 add_dependencies(oya copy_shaders)
+
 

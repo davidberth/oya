@@ -40,10 +40,10 @@ public:
 		add_listener(&mouse_button_data, &WorldLayer::on_mouse_button);
 		add_listener(&function_keyboard_data, &WorldLayer::on_function_keyboard);
 
-		shader = new Shader("shaders/vertex.glsl", "shaders/fragment.glsl");
+		shader = new Shader("../shaders/vertex.glsl", "../shaders/fragment.glsl");
 		viewLoc = glGetUniformLocation(shader->programID, "view_proj");
 
-		scene.load_from_file("../../../scenes/test.scn");
+		scene.load_from_file("../../scenes/test.scn");
 		
 		
 	}
