@@ -42,7 +42,7 @@ public:
 		add_listener(&mouse_button_data, &WorldLayer::on_mouse_button);
 		// add_listener(&function_keyboard_data, &WorldLayer::on_function_keyboard);
 
-		event_dispatcher.subscribe<KeyEvent>([this](const KeyEvent& event) { on_key_pressed(event); });
+		// event_dispatcher.subscribe<KeyEvent>([this](const KeyEvent& event) { on_key_pressed(event); });
 		
 		shader = new Shader("../shaders/vertex.glsl", "../shaders/fragment.glsl");
 		viewLoc = glGetUniformLocation(shader->programID, "view_proj");
@@ -93,6 +93,7 @@ public:
 		mouse_button_data.log();
 	}
 
+    /*
 	void on_key_pressed(const KeyEvent& event) {
 		LOG_F(INFO, "Key pressed: %d", event.key_code);
         if (event.key_code == keycodes::F10)
@@ -109,6 +110,7 @@ public:
 			persistent_data.gui_on = true;
         }
     }
+	*/
 
 	/*
     void on_function_keyboard()

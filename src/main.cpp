@@ -54,19 +54,22 @@ int main(int argc, char** argv)
     persistent_data.load();
     updatable_manager.add_updatable(&camera);
 
+    /*
     if (persistent_data.gui_on)
     {
        world_layer->add_fbo();
 	   viewport_data.active = true;
     }
+
     else
 	{
-        background_layer->disable();
-        gui_layer->disable();
-        viewport_data.active = false;
-        viewport_data.height = window_data.height;
-		viewport_data.width = window_data.width;
-	}
+    */
+    background_layer->disable();
+    //gui_layer->disable();
+    viewport_data.active = false;
+    viewport_data.height = window_data.height;
+    viewport_data.width = window_data.width;
+	//}
 
     while (!window_should_close())
     {

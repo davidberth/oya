@@ -7,7 +7,9 @@
 	"settings": {
 		"files.associations": {
 			"*.ixx": "cpp",
-			"functional": "cpp"
+			"functional": "cpp",
+			"typeindex": "cpp",
+			"xiosbase": "cpp"
 		}
 	}
 }

@@ -21,6 +21,8 @@ import gui_theme;
 import camera;
 import persistent_data;
 import window_data;
+import event;
+import key_event;
 
 export class GUILayer : public Layer
 {
@@ -51,9 +53,9 @@ public:
         io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;     
         // io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad; 
 
-        io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
-        io.ConfigFlags |= ImGuiDockNodeFlags_PassthruCentralNode;
-        io.ConfigFlags |= ImGuiWindowFlags_NoBackground;
+        // io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
+        // io.ConfigFlags |= ImGuiDockNodeFlags_PassthruCentralNode;
+        // io.ConfigFlags |= ImGuiWindowFlags_NoBackground;
         io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
 
        
@@ -72,7 +74,9 @@ public:
         LOG_F(INFO, "done");
         
 		add_listener(&mouse_scroll_data, &GUILayer::on_mouse_scroll);
-		add_listener(&function_keyboard_data, &GUILayer::on_function_keyboard, true);
+		// add_listener(&function_keyboard_data, &GUILayer::on_function_keyboard, true);
+
+		event_dispatcher.subscribe<KeyEvent>([this](const KeyEvent& event) { on_key_pressed(event); });
       
 	
 
@@ -96,22 +100,9 @@ public:
 	{
 
 
-        ImGui::Begin("Viewport");
-        // Get the available size within the viewport window
-		ImVec2 window_pos = ImGui::GetWindowPos();
-        ImVec2 viewport_pos = ImGui::GetWindowContentRegionMin();
-        ImVec2 viewport_size = ImGui::GetContentRegionAvail();
+        
 
-        ImVec2 mouse_pos_screen = ImGui::GetMousePos();
-        ImVec2 mouse_pos_viewport = ImVec2(mouse_pos_screen.x - (viewport_pos.x + window_pos.x),
-            mouse_pos_screen.y - (viewport_pos.y + window_pos.y));
-
-        // Display the texture in the ImGui window
-        ImGui::Image((void*)(intptr_t)viewport_data.texture_index, viewport_size, ImVec2(0, 1), ImVec2(1, 0));
-        ImGui::End();
-
-        viewport_data.set_size(int(viewport_size.x), int(viewport_size.y));
-        glm::vec2 ndc_coords = viewport_data.win_to_ndc(glm::vec2(mouse_pos_viewport.x, mouse_pos_viewport.y));
+        glm::vec2 ndc_coords = window_data.get_ndc_coords(mouse_pointer_data.xpos, mouse_pointer_data.ypos);
         glm::vec2 world_pos = camera.ndc_to_world_at_z(ndc_coords, 0.0f);
 
         ImGuiIO& io = ImGui::GetIO();
@@ -128,10 +119,6 @@ public:
 		ImGui::Text(" NDC pos: x: %.3f, y: %.3f", ndc_coords.x, ndc_coords.y);
         ImGui::Text(" World pos: x: %.3f, y: %.3f", world_pos.x, world_pos.y);
         ImGui::Separator();
-		ImGui::Text("Viewport properties");
-		ImGui::Text(" Viewport pos: x: %.3f, y: %.3f", viewport_pos.x, viewport_pos.y);
-		ImGui::Text(" Viewport size: x: %.3f, y: %.3f", viewport_size.x, viewport_size.y);
-		ImGui::Separator();
 		ImGui::Text("Camera properties");
 		ImGui::Text(" Camera pos: x: %.3f, y: %.3f", camera.position.x, camera.position.y);
 		ImGui::Text(" Camera height: %.3f", camera.height);
@@ -194,21 +181,9 @@ public:
 		}
 	}
 
-    // persistant
-	void on_function_keyboard()
-    {
-		if (function_keyboard_data.F10_down)
-		{
-            disable();
-			viewport_data.active = false;
-            viewport_data.height = window_data.height;
-			viewport_data.width = window_data.width;
-		}
-        else if (function_keyboard_data.F11_down)
-		{
-			enable();
-			viewport_data.active = true;
-		}
+void on_key_pressed(const KeyEvent& event) {
+		LOG_F(INFO, "Key GUI pressed: %d %d ", event.key_code, event.action);
+
 	}
 
 };

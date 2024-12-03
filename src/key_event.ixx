@@ -10,6 +10,7 @@ export namespace keycodes {
 export struct KeyEvent : public Event {
     int key_code;
     int action;
-    KeyEvent(int code, int action) : key_code(code), action(action) {}
+    int mods;
+    KeyEvent(int code, int action) : key_code(code), action(action), mods(mods) {}
 };
 
