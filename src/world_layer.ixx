@@ -11,6 +11,8 @@ module;
 
 export module world_layer;
 
+import event;
+import key_event;
 import layer;
 import gui_data;
 import keyboard_data;
@@ -38,8 +40,10 @@ public:
 	{
 		Layer::init(window);
 		add_listener(&mouse_button_data, &WorldLayer::on_mouse_button);
-		add_listener(&function_keyboard_data, &WorldLayer::on_function_keyboard);
+		// add_listener(&function_keyboard_data, &WorldLayer::on_function_keyboard);
 
+		event_dispatcher.subscribe<KeyEvent>([this](const KeyEvent& event) { on_key_pressed(event); });
+		
 		shader = new Shader("../shaders/vertex.glsl", "../shaders/fragment.glsl");
 		viewLoc = glGetUniformLocation(shader->programID, "view_proj");
 
@@ -89,6 +93,24 @@ public:
 		mouse_button_data.log();
 	}
 
+	void on_key_pressed(const KeyEvent& event) {
+		LOG_F(INFO, "Key pressed: %d", event.key_code);
+        if (event.key_code == keycodes::F10)
+        {
+            remove_fbo();
+			LOG_F(INFO, "window width %d, window height %d", window_data.width, window_data.height);
+            glViewport(0, 0, window_data.width, window_data.height);
+			persistent_data.gui_on = false;
+            
+        }
+        else if (event.key_code == keycodes::F11)
+        {
+            add_fbo();
+			persistent_data.gui_on = true;
+        }
+    }
+
+	/*
     void on_function_keyboard()
     {
         if (function_keyboard_data.F10_down)
@@ -105,5 +127,6 @@ public:
 			persistent_data.gui_on = true;
         }
     }
+	*/
 };
 

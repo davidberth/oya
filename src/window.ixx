@@ -15,6 +15,8 @@ import mouse_data;
 import render;
 import update;
 import persistent_data;
+import event;
+import key_event;
 
 
 GLFWwindow* window;
@@ -97,24 +99,15 @@ void glfw_key_callback(GLFWwindow* lwindow, int key, int scancode, int action, i
 	if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
 		glfwSetWindowShouldClose(lwindow, GLFW_TRUE);
 
+	
+
 	if (action == GLFW_PRESS)
 	{
-		if (key == GLFW_KEY_LEFT_CONTROL) { keyboard_data.left_control_down = true; keyboard_data.trigger(); }
-		
-		if (key == GLFW_KEY_F10) { function_keyboard_data.F10_down = true; function_keyboard_data.trigger(); }
-		if (key == GLFW_KEY_F11) { function_keyboard_data.F11_down = true; function_keyboard_data.trigger(); }
-
-		if (key == GLFW_KEY_A) { keyboard_data.left_down = true; keyboard_data.trigger(); }
-		if (key == GLFW_KEY_D) { keyboard_data.right_down = true; keyboard_data.trigger(); }
-		if (key == GLFW_KEY_W) { keyboard_data.up_down = true; keyboard_data.trigger(); }
-		if (key == GLFW_KEY_S) { keyboard_data.down_down = true; keyboard_data.trigger(); }
-		if (key == GLFW_KEY_Q) { keyboard_data.rotate_left_down = true; keyboard_data.trigger(); }
-		if (key == GLFW_KEY_E) { keyboard_data.rotate_right_down = true; keyboard_data.trigger(); }
-
-		if (key == GLFW_KEY_R) { keyboard_data.zoom_out_down = true; keyboard_data.trigger(); }
-		if (key == GLFW_KEY_F) { keyboard_data.zoom_in_down = true; keyboard_data.trigger(); }
+		KeyEvent event(key, GLFW_PRESS);
+		event_dispatcher.dispatch(event);
 
 	}
+	/*
 	if (action == GLFW_RELEASE)
 	{
 		if (key == GLFW_KEY_LEFT_CONTROL) keyboard_data.left_control_down = false;
@@ -133,7 +126,7 @@ void glfw_key_callback(GLFWwindow* lwindow, int key, int scancode, int action, i
 		if (key == GLFW_KEY_F) keyboard_data.zoom_in_down = false;
 
 	
-	}
+	}*/
 }
 
 void glfw_scroll_callback(GLFWwindow* lwindow, double xoffset, double yoffset)
