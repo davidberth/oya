@@ -6,7 +6,7 @@ export enum class InputAction {
     up,
     right,
     left,
-    right,
+    down,
     one,
     two,
     three,

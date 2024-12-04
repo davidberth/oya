@@ -9,7 +9,8 @@
 			"*.ixx": "cpp",
 			"functional": "cpp",
 			"typeindex": "cpp",
-			"xiosbase": "cpp"
+			"xiosbase": "cpp",
+			"xhash": "cpp"
 		}
 	}
 }

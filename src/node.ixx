@@ -16,7 +16,7 @@ public:
 	std::vector<unsigned int> indices;
 	
 	glm::vec3 color;
-	glm::vec3 outline_color = { 1.0f, 1.0f, 1.0f };
+	glm::vec3 outline_color = { 0.1f, 0.1f, 0.1f };
 	float outline_width;
 
 	Node* parent;

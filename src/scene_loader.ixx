@@ -16,7 +16,7 @@ public:
         std::string type;
         std::vector<glm::vec2> vertices;
         glm::vec3 fillColor{ 0.5f, 0.5f, 0.5f };    // default gray fill
-        glm::vec3 outlineColor{ 1.0f, 1.0f, 1.0f }; // default dark outline
+        glm::vec3 outlineColor{ 0.3f, 0.3f, 0.3f }; // default dark outline
         float outlineWidth{ 0.02f };                  // default width
         int depth{ 0 };                              // indentation level
         std::vector<std::shared_ptr<NodeData>> children;

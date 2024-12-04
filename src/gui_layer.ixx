@@ -22,7 +22,7 @@ import camera;
 import persistent_data;
 import window_data;
 import event;
-import key_event;
+import input_event;
 
 export class GUILayer : public Layer
 {
@@ -76,7 +76,7 @@ public:
 		add_listener(&mouse_scroll_data, &GUILayer::on_mouse_scroll);
 		// add_listener(&function_keyboard_data, &GUILayer::on_function_keyboard, true);
 
-		event_dispatcher.subscribe<KeyEvent>([this](const KeyEvent& event) { on_key_pressed(event); });
+		event_dispatcher.subscribe<InputEvent>([this](const InputEvent& event) { on_input(event); });
       
 	
 
@@ -181,9 +181,24 @@ public:
 		}
 	}
 
-void on_key_pressed(const KeyEvent& event) {
-		LOG_F(INFO, "Key GUI pressed: %d %d ", event.key_code, event.action);
+    void on_input(const InputEvent& event) {
+		LOG_F(INFO, "Key Input: %d %d ", event.action);
 
+        if (event.action == InputAction::one)
+        {
+           persistent_data.font_size = 0;
+           set_font_size(0);
+        }
+        else if (event.action == InputAction::two)
+        {
+            persistent_data.font_size = 1;
+            set_font_size(1);
+        }
+        else if (event.action == InputAction::three)
+        {
+            persistent_data.font_size = 2;
+            set_font_size(2);
+        }
 	}
 
 };
