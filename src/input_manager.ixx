@@ -68,6 +68,7 @@ private:
         key_bindings[GLFW_KEY_F3] = InputAction::function_3;
         key_bindings[GLFW_KEY_F4] = InputAction::function_4;
         key_bindings[GLFW_KEY_F5] = InputAction::function_5;
+        key_bindings[GLFW_KEY_F6] = InputAction::function_6;
     }
 };
 

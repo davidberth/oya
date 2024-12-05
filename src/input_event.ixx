@@ -20,6 +20,7 @@ export enum class InputAction {
     function_3,
     function_4,
     function_5,
+    function_6,
     last
 };
 

@@ -99,9 +99,6 @@ public:
 	virtual void render() override
 	{
 
-
-        
-
         glm::vec2 ndc_coords = window_data.get_ndc_coords(mouse_pointer_data.xpos, mouse_pointer_data.ypos);
         glm::vec2 world_pos = camera.ndc_to_world_at_z(ndc_coords, 0.0f);
 
