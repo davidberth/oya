@@ -10,7 +10,11 @@
 			"functional": "cpp",
 			"typeindex": "cpp",
 			"xiosbase": "cpp",
-			"xhash": "cpp"
+			"xhash": "cpp",
+			"stdexcept": "cpp",
+			"vector": "cpp",
+			"utility": "cpp",
+			"unordered_map": "cpp"
 		}
 	}
 }

@@ -17,6 +17,7 @@ import keyboard_data;
 import updatable;
 import viewport_data;
 import mouse_data;
+import input_manager;
 
 export class Camera  : public Updatable {
 public:
@@ -46,21 +47,12 @@ public:
 
 	glm::vec2 ndc_to_world_at_z(glm::vec2 ndc_pos, float target_z)
 	{
-		// Get camera position in world space
-		// The camera position is the negative of the translation part of the view matrix
+
 		glm::vec3 camera_pos = -glm::vec3(position.x, position.y, -height);
-			
-
-		// distance from camera to target z-plane
 		float z_eye = camera_pos.z - target_z;  
-
-		// compute the NDC z for the target z-plane
 		float z_ndc = ((1.0f / z_eye) - (1.0f / near_clip)) / ((1.0f / far_clip) - (1.0f / near_clip)) * 2.0f - 1.0f;
 
-		// create clip space point
 		glm::vec4 clip_pos(ndc_pos.x, ndc_pos.y, z_ndc, 1.0f);
-
-		// transform to world space
 		glm::vec4 world_pos = view_proj_inv * clip_pos;
 		world_pos /= world_pos.w;
 
@@ -78,20 +70,27 @@ public:
 		view_proj = projection * view;
 		view_proj_inv = glm::inverse(view_proj);
 
-
 		// rotate the camera
 		rotation += rot_speed;
         if (rotation > 6.283f) rotation -= 2 * 6.283f;
-		if (keyboard_data.zoom_in_down)
+
+		// process inputs
+		if (input_manager.get_input_state(InputAction::zoom_in))
 		{
 			height -= zoom_speed;
 			if (height < 1.0f) height = 1.0f;
 		}
-		if (keyboard_data.zoom_out_down)
+		if (input_manager.get_input_state(InputAction::zoom_out))
 		{
 			
 			height += zoom_speed;
 			if (height > 50.f) height = 50.0f;
+		}
+
+		if (input_manager.get_input_state(InputAction::up))
+		{
+			position.x += speed * cos(rotation);
+			position.y += speed * sin(rotation);
 		}
 
 		if (mouse_scroll_data.yoffset > 0.0f)

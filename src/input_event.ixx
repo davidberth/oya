@@ -1,17 +1,26 @@
+
 export module input_event;
 
 import event;
 
 export enum class InputAction {
-    up,
+    up = 0,
     right,
     left,
     down,
+    rotate_left,
+    rotate_right,
+    zoom_in,
+    zoom_out,
     one,
     two,
     three,
-    mod1,
-    mod2,
+    function_1,
+    function_2,
+    function_3,
+    function_4,
+    function_5,
+    last
 };
 
 export struct InputEvent : public Event {

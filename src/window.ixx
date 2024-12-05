@@ -99,13 +99,16 @@ void glfw_key_callback(GLFWwindow* lwindow, int key, int scancode, int action, i
 	if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
 		glfwSetWindowShouldClose(lwindow, GLFW_TRUE);
 
-	
 
 	if (action == GLFW_PRESS)
 	{
 		KeyEvent event(key, GLFW_PRESS);
 		event_dispatcher.dispatch(event);
-
+	}
+	else if (action == GLFW_RELEASE)
+	{
+		KeyEvent event(key, GLFW_RELEASE);
+		event_dispatcher.dispatch(event);
 	}
 
 }
@@ -205,10 +208,6 @@ export bool init_window()
 	glfwSetWindowSizeCallback(window, glfw_window_size_callback);
 	glfwSetWindowRefreshCallback(window, glfw_refresh_callback);
 	glfwSetCursorPosCallback(window, glfw_cursor_position_callback);
-	
-
-	cursor = glfwCreateStandardCursor(GLFW_CROSSHAIR_CURSOR);
-	glfwSetCursor(window, cursor);
 
 	glfwSwapInterval(1);
 
