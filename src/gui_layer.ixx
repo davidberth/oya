@@ -73,9 +73,8 @@ public:
 		}
         LOG_F(INFO, "done");
         
-		add_listener(&mouse_scroll_data, &GUILayer::on_mouse_scroll);
-		// add_listener(&function_keyboard_data, &GUILayer::on_function_keyboard, true);
-
+		
+		
 		event_dispatcher.subscribe<InputEvent>([this](const InputEvent& event) { on_input(event); });
       
 	
@@ -161,22 +160,7 @@ public:
 		persistent_data.font_size = font_index; 
 	}
 
-    // listeners
 
-	void on_mouse_scroll()
-	{
-			if (keyboard_data.left_control_down && (mouse_scroll_data.yoffset < 0.5 || mouse_scroll_data.yoffset > 0.5))
-		{
-			if (mouse_scroll_data.yoffset > 0.5)
-			{
-				set_font_size(persistent_data.font_size + 1);
-			}
-			else
-			{
-				set_font_size(persistent_data.font_size - 1);
-			}
-		}
-	}
 
     void on_input(const InputEvent& event) {
 		LOG_F(INFO, "Key Input: %d %d ", event.action);

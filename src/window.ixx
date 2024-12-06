@@ -24,25 +24,8 @@ int resolution_width;
 int resolution_height;
 GLFWcursor* cursor;
 
-struct size_option
-{
-	int index;
-	int key;
-	float size_ratio_x;
-	float size_ratio_y;
-	int monitor;
-};
 
-size_option size_options[] =
-{ {0, GLFW_KEY_F1, 0.2f, 0.3f, 0},
-  {1, GLFW_KEY_F2, 0.4f, 0.5f, 0},
-  {2, GLFW_KEY_F3, 0.6f, 0.7f, 0},
-  {3, GLFW_KEY_F4, 0.8f, 0.85f, 0},
-  {4, GLFW_KEY_F5, 1.0f, 1.0f, 0},
-  {5, GLFW_KEY_F6, 1.0f, 1.0f, 1},
-};
 
-int current_size = 2;
 
 
 
@@ -51,16 +34,15 @@ void glfw_errorCallback(int error, const char* description)
 	LOG_F(INFO, "GLFW error: %d description: %s", error, description);
 }
 
-void resize_window()
+export void set_window_size(float size_ratio_x, float size_ratio_y, int monitor)
 {
-	persistent_data.window_size = current_size;
-	float size_rat = size_options[current_size].size_ratio_x;
 
-	if (size_rat > 0.9f)
+	if (size_ratio_x > 0.99f)
 	{
+		// full screen
 		int monitor_count;
 		GLFWmonitor** monitors = glfwGetMonitors(&monitor_count);
-		int index = size_options[current_size].monitor;
+		int index = monitor;
 		if (index > monitor_count - 1) index = 0;
 
 		const GLFWvidmode* mode = glfwGetVideoMode(monitors[index]);
@@ -76,26 +58,18 @@ void resize_window()
 	}
 	else
 	{
-		int sizex = int(float(resolution_width) * size_options[current_size].size_ratio_x);
-		int sizey = int(float(resolution_height) * size_options[current_size].size_ratio_y);
+		int sizex = int(float(resolution_width) * size_ratio_x);
+		int sizey = int(float(resolution_height) * size_ratio_y);
 		glfwSetWindowMonitor(window, NULL, resolution_width / 2 - sizex / 2, resolution_height / 2 - sizey / 2, sizex, sizey, 0);
 		glViewport(0, 0, sizex, sizey);
 		window_data.width = sizex;
 		window_data.height = sizey;
 	}
-
 }
 
 void glfw_key_callback(GLFWwindow* lwindow, int key, int scancode, int action, int mods)
 {
-	for (auto& option : size_options)
-	{
-		if (key == option.key && action == GLFW_PRESS)
-		{
-			current_size = option.index;
-			resize_window();
-		}
-	}
+
 	if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
 		glfwSetWindowShouldClose(lwindow, GLFW_TRUE);
 
@@ -199,9 +173,8 @@ export bool init_window()
 		LOG_F(ERROR, "Failed to initialize GLEW\n");
 		return 1;
 	}
-
-	current_size = persistent_data.window_size;
-	resize_window();
+	
+	set_window_size(0.5f, 0.5f, 0);
 	glfwSetKeyCallback(window, glfw_key_callback);
 	glfwSetScrollCallback(window, glfw_scroll_callback);
 	glfwSetMouseButtonCallback(window, glfw_mouse_button_callback);
