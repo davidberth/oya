@@ -10,7 +10,7 @@
             "intelliSenseMode": "windows-msvc-x64",
             "compilerPath": "cl.exe",
             "compilerArgs": [
-                "/ifcSearchDir", "C:/db/oya/build/src/CMakeFiles/oya.dir"
+                "/ifcSearchDir", "C:/db/oya/build/src/ifc"
             ]
         }
     ],

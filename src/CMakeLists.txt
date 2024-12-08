@@ -48,4 +48,13 @@ add_custom_target(copy_shaders ALL DEPENDS ${CMAKE_BINARY_DIR}/shaders/vertex.gl
 # Make the main target depend on the custom target
 add_dependencies(oya copy_shaders)
 
-
+add_custom_command(
+    TARGET oya
+    POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E make_directory "${CMAKE_BINARY_DIR}/src/ifc"
+    COMMAND ${CMAKE_COMMAND}
+        -DSOURCE_DIR="${CMAKE_BINARY_DIR}/src/CMakeFiles/oya.dir"
+        -DDEST_DIR="${CMAKE_BINARY_DIR}/src/ifc"
+        -P "${CMAKE_CURRENT_LIST_DIR}/copy_ifc.cmake"
+    COMMENT "Copying IFC files..."
+)

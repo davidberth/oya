@@ -10,3 +10,5 @@ set(APPVERSION ${CMAKE_PROJECT_VERSION})
 
 add_subdirectory(configure)
 add_subdirectory(src)
+
+
