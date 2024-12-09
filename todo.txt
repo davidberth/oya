@@ -1,0 +1,7 @@
+ToDo
+
+- Remove all previous data triggers and listeners
+- Remove listeners from the Layer classes
+- Implement event system across all of Oya
+
+Done

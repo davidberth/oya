@@ -55,6 +55,6 @@ add_custom_command(
     COMMAND ${CMAKE_COMMAND}
         -DSOURCE_DIR="${CMAKE_BINARY_DIR}/src/CMakeFiles/oya.dir"
         -DDEST_DIR="${CMAKE_BINARY_DIR}/src/ifc"
-        -P "${CMAKE_CURRENT_LIST_DIR}/copy_ifc.cmake"
+        -P "${CMAKE_SOURCE_DIR}/src/copy_ifc.cmake"
     COMMENT "Copying IFC files..."
 )
