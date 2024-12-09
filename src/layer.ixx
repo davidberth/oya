@@ -7,19 +7,15 @@ module;
 
 export module layer;
 
-import listener;
-import fbo;
-import gui_data;
 
-export class Layer : public Listener
+export class Layer
 {
 private:
 	std::string name;
 	bool enabled = true;
-protected:
-	FBO* fbo = nullptr;
+
 public:
-	Layer(std::string pname) : Listener(), name(pname) {}
+	Layer(std::string pname) : name(pname) {}
 	~Layer() {};
 	virtual void init(GLFWwindow *) {
 		LOG_F(INFO, "Layer %s initialized", name.c_str());
@@ -36,12 +32,7 @@ public:
 	virtual void cleanup() {
 		LOG_F(INFO, "Layer %s cleaned up", name.c_str());
 		
-	};
-	
-	bool is_enabled() const { return enabled; };
-	void enable() { enabled = true; Listener::listen(); };
-	void disable() { enabled = false; Listener::unlisten(); };
-	
+	};	
 
 	std::string get_name() { return name; };
 };

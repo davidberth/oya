@@ -14,11 +14,7 @@ export module world_layer;
 import event;
 import key_event;
 import layer;
-import gui_data;
-import keyboard_data;
-import window_data;
-import data_trigger;
-import mouse_data;
+
 import shader;
 import camera;
 import persistent_data;
@@ -39,10 +35,7 @@ public:
 	virtual void init(GLFWwindow* window) override
 	{
 		Layer::init(window);
-		add_listener(&mouse_button_data, &WorldLayer::on_mouse_button);
-		// add_listener(&function_keyboard_data, &WorldLayer::on_function_keyboard);
 
-		// event_dispatcher.subscribe<KeyEvent>([this](const KeyEvent& event) { on_key_pressed(event); });
 		
 		shader = new Shader("../shaders/vertex.glsl", "../shaders/fragment.glsl");
 		viewLoc = glGetUniformLocation(shader->programID, "view_proj");
@@ -62,10 +55,7 @@ public:
 	virtual void render() override
 	{
 
-		glClearColor(gui_data.clear_color[0], 
-					 gui_data.clear_color[1],
-					 gui_data.clear_color[2],
-					 gui_data.clear_color[3]);
+		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
 
 		shader->use();
@@ -85,50 +75,5 @@ public:
 		delete shader;
 	}
 
-	// listeners
-	void on_mouse_button()
-	{
-		
-		LOG_F(INFO, "On Mouse Called!");
-		mouse_button_data.log();
-	}
-
-    /*
-	void on_key_pressed(const KeyEvent& event) {
-		LOG_F(INFO, "Key pressed: %d", event.key_code);
-        if (event.key_code == keycodes::F10)
-        {
-            remove_fbo();
-			LOG_F(INFO, "window width %d, window height %d", window_data.width, window_data.height);
-            glViewport(0, 0, window_data.width, window_data.height);
-			persistent_data.gui_on = false;
-            
-        }
-        else if (event.key_code == keycodes::F11)
-        {
-            add_fbo();
-			persistent_data.gui_on = true;
-        }
-    }
-	*/
-
-	/*
-    void on_function_keyboard()
-    {
-        if (function_keyboard_data.F10_down)
-        {
-            remove_fbo();
-			LOG_F(INFO, "window width %d, window height %d", window_data.width, window_data.height);
-            glViewport(0, 0, window_data.width, window_data.height);
-			persistent_data.gui_on = false;
-            
-        }
-        else if (function_keyboard_data.F11_down)
-        {
-            add_fbo();
-			persistent_data.gui_on = true;
-        }
-    }
-	*/
 };
 

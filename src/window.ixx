@@ -8,25 +8,19 @@ module;
 
 export module window;
 
-import keyboard_data;
-import viewport_data;
-import window_data;
-import mouse_data;
+
 import render;
 import update;
 import persistent_data;
 import event;
 import key_event;
+import window_event;
 
 
 GLFWwindow* window;
 int resolution_width;
 int resolution_height;
 GLFWcursor* cursor;
-
-
-
-
 
 
 void glfw_errorCallback(int error, const char* description)
@@ -52,8 +46,8 @@ export void set_window_size(float size_ratio_x, float size_ratio_y, int monitor)
 
 		glfwSetWindowMonitor(window, monitors[index], 0, 0, mwidth, mheight, GLFW_DONT_CARE);
 		glViewport(0, 0, mwidth, mheight);
-		window_data.width = mwidth;
-		window_data.height = mheight;
+
+		event_dispatcher.dispatch(WindowEvent(mwidth, mheight));
 
 	}
 	else
@@ -62,8 +56,9 @@ export void set_window_size(float size_ratio_x, float size_ratio_y, int monitor)
 		int sizey = int(float(resolution_height) * size_ratio_y);
 		glfwSetWindowMonitor(window, NULL, resolution_width / 2 - sizex / 2, resolution_height / 2 - sizey / 2, sizex, sizey, 0);
 		glViewport(0, 0, sizex, sizey);
-		window_data.width = sizex;
-		window_data.height = sizey;
+		
+		event_dispatcher.dispatch(WindowEvent(sizex, sizey));
+
 	}
 }
 
@@ -89,25 +84,18 @@ void glfw_key_callback(GLFWwindow* lwindow, int key, int scancode, int action, i
 
 void glfw_scroll_callback(GLFWwindow* lwindow, double xoffset, double yoffset)
 {
-	mouse_scroll_data.yoffset = yoffset;
-	mouse_scroll_data.trigger();
+
 }
 
 void glfw_mouse_button_callback(GLFWwindow* lwindow, int button, int action, int mods)
 {
-	mouse_button_data.button = button;
-	mouse_button_data.trigger();
+
 }
 
 void glfw_window_size_callback(GLFWwindow* lwindow, int width, int height)
 {
 	glViewport(0, 0, width, height);
-	window_data.width = width;
-	window_data.height = height;
-	if (!viewport_data.active)
-	{
-		viewport_data.set_size(window_data.width, window_data.height);
-	}
+	event_dispatcher.dispatch(WindowEvent(width, height));
 
 }
 
@@ -125,8 +113,7 @@ void glfw_refresh_callback(GLFWwindow* lwindow)
 
 void glfw_cursor_position_callback(GLFWwindow* lwindow, double xpos, double ypos)
 {
-	mouse_pointer_data.xpos = xpos;
-	mouse_pointer_data.ypos = ypos;
+
 }
 
 export void get_mouse_pos(double& xpos, double& ypos)

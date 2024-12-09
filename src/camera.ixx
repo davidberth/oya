@@ -12,12 +12,9 @@ module;
 
 export module camera;
 
-import window_data;
-import keyboard_data;
 import updatable;
-import viewport_data;
-import mouse_data;
 import input_manager;
+import viewport;
 
 export class Camera  : public Updatable {
 public:
@@ -62,7 +59,7 @@ public:
 	void update() override {
 
 		// update the matrices
-		float asp_ratio = float(viewport_data.width) / float(viewport_data.height);
+		float asp_ratio = float(viewport.width) / float(viewport.height);
 		projection = glm::perspective(glm::radians(45.0f), asp_ratio, near_clip, far_clip);
 		view = glm::mat4(1.0f);
 		view = glm::translate(view, glm::vec3(-position.x, -position.y, -height));
@@ -93,18 +90,7 @@ public:
 			position.y += speed * sin(rotation);
 		}
 
-		if (mouse_scroll_data.yoffset > 0.0f)
-		{
-			height -= zoom_speed * 5.0;
-			mouse_scroll_data.yoffset = 0.0f;
-			if (height < 1.0f) height = 1.0f;
-		}
-		if (mouse_scroll_data.yoffset < 0.0f)
-		{
-			height += zoom_speed * 5.0;
-			mouse_scroll_data.yoffset = 0.0f;
-			if (height > 50.f) height = 50.0f;
-		}
+
 	}
 };
 

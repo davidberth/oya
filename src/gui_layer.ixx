@@ -13,14 +13,9 @@ module;
 export module gui_layer;
 
 import layer;
-import gui_data;
-import keyboard_data;
-import mouse_data;
-import viewport_data;
 import gui_theme;
 import camera;
 import persistent_data;
-import window_data;
 import event;
 import input_event;
 
@@ -98,7 +93,8 @@ public:
 	virtual void render() override
 	{
 
-        glm::vec2 ndc_coords = window_data.get_ndc_coords(mouse_pointer_data.xpos, mouse_pointer_data.ypos);
+        // TODO: implement a pixel position to ndc function
+        glm::vec2 ndc_coords = glm::vec2(0.5f, 0.5f);
         glm::vec2 world_pos = camera.ndc_to_world_at_z(ndc_coords, 0.0f);
 
         ImGuiIO& io = ImGui::GetIO();
@@ -108,10 +104,10 @@ public:
         ImGui::Text("Performance");
         ImGui::Text(" Framerate: %.1f FPS", framerate);
         ImGui::Text("Background properties");              
-        ImGui::ColorEdit3(" clear color", (float*)&gui_data.clear_color); 
+        //ImGui::ColorEdit3(" clear color", (float*)&gui_data.clear_color); 
         ImGui::Separator();
 		ImGui::Text("Mouse properties");
-        ImGui::Text(" Window pos: x: %.3f, y: %.3f", mouse_pointer_data.xpos, mouse_pointer_data.ypos);
+        ImGui::Text(" Window pos: x: %.3f, y: %.3f", 100, 100);
 		ImGui::Text(" NDC pos: x: %.3f, y: %.3f", ndc_coords.x, ndc_coords.y);
         ImGui::Text(" World pos: x: %.3f, y: %.3f", world_pos.x, world_pos.y);
         ImGui::Separator();

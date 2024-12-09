@@ -5,10 +5,8 @@ module;
 
 export module fbo;
 
-import listener;
-import viewport_data;
 
-export class FBO : public Listener
+export class FBO 
 {
 private:
 	unsigned int fbo;
@@ -16,7 +14,7 @@ private:
 	unsigned int rbo;
 
 public:
-	FBO() : Listener() {
+	FBO(){
 
 		create_frame_buffer();
 		attach_to_viewport();
@@ -77,14 +75,17 @@ public:
 	}
 
 	void attach_to_viewport() {
-		add_listener(&viewport_data, &FBO::resize);
+		//add_listener(&viewport_data, &FBO::resize);
 	}
 
 	void set_texture_index(int id) { 
-		viewport_data.texture_index = id; 
+		//viewport_data.texture_index = id; 
 	}
 
-	int get_width() { return viewport_data.width; }
-	int get_height() { return viewport_data.height; }
+	
+	int get_width() { return 1280; }
+	int get_height() { return 720; }
+	//int get_width() { return viewport_data.width; }
+	//int get_height() { return viewport_data.height; }
 
 };
