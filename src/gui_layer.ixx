@@ -48,15 +48,11 @@ public:
         io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;     
         // io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad; 
 
-        // io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
-        // io.ConfigFlags |= ImGuiDockNodeFlags_PassthruCentralNode;
-        // io.ConfigFlags |= ImGuiWindowFlags_NoBackground;
         io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
-
+        io.ConfigFlags |= ImGuiConfigFlags_NoMouseCursorChange;
        
-        setup_gui_theme();
+        get_imgui_style();
 
-       
         ImGui_ImplGlfw_InitForOpenGL(window, true);
         ImGui_ImplOpenGL3_Init("#version 460");
 
@@ -67,13 +63,9 @@ public:
 			IM_ASSERT(font[i] != nullptr);
 		}
         LOG_F(INFO, "done");
-        
-		
-		
-		event_dispatcher.subscribe<InputEvent>([this](const InputEvent& event) { on_input(event); });
-      
-	
 
+		event_dispatcher.subscribe<InputEvent>([this](const InputEvent& event) { on_input(event); });
+   
 	}
 	virtual void update() override
 	{

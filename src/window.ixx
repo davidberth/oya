@@ -14,7 +14,9 @@ import update;
 import persistent_data;
 import event;
 import key_event;
+import mouse_event;
 import window_event;
+
 
 
 GLFWwindow* window;
@@ -69,27 +71,26 @@ void glfw_key_callback(GLFWwindow* lwindow, int key, int scancode, int action, i
 		glfwSetWindowShouldClose(lwindow, GLFW_TRUE);
 
 
-	if (action == GLFW_PRESS)
-	{
-		KeyEvent event(key, GLFW_PRESS);
-		event_dispatcher.dispatch(event);
-	}
-	else if (action == GLFW_RELEASE)
-	{
-		KeyEvent event(key, GLFW_RELEASE);
-		event_dispatcher.dispatch(event);
-	}
+
+	KeyEvent event(key, action);
+	event_dispatcher.dispatch(event);
+	
 
 }
 
 void glfw_scroll_callback(GLFWwindow* lwindow, double xoffset, double yoffset)
 {
-
+	event_dispatcher.dispatch(MouseScrollEvent(xoffset, yoffset));
 }
 
 void glfw_mouse_button_callback(GLFWwindow* lwindow, int button, int action, int mods)
 {
+	event_dispatcher.dispatch(MouseButtonEvent(button, action, mods));
+}
 
+void glfw_cursor_position_callback(GLFWwindow* lwindow, double xpos, double ypos)
+{
+	event_dispatcher.dispatch(MouseMoveEvent(xpos, ypos));
 }
 
 void glfw_window_size_callback(GLFWwindow* lwindow, int width, int height)
@@ -111,10 +112,6 @@ void glfw_refresh_callback(GLFWwindow* lwindow)
 	present();
 }
 
-void glfw_cursor_position_callback(GLFWwindow* lwindow, double xpos, double ypos)
-{
-
-}
 
 export void get_mouse_pos(double& xpos, double& ypos)
 {
@@ -169,6 +166,9 @@ export bool init_window()
 	glfwSetWindowRefreshCallback(window, glfw_refresh_callback);
 	glfwSetCursorPosCallback(window, glfw_cursor_position_callback);
 
+	cursor = glfwCreateStandardCursor(GLFW_CROSSHAIR_CURSOR);
+	glfwSetCursor(window, cursor);
+
 	glfwSwapInterval(1);
 
 	return true;
@@ -196,7 +196,7 @@ export void poll_events()
 
 export void cleanup_window()
 {
-
+	glfwDestroyCursor(cursor);
 	glfwDestroyWindow(window);
 	glfwTerminate();
 }
