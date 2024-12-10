@@ -14,7 +14,9 @@ export module camera;
 
 import updatable;
 import input_manager;
+import input_event;
 import viewport;
+import mouse_event;
 
 export class Camera  : public Updatable {
 public:
@@ -40,6 +42,9 @@ public:
     Camera(glm::vec2 start_pos, float start_height, float start_rotation)
         : position(start_pos), height(start_height), rotation(start_rotation) 
 	{
+		event_dispatcher.subscribe<InputEvent>([this](const InputEvent& input_event) {
+			on_input(input_event);
+		});
 	}
 
 	glm::vec2 ndc_to_world_at_z(glm::vec2 ndc_pos, float target_z)
@@ -90,6 +95,20 @@ public:
 			position.y += speed * sin(rotation);
 		}
 
+	}
+
+	void on_input(const InputEvent& input_event)
+	{
+		if (input_event.action == InputAction::scroll_in)
+		{
+			height -= zoom_speed * 5.0f;
+			if (height < 1.0f) height = 1.0f;
+		}
+		if (input_event.action == InputAction::scroll_out)
+		{
+			height += zoom_speed * 5.0f;
+			if (height > 50.f) height = 50.0f;
+		}
 
 	}
 };

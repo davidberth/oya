@@ -32,6 +32,13 @@ public:
             target_x = mouse_event.xpos;
             target_y = mouse_event.ypos;
         });
+        event_dispatcher.subscribe<MouseScrollEvent>([this](const MouseScrollEvent& scroll_event) {
+            if (scroll_event.yoffset > 0) {
+                event_dispatcher.dispatch(InputEvent(InputAction::scroll_in, true));
+            } else {
+                event_dispatcher.dispatch(InputEvent(InputAction::scroll_out, true));
+            }
+        });
     }
 
     void on_key_event(const KeyEvent& key_event) {
@@ -76,6 +83,7 @@ private:
         key_bindings[GLFW_KEY_F4] = InputAction::function_4;
         key_bindings[GLFW_KEY_F5] = InputAction::function_5;
         key_bindings[GLFW_KEY_F6] = InputAction::function_6;
+        key_bindings[GLFW_KEY_F7] = InputAction::function_7;
     }
 };
 

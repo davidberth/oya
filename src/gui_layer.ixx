@@ -155,21 +155,28 @@ public:
 
     void on_input(const InputEvent& event) {
 		LOG_F(INFO, "Key Input: %d %d ", event.action);
+        if (event.is_pressed)
+        {
 
-        if (event.action == InputAction::one)
-        {
-           persistent_data.font_size = 0;
-           set_font_size(0);
-        }
-        else if (event.action == InputAction::two)
-        {
-            persistent_data.font_size = 1;
-            set_font_size(1);
-        }
-        else if (event.action == InputAction::three)
-        {
-            persistent_data.font_size = 2;
-            set_font_size(2);
+            if (event.action == InputAction::one)
+            {
+            persistent_data.font_size = 0;
+            set_font_size(0);
+            }
+            else if (event.action == InputAction::two)
+            {
+                persistent_data.font_size = 1;
+                set_font_size(1);
+            }
+            else if (event.action == InputAction::three)
+            {
+                persistent_data.font_size = 2;
+                set_font_size(2);
+            }
+            if (event.action == InputAction::function_7)
+            {
+                this->do_render = !this->do_render;
+            }
         }
 	}
 

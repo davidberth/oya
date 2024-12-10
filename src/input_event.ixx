@@ -21,6 +21,9 @@ export enum class InputAction {
     function_4,
     function_5,
     function_6,
+    function_7,
+    scroll_in,
+    scroll_out,
     last
 };
 

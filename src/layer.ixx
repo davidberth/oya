@@ -12,9 +12,9 @@ export class Layer
 {
 private:
 	std::string name;
-	bool enabled = true;
 
 public:
+	bool do_render = true;
 	Layer(std::string pname) : name(pname) {}
 	~Layer() {};
 	virtual void init(GLFWwindow *) {

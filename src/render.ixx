@@ -8,10 +8,12 @@ export void render()
     // render
     for (auto layer : layer_stack)
     {
-        
-        layer->begin();
-        layer->render();
-        layer->end();
+        if (layer->do_render)
+        {
+            layer->begin();
+            layer->render();
+            layer->end();
+        }
     
     }
 

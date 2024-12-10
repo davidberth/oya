@@ -70,12 +70,9 @@ void glfw_key_callback(GLFWwindow* lwindow, int key, int scancode, int action, i
 	if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
 		glfwSetWindowShouldClose(lwindow, GLFW_TRUE);
 
-
-
 	KeyEvent event(key, action);
 	event_dispatcher.dispatch(event);
 	
-
 }
 
 void glfw_scroll_callback(GLFWwindow* lwindow, double xoffset, double yoffset)
