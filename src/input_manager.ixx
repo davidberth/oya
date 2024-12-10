@@ -8,9 +8,9 @@ module;
 export module input_manager;
 
 import event;
-import key_event;
 import input_event;
-import event;
+import mouse_event;
+import key_event;
 
 
 export class InputManager {
@@ -20,11 +20,18 @@ private:
     std::array<bool, static_cast<size_t>(InputAction::last)> input_states;
 
 public:
+    float target_x;
+    float target_y;
+
     InputManager() {
         setup_default_bindings();
         event_dispatcher.subscribe<KeyEvent>([this](const KeyEvent& key_event) {
             on_key_event(key_event);
-        });     
+        });    
+        event_dispatcher.subscribe<MouseMoveEvent>([this](const MouseMoveEvent& mouse_event) {
+            target_x = mouse_event.xpos;
+            target_y = mouse_event.ypos;
+        });
     }
 
     void on_key_event(const KeyEvent& key_event) {

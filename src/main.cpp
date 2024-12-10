@@ -7,7 +7,6 @@ import window;
 import layer;
 import world_layer;
 import gui_layer;
-import background_layer;
 import layer_stack;
 import render;
 import update;

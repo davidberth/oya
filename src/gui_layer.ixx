@@ -18,6 +18,8 @@ import camera;
 import persistent_data;
 import event;
 import input_event;
+import viewport;
+import input_manager;
 
 export class GUILayer : public Layer
 {
@@ -85,8 +87,9 @@ public:
 	virtual void render() override
 	{
 
-        // TODO: implement a pixel position to ndc function
-        glm::vec2 ndc_coords = glm::vec2(0.5f, 0.5f);
+        float window_x = input_manager.target_x;
+        float window_y = input_manager.target_y;
+        glm::vec2 ndc_coords = viewport.get_ndc_coords(window_x, window_y);
         glm::vec2 world_pos = camera.ndc_to_world_at_z(ndc_coords, 0.0f);
 
         ImGuiIO& io = ImGui::GetIO();
@@ -99,7 +102,7 @@ public:
         //ImGui::ColorEdit3(" clear color", (float*)&gui_data.clear_color); 
         ImGui::Separator();
 		ImGui::Text("Mouse properties");
-        ImGui::Text(" Window pos: x: %.3f, y: %.3f", 100, 100);
+        ImGui::Text(" Window pos: x: %.0f, y: %.0f", window_x, window_y);
 		ImGui::Text(" NDC pos: x: %.3f, y: %.3f", ndc_coords.x, ndc_coords.y);
         ImGui::Text(" World pos: x: %.3f, y: %.3f", world_pos.x, world_pos.y);
         ImGui::Separator();
