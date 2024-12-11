@@ -16,7 +16,7 @@ import event;
 import key_event;
 import mouse_event;
 import window_event;
-
+import viewport;
 
 
 GLFWwindow* window;
@@ -123,6 +123,11 @@ export int get_mouse_button_state()
 	return state;
 }
 
+export inline void get_window_size(int& width, int& height)
+{
+	glfwGetWindowSize(window, &width, &height);
+}
+
 export bool init_window()
 {
 	glfwSetErrorCallback(glfw_errorCallback);
@@ -168,6 +173,11 @@ export bool init_window()
 
 	glfwSwapInterval(1);
 
+	int width, height;
+	viewport.init();
+	get_window_size(width, height);
+	viewport.set_size(width, height);
+
 	return true;
 }
 
@@ -176,10 +186,6 @@ export GLFWwindow* get_window()
 	return window;
 }
 
-export inline void get_window_size(int& width, int& height)
-{
-	glfwGetWindowSize(window, &width, &height);
-}
 
 export bool window_should_close()
 {

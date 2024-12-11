@@ -1,7 +1,8 @@
 ToDo
 
+Done
+- Ensure Oya is working on the work laptop
 - Remove all previous data triggers and listeners
 - Remove listeners from the Layer classes
 - Implement event system across all of Oya
-
-Done
+- Transition back to Visual Studio (needed copilot features are now supported in preview)

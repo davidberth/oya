@@ -10,3 +10,4 @@ imgui.ini
 .vs/slnx.sqlite
 .vs/VSWorkspaceState.json
 /.vs/tasks.vs.json
+/preferences.txt
