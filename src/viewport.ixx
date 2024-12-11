@@ -12,7 +12,7 @@ import window_event;
 export struct Viewport {
 	int width;
 	int height;
-public:
+
 	Viewport()
 	{
 		width = 100;

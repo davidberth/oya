@@ -73,8 +73,8 @@ public:
 		view_proj_inv = glm::inverse(view_proj);
 
 		// rotate the camera
-		rotation += rot_speed;
-        if (rotation > 6.283f) rotation -= 2 * 6.283f;
+		//rotation += rot_speed;
+        //if (rotation > 6.283f) rotation -= 2 * 6.283f;
 
 		// process inputs
 		if (input_manager.get_input_state(InputAction::zoom_in))

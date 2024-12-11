@@ -33,7 +33,7 @@ public:
 
 	void add_node(glm::vec2 vertices[], int num_vertices, float outline_width,
 		float red, float green, float blue,
-		float ored, float ogreen, float oblue)
+		float outline_red, float outline_green, float outline_blue)
 	{
 		Node* node = new Node();
 		for (int i = 0; i < num_vertices; i++)
@@ -42,7 +42,7 @@ public:
 		}
 		node->outline_width = outline_width;
 		node->color = glm::vec3(red, green, blue);
-		node->outline_color = glm::vec3(ored, ogreen, oblue);
+		node->outline_color = glm::vec3(outline_red, outline_green, outline_blue);
 
 		generate_indices(node);
 		
@@ -64,8 +64,18 @@ public:
 
 	void render()
 	{
-		// eventually I will add recursive traversal and transformations
-		geom.render();
+		render_node(root, glm::mat4(1.0f));
+	}
+
+	void render_node(Node* node, const glm::mat4& parent_transform)
+	{
+		glm::mat4 global_transform = parent_transform * node->get_transform();
+		geom.render(node, global_transform);
+
+		for (Node* child : node->children)
+		{
+			render_node(child, global_transform);
+		}
 	}
 
 	void load_from_file(const std::string& filename) {

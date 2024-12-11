@@ -22,9 +22,12 @@ public:
 	Node* parent;
 	std::vector<Node*> children;
 
+	glm::mat4 transform;
+
 	Node() {
 		vertices.clear();
 		indices.clear();
+		transform = glm::mat4(1.0f);
 	};
 	~Node() {};
 
@@ -41,5 +44,15 @@ public:
 	int get_num_indices()
 	{
 		return indices.size();
+	}
+
+	void set_transform(const glm::mat4& new_transform)
+	{
+		transform = new_transform;
+	}
+
+	glm::mat4 get_transform() const
+	{
+		return transform;
 	}
 };
