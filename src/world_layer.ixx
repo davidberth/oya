@@ -37,10 +37,10 @@ public:
 		Layer::init(window);
 
 		
-		shader = new Shader("../shaders/vertex.glsl", "../shaders/fragment.glsl");
+		shader = new Shader("shaders/vertex.glsl", "shaders/fragment.glsl");
 		viewLoc = glGetUniformLocation(shader->programID, "view_proj");
 
-		scene.load_from_file("../scenes/test.scn");
+		scene.load_from_file("scenes/test.scn");
 		
 		
 	}

@@ -28,34 +28,4 @@ target_compile_definitions(oya PUBLIC GLEW_STATIC)
 target_link_libraries(oya ${glfw_lib} ${imgui_lib} ${glew_lib} ${logoru_lib} OpenGL32) 
 set_property(TARGET oya PROPERTY CXX_STANDARD 23)
 set_target_properties(oya PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
-
-set(SHADER_FILES
-    ${CMAKE_SOURCE_DIR}/shaders/vertex.glsl
-    ${CMAKE_SOURCE_DIR}/shaders/fragment.glsl
-)
-
-# Custom command to copy shader files
-add_custom_command(
-    OUTPUT ${CMAKE_BINARY_DIR}/shaders/vertex.glsl ${CMAKE_BINARY_DIR}/shaders/fragment.glsl
-    COMMAND ${CMAKE_COMMAND} -E copy_if_different ${CMAKE_SOURCE_DIR}/shaders/vertex.glsl ${CMAKE_BINARY_DIR}/shaders/vertex.glsl
-    COMMAND ${CMAKE_COMMAND} -E copy_if_different ${CMAKE_SOURCE_DIR}/shaders/fragment.glsl ${CMAKE_BINARY_DIR}/shaders/fragment.glsl
-    DEPENDS ${SHADER_FILES}
-    COMMENT "Copying shader files..."
-)
-
-# Custom target that depends on the shader files
-add_custom_target(copy_shaders ALL DEPENDS ${CMAKE_BINARY_DIR}/shaders/vertex.glsl ${CMAKE_BINARY_DIR}/shaders/fragment.glsl)
-
-# Make the main target depend on the custom target
-add_dependencies(oya copy_shaders)
-
-add_custom_command(
-    TARGET oya
-    POST_BUILD
-    COMMAND ${CMAKE_COMMAND} -E make_directory "${CMAKE_BINARY_DIR}/src/ifc"
-    COMMAND ${CMAKE_COMMAND}
-        -DSOURCE_DIR="${CMAKE_BINARY_DIR}/src/CMakeFiles/oya.dir"
-        -DDEST_DIR="${CMAKE_BINARY_DIR}/src/ifc"
-        -P "${CMAKE_SOURCE_DIR}/src/copy_ifc.cmake"
-    COMMENT "Copying IFC files..."
-)
+set_target_properties(oya PROPERTIES VS_DEBUGGER_WORKING_DIRECTORY ${CMAKE_SOURCE_DIR})
