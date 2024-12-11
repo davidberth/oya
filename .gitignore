@@ -2,5 +2,10 @@
 /vc140.pdb
 build/
 external/
-.vs/
 imgui.ini
+.vs/oya/
+.vs/CMake Overview
+.vs/cmake.db
+.vs/ProjectSettings.json
+.vs/slnx.sqlite
+.vs/VSWorkspaceState.json
