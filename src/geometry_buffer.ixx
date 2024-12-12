@@ -18,6 +18,7 @@ private:
 	int vertex_buffer_size = 200;
 	int index_buffer_size = 200;
 	int current_offset = 0;
+	int index_offset = 0;
 
 	GLuint VBO, VAO;
 	GLuint EBO;
@@ -30,10 +31,15 @@ public:
 		vertices.clear();
 		indices.clear();
 		current_offset = 0;
+		index_offset = 0;
+		
 	}
 
 	void add_node(Node *node)
 	{
+		node->set_buffer_offset(current_offset);
+		node->set_index_offset(index_offset);
+
 		for (int i = 0; i < node->get_num_vertices(); i++)
 		{
 			vertices.push_back(node->vertices.at(i));
@@ -43,6 +49,7 @@ public:
 			indices.push_back(node->indices.at(i) + current_offset);
 		}
 		current_offset += node->get_num_vertices();
+		index_offset += node->get_num_indices();
 	}
 
 	int get_num_vertices()
@@ -77,10 +84,15 @@ public:
 		glBindVertexArray(0);
 	}
 
-	void render()
+	void render(int start_index, int num_indices)
 	{
-		glBindVertexArray(VAO);
-		glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
-		glBindVertexArray(0);
+		if (num_indices > 0)
+		{
+			glBindVertexArray(VAO);
+			glDrawElements(GL_TRIANGLES, num_indices, GL_UNSIGNED_INT, (void*)(start_index * sizeof(unsigned int)));
+
+			glBindVertexArray(0);
+		}
 	}
+
 };

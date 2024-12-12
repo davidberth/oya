@@ -14,6 +14,8 @@ public:
 	
 	std::vector<Vertex> vertices;
 	std::vector<unsigned int> indices;
+	int buffer_offset = 0;
+	int index_offset = 0;
 	
 	glm::vec3 color;
 	glm::vec3 outline_color = { 0.1f, 0.1f, 0.1f };
@@ -54,5 +56,25 @@ public:
 	glm::mat4 get_transform() const
 	{
 		return transform;
+	}
+
+	inline int get_buffer_offset()
+	{
+		return buffer_offset;
+	}
+
+	inline void set_buffer_offset(int offset)
+	{
+		buffer_offset = offset;
+	}
+
+	inline int get_index_offset()
+	{
+		return index_offset;
+	}
+
+	inline void set_index_offset(int offset)
+	{
+		index_offset = offset;
 	}
 };

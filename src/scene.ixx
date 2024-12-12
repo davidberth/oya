@@ -70,7 +70,7 @@ public:
 	void render_node(Node* node, const glm::mat4& parent_transform)
 	{
 		glm::mat4 global_transform = parent_transform * node->get_transform();
-		geom.render(node, global_transform);
+		geom.render(node->get_index_offset(), node->get_num_indices());
 
 		for (Node* child : node->children)
 		{
