@@ -1,6 +1,5 @@
 # Root node
 polygon vertices (1.0,0.0) (1.0,1.0) (0.0,1.0) (0.0,0.0) fill_color (1.0,0.0,0.0) 
-    # Child node (4 spaces indentation)
-    polygon vertices (2.2,0.2) (2.8,0.2) (2.8,0.8) fill_color (0.0,0.0,0.7) 
-
+polygon vertices (2.2,0.2) (2.8,0.2) (2.8,0.8) fill_color (0.0,0.0,0.7) 
 polygon vertices (-1.0,0.0) (-1.0,1.0) (-2.0,1.0) (-2.0,0.0) fill_color (0.0,0.9,0.1)
+polygon vertices (0.0,-2.0) (1.0,-2.0) (1.0,-1.0) (0.0,-1.0) fill_color (0.4,0.1,0.8)

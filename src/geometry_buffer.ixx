@@ -84,7 +84,7 @@ public:
 		glBindVertexArray(0);
 	}
 
-	void render(int start_index, int num_indices)
+	void render(int start_index, int num_indices) const
 	{
 		if (num_indices > 0)
 		{
@@ -94,5 +94,4 @@ public:
 			glBindVertexArray(0);
 		}
 	}
-
 };
