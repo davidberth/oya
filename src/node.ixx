@@ -2,6 +2,7 @@ module;
 
 #include <glm/glm.hpp>
 #include <vector>
+#include <glm/gtc/matrix_transform.hpp>
 
 export module node;
 import vertex;
@@ -76,5 +77,11 @@ public:
 	inline void set_index_offset(int offset)
 	{
 		index_offset = offset;
+	}
+
+	void set_rotation(float angle)
+	{
+		
+		transform = glm::rotate(glm::mat4(1.0f), angle, glm::vec3(0.0f, 0.0f, 1.0f));
 	}
 };

@@ -3,6 +3,7 @@ module;
 #include <vector>
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
+#include <glm/glm.hpp>
 
 export module geometry_buffer;
 
@@ -84,7 +85,7 @@ public:
 		glBindVertexArray(0);
 	}
 
-	void render(int start_index, int num_indices) const
+	void render(int start_index, int num_indices, const glm::mat4 &view_proj, glm::mat4 &model) const
 	{
 		if (num_indices > 0)
 		{

@@ -3,6 +3,8 @@ module;
 #include <glm/glm.hpp>
 #include <string>
 #include <loguru.hpp>
+#include "GL/glew.h"
+#include <glm/gtc/type_ptr.hpp>
 
 export module scene;
 
@@ -11,16 +13,21 @@ import geometry_buffer;
 import polygon;
 import outline;
 import scene_loader;
+import shader;
+
 
 export class Scene
 {
 public:
 	Node* root;
 	GeometryBuffer geom;
+	Shader* shader;
+	GLuint viewLoc;
 	
 
 	Scene() {
 		root = new Node();
+		
 	};
 
 	~Scene() {
@@ -29,6 +36,7 @@ public:
 			delete root->children.at(i);
 		}
 		delete root;
+		delete shader;
 	};
 
 	void add_node(glm::vec2 vertices[], int num_vertices, float outline_width,
@@ -60,21 +68,27 @@ public:
 			geom.add_node(root->children.at(i));
 		}
 		geom.setup_vbo();
+		shader = new Shader("shaders/vertex.glsl", "shaders/fragment.glsl");
+		viewLoc = glGetUniformLocation(shader->programID, "view_proj_model");
 	}
 
-	void render()
+	void render(const glm::mat4 view_proj)
 	{
-		render_node(root, glm::mat4(1.0f));
+		shader->use();
+
+		root->set_rotation(12.f);
+		render_node(root, glm::mat4(1.0f), view_proj);
 	}
 
-	void render_node(Node* node, const glm::mat4& parent_transform)
+	void render_node(Node* node, const glm::mat4& parent_transform, const glm::mat4& view_proj)
 	{
 		glm::mat4 global_transform = parent_transform * node->get_transform();
-		geom.render(node->get_index_offset(), node->get_num_indices());
+		glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view_proj * parent_transform));
+		geom.render(node->get_index_offset(), node->get_num_indices(), view_proj, global_transform);
 
 		for (Node* child : node->children)
 		{
-			render_node(child, global_transform);
+			render_node(child, global_transform, view_proj);
 		}
 	}
 
