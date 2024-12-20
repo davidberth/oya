@@ -40,7 +40,7 @@ public:
 		delete shader;
 	};
 
-	void add_node(glm::vec2 vertices[], int num_vertices, float outline_width,
+	void add_node(Node *parent, glm::vec2 vertices[], int num_vertices, float outline_width,
 		float red, float green, float blue,
 		float outline_red, float outline_green, float outline_blue)
 	{
@@ -61,7 +61,7 @@ public:
 		generate_outline_indices(node);
 		generate_vertices(node);
 		node->compute_centroid();
-		root->children.push_back(node);
+		parent->children.push_back(node);
 	}
 
 	void setup()
@@ -106,11 +106,11 @@ public:
 			auto nodes = loader.loadFromFile(filename);
 
 			// recursive function to process nodes
-			std::function<void(const std::shared_ptr<SceneLoader::NodeData>&)> processNode =
-				[&](const std::shared_ptr<SceneLoader::NodeData>& node) {
+			std::function<void(Node*, const std::shared_ptr<SceneLoader::NodeData>&)> processNode =
+				[&](Node* parent, const std::shared_ptr<SceneLoader::NodeData>& node) {
 				// add current node to scene
 				if (node->type == "polygon" && !node->vertices.empty()) {
-					add_node(
+					add_node(parent,
 						node->vertices.data(),           // vertex array
 						node->vertices.size(),           // vertex count
 						node->outlineWidth,              // outline width
@@ -121,18 +121,17 @@ public:
 						node->outlineColor.g,            // outline color g
 						node->outlineColor.b             // outline color b
 					);
-					
 				}
 
 				// process all children
 				for (const auto& child : node->children) {
-					processNode(child);
+					processNode(parent->children.back(), child);
 				}
 				};
 
 			// process all root nodes
 			for (const auto& node : nodes) {
-				processNode(node);
+				processNode(root, node);
 			}
 
 			setup();
@@ -143,4 +142,5 @@ public:
 			throw;
 		}
 	}
+
 };
