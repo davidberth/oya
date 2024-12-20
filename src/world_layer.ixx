@@ -39,7 +39,7 @@ public:
 	}
 	virtual void update() override
 	{
-
+		scene.update(0.01f);
 	}
 	virtual void begin()
 	{

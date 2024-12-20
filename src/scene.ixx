@@ -27,7 +27,8 @@ public:
 
 	Scene() {
 		root = new Node();
-		
+		root->centroid = glm::vec2(0.0f, 0.0f);
+		root->rotate_delta = 0.001f;
 	};
 
 	~Scene() {
@@ -52,11 +53,14 @@ public:
 		node->color = glm::vec3(red, green, blue);
 		node->outline_color = glm::vec3(outline_red, outline_green, outline_blue);
 
+		node->rotate_delta = 0.01f;
+
 		generate_indices(node);
 		
 		add_outline(node, outline_width);
 		generate_outline_indices(node);
 		generate_vertices(node);
+		node->compute_centroid();
 		root->children.push_back(node);
 	}
 
@@ -76,20 +80,24 @@ public:
 	{
 		shader->use();
 
-		root->set_rotation(12.f);
 		render_node(root, glm::mat4(1.0f), view_proj);
 	}
 
 	void render_node(Node* node, const glm::mat4& parent_transform, const glm::mat4& view_proj)
 	{
 		glm::mat4 global_transform = parent_transform * node->get_transform();
-		glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view_proj * parent_transform));
-		geom.render(node->get_index_offset(), node->get_num_indices(), view_proj, global_transform);
+		glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view_proj * global_transform));
+		geom.render(node->get_index_offset(), node->get_num_indices());
 
 		for (Node* child : node->children)
 		{
 			render_node(child, global_transform, view_proj);
 		}
+	}
+
+	void update(float dt)
+	{
+		root->update(dt);
 	}
 
 	void load_from_file(const std::string& filename) {
@@ -113,6 +121,7 @@ public:
 						node->outlineColor.g,            // outline color g
 						node->outlineColor.b             // outline color b
 					);
+					
 				}
 
 				// process all children

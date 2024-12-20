@@ -2,6 +2,7 @@ ToDo
 - Implemnt hierarchical scene rendering with transforms
 	- Implement rendering one node at a time with traversal
 	- Implement transforms for each node 
+	- Implement node updates and rotate deltas (mainly for debugging for now)
 	- Optimize rendering by batching nodes that don't need transform
 Done
 - Ensure Oya is working on the work laptop

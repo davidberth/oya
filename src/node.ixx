@@ -24,8 +24,11 @@ public:
 
 	Node* parent;
 	std::vector<Node*> children;
+	float rotate_delta = 0.0f;
+	float angle=0.0f;
 
 	glm::mat4 transform;
+	glm::vec2 centroid;
 
 	Node() {
 		vertices.clear();
@@ -47,6 +50,16 @@ public:
 	int get_num_indices()
 	{
 		return indices.size();
+	}
+
+	void compute_centroid()
+	{
+		centroid = glm::vec2(0.0f, 0.0f);
+		for (int i = 0; i < outline.size(); i++)
+		{
+			centroid += outline.at(i);
+		}
+		centroid /= outline.size();
 	}
 
 	void set_transform(const glm::mat4& new_transform)
@@ -82,6 +95,21 @@ public:
 	void set_rotation(float angle)
 	{
 		
-		transform = glm::rotate(glm::mat4(1.0f), angle, glm::vec3(0.0f, 0.0f, 1.0f));
+		transform = glm::translate(glm::mat4(1.0f), glm::vec3(centroid, 0.0f)) * 
+			glm::rotate(glm::mat4(1.0f), angle, glm::vec3(0.0f, 0.0f, 1.0f)) * 
+			glm::translate(glm::mat4(1.0f), glm::vec3(-centroid, 0.0f));
+
+	}
+
+	void update(float dt)
+	{
+		// update logic here
+		angle += rotate_delta;
+		if (angle > 6.283f) angle -= 2 * 6.283f;
+		set_rotation(angle);
+		for (Node* child : children)
+		{
+			child->update(dt);
+		}
 	}
 };

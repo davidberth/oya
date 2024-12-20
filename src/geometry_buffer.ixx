@@ -85,7 +85,7 @@ public:
 		glBindVertexArray(0);
 	}
 
-	void render(int start_index, int num_indices, const glm::mat4 &view_proj, glm::mat4 &model) const
+	void render(int start_index, int num_indices) const
 	{
 		if (num_indices > 0)
 		{
