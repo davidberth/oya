@@ -12,7 +12,6 @@ import node;
 import geometry_buffer;
 import polygon;
 import outline;
-import scene_loader;
 import shader;
 
 
@@ -40,9 +39,10 @@ public:
 		delete shader;
 	};
 
-	void add_node(Node *parent, glm::vec2 vertices[], int num_vertices, float outline_width,
-		float red, float green, float blue,
-		float outline_red, float outline_green, float outline_blue)
+	Node* add_node(Node *parent, glm::vec2 vertices[], int num_vertices, 
+		float outline_width,
+		glm::vec3 color,
+		glm::vec3 outline_color)
 	{
 		Node* node = new Node();
 		for (int i = 0; i < num_vertices; i++)
@@ -50,8 +50,8 @@ public:
 			node->add_vertex(vertices[i]);
 		}
 		node->outline_width = outline_width;
-		node->color = glm::vec3(red, green, blue);
-		node->outline_color = glm::vec3(outline_red, outline_green, outline_blue);
+		node->color = color;
+		node->outline_color = outline_color;
 
 		node->rotate_delta = 0.01f;
 
@@ -62,6 +62,7 @@ public:
 		generate_vertices(node);
 		node->compute_centroid();
 		parent->children.push_back(node);
+		return node;
 	}
 
 	void setup()
@@ -77,6 +78,43 @@ public:
 		geom.setup_vbo();
 		shader = new Shader("shaders/vertex.glsl", "shaders/fragment.glsl");
 		viewLoc = glGetUniformLocation(shader->programID, "view_proj_model");
+	}
+
+	void create_world()
+	{
+		for (float x = -2.0; x < 2.1; x += 0.5)
+		{
+			for (float y = -2.0; y < 2.1; y += 0.5)
+			{
+				glm::vec2 vertices[] = {
+					glm::vec2(x, y),
+					glm::vec2(x + 0.1f, y),
+					glm::vec2(x + 0.1f, y + 0.1f),
+					glm::vec2(x, y + 0.1f)
+				};
+
+				glm::vec2 vertices2[] =
+				{
+					glm::vec2(x + 1.3f, y),
+					glm::vec2(x + 1.4f, y),
+					glm::vec2(x + 1.4f, y + 0.1f),
+					glm::vec2(x + 1.3f, y + 0.1f)
+				};
+
+				glm::vec2 vertices3[] =
+				{
+					glm::vec2(x - 1.3f, y),
+					glm::vec2(x - 1.4f, y),
+					glm::vec2(x - 1.4f, y + 0.1f),
+					glm::vec2(x - 1.3f, y + 0.1f)
+				};
+
+				Node *node = add_node(root, vertices, 4, 0.008f, glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f));
+				Node *node2 = add_node(node, vertices2, 4, 0.008f, glm::vec3(0.0f, 0.0f, 1.0f), glm::vec3(1.0f, 1.0f, 1.0f));
+				add_node(node2, vertices3, 4, 0.008f, glm::vec3(1.0f, 1.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f));
+			}
+		}
+
 	}
 
 	void render(const glm::mat4 view_proj)
@@ -101,49 +139,6 @@ public:
 	void update(float dt)
 	{
 		root->update(dt);
-	}
-
-	void load_from_file(const std::string& filename) {
-		SceneLoader loader;
-		try {
-			auto nodes = loader.loadFromFile(filename);
-
-			// recursive function to process nodes
-			std::function<void(Node*, const std::shared_ptr<SceneLoader::NodeData>&)> process_node =
-				[&](Node* parent, const std::shared_ptr<SceneLoader::NodeData>& node) {
-				// add current node to scene
-				if (node->type == "polygon" && !node->vertices.empty()) {
-					add_node(parent,
-						node->vertices.data(),           // vertex array
-						node->vertices.size(),           // vertex count
-						node->outlineWidth,              // outline width
-						node->fillColor.r,               // fill color r
-						node->fillColor.g,               // fill color g
-						node->fillColor.b,               // fill color b
-						node->outlineColor.r,            // outline color r
-						node->outlineColor.g,            // outline color g
-						node->outlineColor.b             // outline color b
-					);
-				}
-
-				// process all children
-				for (const auto& child : node->children) {
-					process_node(parent->children.back(), child);
-				}
-				};
-
-			// process all root nodes
-			for (const auto& node : nodes) {
-				process_node(root, node);
-			}
-
-			setup();
-
-		}
-		catch (const std::exception& e) {
-			LOG_F(ERROR, "Failed to load scene from %s: %s", filename.c_str(), e.what());
-			throw;
-		}
 	}
 
 };

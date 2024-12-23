@@ -18,7 +18,7 @@ struct size_option
 size_option size_options[6] =
     { {0, InputAction::function_1, 0.2f, 0.3f, 0},
     {1, InputAction::function_2, 0.4f, 0.5f, 0},
-    {2, InputAction::function_3, 0.6f, 0.7f, 0},
+    {2, InputAction::function_3, 0.65f, 0.75f, 0},
     {3, InputAction::function_4, 0.8f, 0.85f, 0},
     {4, InputAction::function_5, 1.0f, 1.0f, 0},
     {5, InputAction::function_6, 1.0f, 1.0f, 1},

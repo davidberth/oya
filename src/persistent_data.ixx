@@ -12,7 +12,7 @@ public:
     bool gui_on;
     int font_size;
 
-    PersistentData() : window_size(2), gui_on(true), font_size(0) {
+    PersistentData() : window_size(3), gui_on(true), font_size(0) {
         load();
     }
 

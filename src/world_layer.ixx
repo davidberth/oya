@@ -33,8 +33,8 @@ public:
 	virtual void init(GLFWwindow* window) override
 	{
 		Layer::init(window);
-		scene.load_from_file("scenes/test.scn");
-		
+		scene.create_world();
+		scene.setup();
 		
 	}
 	virtual void update() override

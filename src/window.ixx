@@ -161,7 +161,7 @@ export bool init_window()
 		return 1;
 	}
 	
-	set_window_size(0.5f, 0.5f, 0);
+	set_window_size(0.65f, 0.75f, 0);
 	glfwSetKeyCallback(window, glfw_key_callback);
 	glfwSetScrollCallback(window, glfw_scroll_callback);
 	glfwSetMouseButtonCallback(window, glfw_mouse_button_callback);

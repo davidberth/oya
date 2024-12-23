@@ -16,8 +16,8 @@ export class GeometryBuffer
 private:
 	std::vector<Vertex> vertices;
 	std::vector<unsigned int> indices;
-	int vertex_buffer_size = 200;
-	int index_buffer_size = 200;
+	int vertex_buffer_size = 900;
+	int index_buffer_size = 900;
 	int current_offset = 0;
 	int index_offset = 0;
 
