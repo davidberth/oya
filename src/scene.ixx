@@ -67,10 +67,13 @@ public:
 	void setup()
 	{
 		geom.clear_buffer();
-		for (int i = 0; i < root->children.size(); i++)
-		{
-			geom.add_node(root->children.at(i));
-		}
+		std::function<void(Node*)> add_node_recursive = [&](Node* node) {
+			geom.add_node(node);
+			for (Node* child : node->children) {
+				add_node_recursive(child);
+			}
+			};
+		add_node_recursive(root);
 		geom.setup_vbo();
 		shader = new Shader("shaders/vertex.glsl", "shaders/fragment.glsl");
 		viewLoc = glGetUniformLocation(shader->programID, "view_proj_model");
@@ -106,7 +109,7 @@ public:
 			auto nodes = loader.loadFromFile(filename);
 
 			// recursive function to process nodes
-			std::function<void(Node*, const std::shared_ptr<SceneLoader::NodeData>&)> processNode =
+			std::function<void(Node*, const std::shared_ptr<SceneLoader::NodeData>&)> process_node =
 				[&](Node* parent, const std::shared_ptr<SceneLoader::NodeData>& node) {
 				// add current node to scene
 				if (node->type == "polygon" && !node->vertices.empty()) {
@@ -125,13 +128,13 @@ public:
 
 				// process all children
 				for (const auto& child : node->children) {
-					processNode(parent->children.back(), child);
+					process_node(parent->children.back(), child);
 				}
 				};
 
 			// process all root nodes
 			for (const auto& node : nodes) {
-				processNode(root, node);
+				process_node(root, node);
 			}
 
 			setup();
