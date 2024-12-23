@@ -72,27 +72,32 @@ public:
 		view_proj = projection * view;
 		view_proj_inv = glm::inverse(view_proj);
 
-		// rotate the camera
-		//rotation += rot_speed;
-        //if (rotation > 6.283f) rotation -= 2 * 6.283f;
-
-		// process inputs
 		if (input_manager.get_input_state(InputAction::zoom_in))
 		{
 			height -= zoom_speed;
 			if (height < 1.0f) height = 1.0f;
 		}
 		if (input_manager.get_input_state(InputAction::zoom_out))
-		{
-			
+		{			
 			height += zoom_speed;
 			if (height > 50.f) height = 50.0f;
 		}
 
 		if (input_manager.get_input_state(InputAction::up))
 		{
-			position.x += speed * cos(rotation);
-			position.y += speed * sin(rotation);
+			position.y += speed;
+		}
+		if (input_manager.get_input_state(InputAction::down))
+		{
+			position.y -= speed;
+		}
+		if (input_manager.get_input_state(InputAction::left))
+		{
+			position.x -= speed;
+		}
+		if (input_manager.get_input_state(InputAction::right))
+		{
+			position.x += speed;
 		}
 
 	}

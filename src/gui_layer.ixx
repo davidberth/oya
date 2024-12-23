@@ -20,6 +20,7 @@ import event;
 import input_event;
 import viewport;
 import input_manager;
+import render_stats_event;
 
 export class GUILayer : public Layer
 {
@@ -35,6 +36,7 @@ private:
     unsigned int font_sizes[3] = { 20, 30, 38 };
 
     ImFont* font[3];
+	int num_draw_calls = 0;
    
     
 public:
@@ -67,7 +69,9 @@ public:
         LOG_F(INFO, "done");
 
 		event_dispatcher.subscribe<InputEvent>([this](const InputEvent& event) { on_input(event); });
-   
+        event_dispatcher.subscribe<RenderStatsEvent>([this](const RenderStatsEvent& event) {
+                num_draw_calls = event.num_draw_calls;
+                });
 	}
 	virtual void update() override
 	{
@@ -109,6 +113,9 @@ public:
 		ImGui::Text("Camera properties");
 		ImGui::Text(" Camera pos: x: %.3f, y: %.3f", camera.position.x, camera.position.y);
 		ImGui::Text(" Camera height: %.3f", camera.height);
+        ImGui::Separator();
+        ImGui::Text("Render properties");
+        ImGui::Text("Draw calls: %d", num_draw_calls);
 
 
         ImGui::End();

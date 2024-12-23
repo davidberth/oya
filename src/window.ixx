@@ -149,6 +149,8 @@ export bool init_window()
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
+
+
 	window = glfwCreateWindow(1280, 720, caption.c_str(), nullptr, nullptr);
 	if (window == nullptr)
 		return 1;
@@ -160,6 +162,8 @@ export bool init_window()
 		LOG_F(ERROR, "Failed to initialize GLEW\n");
 		return 1;
 	}
+
+	glDisable(GL_CULL_FACE);
 	
 	set_window_size(0.65f, 0.75f, 0);
 	glfwSetKeyCallback(window, glfw_key_callback);

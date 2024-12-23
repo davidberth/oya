@@ -42,7 +42,8 @@ public:
 	Node* add_node(Node *parent, glm::vec2 vertices[], int num_vertices, 
 		float outline_width,
 		glm::vec3 color,
-		glm::vec3 outline_color)
+		glm::vec3 outline_color,
+		float rotate_delta)
 	{
 		Node* node = new Node();
 		for (int i = 0; i < num_vertices; i++)
@@ -53,7 +54,7 @@ public:
 		node->color = color;
 		node->outline_color = outline_color;
 
-		node->rotate_delta = 0.01f;
+		node->rotate_delta = rotate_delta;
 
 		generate_indices(node);
 		
@@ -68,6 +69,40 @@ public:
 	void setup()
 	{
 		geom.clear_buffer();
+
+		// first pass - set individual transform needs
+		std::function<void(Node*)> check_transform_needs = [&](Node* node) {
+			constexpr float epsilon = 0.001f;
+			node->needs_transform = std::abs(node->rotate_delta) > epsilon;
+			for (Node* child : node->children) {
+				check_transform_needs(child);
+			}
+			};
+		check_transform_needs(root);
+
+		// second pass - propagate transform needs up the tree
+		std::function<bool(Node*)> propagate_transform_needs = [&](Node* node) {
+			bool needs_transforms = false;  // changed: don't include this node's transform need
+			for (Node* child : node->children) {
+				needs_transforms |= propagate_transform_needs(child);
+			}
+			node->needs_child_transforms = needs_transforms;
+			return needs_transforms || node->needs_transform;  // include node's transform only in return value
+			};
+		propagate_transform_needs(root);
+
+		// third pass - count total indices
+		std::function<int(Node*)> count_total_indices = [&](Node* node) {
+			int total = node->get_num_indices();
+			for (Node* child : node->children) {
+				total += count_total_indices(child);
+			}
+			node->total_indices = total;
+			return total;
+			};
+		count_total_indices(root);
+
+		// add the nodes to the geometry buffer
 		std::function<void(Node*)> add_node_recursive = [&](Node* node) {
 			geom.add_node(node);
 			for (Node* child : node->children) {
@@ -104,14 +139,30 @@ public:
 				glm::vec2 vertices3[] =
 				{
 					glm::vec2(x - 1.3f, y),
-					glm::vec2(x - 1.4f, y),
-					glm::vec2(x - 1.4f, y + 0.1f),
+					glm::vec2(x - 1.2f, y),
+					glm::vec2(x - 1.2f, y + 0.1f),
 					glm::vec2(x - 1.3f, y + 0.1f)
 				};
 
-				Node *node = add_node(root, vertices, 4, 0.008f, glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f));
-				Node *node2 = add_node(node, vertices2, 4, 0.008f, glm::vec3(0.0f, 0.0f, 1.0f), glm::vec3(1.0f, 1.0f, 1.0f));
-				add_node(node2, vertices3, 4, 0.008f, glm::vec3(1.0f, 1.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f));
+				Node *node = add_node(root, vertices, 4, 0.008f, glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f), 0.01f);
+				Node *node2 = add_node(node, vertices2, 4, 0.008f, glm::vec3(0.0f, 0.0f, 1.0f), glm::vec3(1.0f, 1.0f, 1.0f), 0.01f);
+				Node *node3 = add_node(node2, vertices3, 4, 0.008f, glm::vec3(1.0f, 1.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f), 0.0f);
+
+
+				for (float xi = x - 0.5f; xi < x + 0.6f; xi += 0.5f)
+				{
+					for (float yi = y - 0.5f; yi < y + 0.6f; yi += 0.5f)
+					{
+						glm::vec2 vertices4[] = {
+							glm::vec2(xi, yi),
+							glm::vec2(xi + 0.02f, yi),
+							glm::vec2(xi + 0.02f, yi + 0.1f),
+							glm::vec2(xi, yi + 0.1f)
+						};
+						Node* node4 = add_node(node3, vertices4, 4, 0.008f, glm::vec3(0.7f, 0.0f, 0.0f), glm::vec3(1.0f, 0.2f, 0.2f), 0.00f);
+					}
+				}
+
 			}
 		}
 
@@ -120,19 +171,28 @@ public:
 	void render(const glm::mat4 view_proj)
 	{
 		shader->use();
-
+		geom.new_frame();
 		render_node(root, glm::mat4(1.0f), view_proj);
+		geom.end_frame();
 	}
 
 	void render_node(Node* node, const glm::mat4& parent_transform, const glm::mat4& view_proj)
 	{
 		glm::mat4 global_transform = parent_transform * node->get_transform();
 		glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view_proj * global_transform));
-		geom.render(node->get_index_offset(), node->get_num_indices());
 
-		for (Node* child : node->children)
-		{
-			render_node(child, global_transform, view_proj);
+		if (!node->needs_child_transforms) {
+			// render this node and all children in one draw call
+			geom.render(node->get_index_offset(), node->total_indices);
+		}
+		else {
+			// render just this node
+			geom.render(node->get_index_offset(), node->get_num_indices());
+
+			// recursively render children that need transforms
+			for (Node* child : node->children) {
+				render_node(child, global_transform, view_proj);
+			}
 		}
 	}
 

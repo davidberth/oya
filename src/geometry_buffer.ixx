@@ -9,6 +9,8 @@ export module geometry_buffer;
 
 import node;
 import vertex;
+import render_stats_event;
+import event;
 
 
 export class GeometryBuffer
@@ -16,10 +18,12 @@ export class GeometryBuffer
 private:
 	std::vector<Vertex> vertices;
 	std::vector<unsigned int> indices;
-	int vertex_buffer_size = 900;
-	int index_buffer_size = 900;
+	int vertex_buffer_size = 4000;
+	int index_buffer_size = 4000;
 	int current_offset = 0;
 	int index_offset = 0;
+
+	int num_draw_calls = 0;
 
 	GLuint VBO, VAO;
 	GLuint EBO;
@@ -33,10 +37,10 @@ public:
 		indices.clear();
 		current_offset = 0;
 		index_offset = 0;
-		
+
 	}
 
-	void add_node(Node *node)
+	void add_node(Node* node)
 	{
 		node->set_buffer_offset(current_offset);
 		node->set_index_offset(index_offset);
@@ -65,7 +69,7 @@ public:
 
 	void setup_vbo()
 	{
-		
+
 		glGenVertexArrays(1, &VAO);
 		glBindVertexArray(VAO);
 
@@ -85,14 +89,24 @@ public:
 		glBindVertexArray(0);
 	}
 
-	void render(int start_index, int num_indices) const
+	void render(int start_index, int num_indices) 
 	{
 		if (num_indices > 0)
 		{
-			glBindVertexArray(VAO);
 			glDrawElements(GL_TRIANGLES, num_indices, GL_UNSIGNED_INT, (void*)(start_index * sizeof(unsigned int)));
-
-			glBindVertexArray(0);
+			num_draw_calls += 1;
 		}
+	}
+
+	void new_frame()
+	{
+		glBindVertexArray(VAO);
+		num_draw_calls = 0;
+	}
+
+	void end_frame()
+	{
+		glBindVertexArray(0);
+		event_dispatcher.dispatch(RenderStatsEvent(num_draw_calls));
 	}
 };

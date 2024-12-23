@@ -27,6 +27,11 @@ public:
 	float rotate_delta = 0.0f;
 	float angle=0.0f;
 
+	bool needs_transform = false;
+	bool needs_child_transforms = false;
+	int total_indices = 0;
+
+
 	glm::mat4 transform;
 	glm::vec2 centroid;
 
