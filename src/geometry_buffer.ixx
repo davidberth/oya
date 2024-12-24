@@ -24,6 +24,7 @@ private:
 	int index_offset = 0;
 
 	int num_draw_calls = 0;
+	int num_total_indices = 0;
 
 	GLuint VBO, VAO;
 	GLuint EBO;
@@ -95,6 +96,7 @@ public:
 		{
 			glDrawElements(GL_TRIANGLES, num_indices, GL_UNSIGNED_INT, (void*)(start_index * sizeof(unsigned int)));
 			num_draw_calls += 1;
+			num_total_indices += num_indices;
 		}
 	}
 
@@ -102,11 +104,15 @@ public:
 	{
 		glBindVertexArray(VAO);
 		num_draw_calls = 0;
+		num_total_indices = 0;
 	}
 
 	void end_frame()
 	{
 		glBindVertexArray(0);
-		event_dispatcher.dispatch(RenderStatsEvent(num_draw_calls));
+		float average_indices = num_total_indices / num_draw_calls;
+		float average_triangles = average_indices / 3;
+		
+		event_dispatcher.dispatch(RenderStatsEvent(num_draw_calls, average_indices, average_triangles));
 	}
 };

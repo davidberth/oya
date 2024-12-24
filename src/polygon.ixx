@@ -93,9 +93,9 @@ export void generate_vertices(Node *node)
     {
         node->vertices.push_back(Vertex{ point.x, point.y, node->color.x, node->color.y, node->color.z });
     }
-    float redo = node->outline_color.x * 0.6f;
-	float greeno = node->outline_color.y * 0.6f;
-	float blueo = node->outline_color.z * 0.6f;
+    float redo = node->outline_color.x * 0.9f;
+	float greeno = node->outline_color.y * 0.9f;
+	float blueo = node->outline_color.z * 0.9f;
     for (const auto& point : node->outline)
     {
         node->vertices.push_back(Vertex{ point.x, point.y, redo, greeno, blueo });

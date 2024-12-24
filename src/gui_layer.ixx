@@ -37,6 +37,8 @@ private:
 
     ImFont* font[3];
 	int num_draw_calls = 0;
+    float average_indices = 0.0f;
+	float average_triangles = 0.0f;
    
     
 public:
@@ -71,6 +73,8 @@ public:
 		event_dispatcher.subscribe<InputEvent>([this](const InputEvent& event) { on_input(event); });
         event_dispatcher.subscribe<RenderStatsEvent>([this](const RenderStatsEvent& event) {
                 num_draw_calls = event.num_draw_calls;
+                average_indices = event.average_indices;
+				average_triangles = event.average_triangles;
                 });
 	}
 	virtual void update() override
@@ -90,7 +94,6 @@ public:
 	}
 	virtual void render() override
 	{
-
         float window_x = input_manager.target_x;
         float window_y = input_manager.target_y;
         glm::vec2 ndc_coords = viewport.get_ndc_coords(window_x, window_y);
@@ -116,7 +119,9 @@ public:
         ImGui::Separator();
         ImGui::Text("Render properties");
         ImGui::Text("Draw calls: %d", num_draw_calls);
-
+		ImGui::Text("Average indices: %.1f", average_indices);
+		ImGui::Text("Average triangles: %.1f", average_triangles);
+		ImGui::Text("Total triangles: %d", int(num_draw_calls * average_triangles));
 
         ImGui::End();
 
@@ -158,8 +163,6 @@ public:
 		persistent_data.font_size = font_index; 
 	}
 
-
-
     void on_input(const InputEvent& event) {
 		LOG_F(INFO, "Key Input: %d %d ", event.action);
         if (event.is_pressed)
@@ -186,6 +189,5 @@ public:
             }
         }
 	}
-
 };
 
