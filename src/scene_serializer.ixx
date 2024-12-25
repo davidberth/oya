@@ -74,7 +74,7 @@ private:
 
         node->parent = parent;
         node->compute_centroid();
-
+        
         // read children
         uint32_t child_count;
         file.read(reinterpret_cast<char*>(&child_count), sizeof(child_count));

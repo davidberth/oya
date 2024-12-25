@@ -38,6 +38,7 @@ public:
 		event_dispatcher.subscribe<SceneEvent>([this](const SceneEvent& scene_event) {
 			if (scene_event.event_type == SceneEventType::load) {
 				scene_serializer.deserialize(scene, scene_event.scene_path);
+				scene.setup();
 			}
 			else if (scene_event.event_type == SceneEventType::save) {
 				scene_serializer.serialize(scene, scene_event.scene_path);

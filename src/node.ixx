@@ -42,6 +42,12 @@ public:
 	};
 	~Node() {};
 
+	void setup()
+	{
+		compute_centroid();
+		set_rotation(angle);
+	}
+
 	void add_vertex(glm::vec2 pos)
 	{
 		outline.push_back(pos);

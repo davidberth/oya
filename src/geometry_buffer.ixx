@@ -110,6 +110,11 @@ public:
 	void end_frame()
 	{
 		glBindVertexArray(0);
+		if (num_draw_calls == 0)
+		{
+			event_dispatcher.dispatch(RenderStatsEvent(0, 0.0f, 0.0f));
+			return;
+		}
 		float average_indices = num_total_indices / num_draw_calls;
 		float average_triangles = average_indices / 3;
 		
