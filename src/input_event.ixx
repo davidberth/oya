@@ -1,4 +1,3 @@
-
 export module input_event;
 
 import event;

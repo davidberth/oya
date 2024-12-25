@@ -4,10 +4,9 @@ module;
 #include <functional>
 #include "loguru.hpp"
 #include "GL/glew.h"
-
-
 #include <glm/glm.hpp>
 #include <iostream>
+
 
 export module world_layer;
 
@@ -19,8 +18,8 @@ import camera;
 import persistent_data;
 import geometry_buffer;
 import scene;
-
-
+import scene_event;
+import scene_serializer;
 
 export class WorldLayer : public Layer
 {
@@ -35,6 +34,15 @@ public:
 		Layer::init(window);
 		scene.create_world();
 		scene.setup();
+
+		event_dispatcher.subscribe<SceneEvent>([this](const SceneEvent& scene_event) {
+			if (scene_event.event_type == SceneEventType::load) {
+				scene_serializer.deserialize(scene, scene_event.scene_path);
+			}
+			else if (scene_event.event_type == SceneEventType::save) {
+				scene_serializer.serialize(scene, scene_event.scene_path);
+			}
+			});
 		
 	}
 	virtual void update() override
@@ -50,10 +58,7 @@ public:
 
 		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
-
 		scene.render(camera.view_proj);
-
-        
 	}
 	virtual void end() override
 	{

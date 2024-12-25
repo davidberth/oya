@@ -21,6 +21,7 @@ import input_event;
 import viewport;
 import input_manager;
 import render_stats_event;
+import scene_event;
 
 export class GUILayer : public Layer
 {
@@ -55,6 +56,7 @@ public:
         // io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad; 
 
         io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
+		io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
         io.ConfigFlags |= ImGuiConfigFlags_NoMouseCursorChange;
        
         get_imgui_style();
@@ -102,11 +104,11 @@ public:
         ImGuiIO& io = ImGui::GetIO();
         float framerate = io.Framerate;
 
+        // Properties window
         ImGui::Begin("Properties");  
         ImGui::Text("Performance");
         ImGui::Text(" Framerate: %.1f FPS", framerate);
         ImGui::Text("Background properties");              
-        //ImGui::ColorEdit3(" clear color", (float*)&gui_data.clear_color); 
         ImGui::Separator();
 		ImGui::Text("Mouse properties");
         ImGui::Text(" Window pos: x: %.0f, y: %.0f", window_x, window_y);
@@ -122,7 +124,40 @@ public:
 		ImGui::Text("Average indices: %.1f", average_indices);
 		ImGui::Text("Average triangles: %.1f", average_triangles);
 		ImGui::Text("Total triangles: %d", int(num_draw_calls * average_triangles));
+        ImGui::End();
 
+        // Scenes window
+        ImGui::Begin("Scenes");
+        ImGui::Columns(3, "scenes_columns", false);
+        ImGui::SetColumnWidth(0, 100.0f); // scene name column
+        ImGui::SetColumnWidth(1, 60.0f);  // load button column
+        ImGui::SetColumnWidth(2, 60.0f);  // save button column
+
+        const int num_scenes = 5; // adjust number of scenes as needed
+        for (int scene_index = 0; scene_index < num_scenes; scene_index++)
+        {
+            // Column 1: Scene name
+            ImGui::Text("Scene %d", scene_index + 1);
+            ImGui::NextColumn();
+
+            // Column 2: Load button
+            if (ImGui::Button(("Load##" + std::to_string(scene_index)).c_str()))
+            {
+				std::string scene_path = "scenes/scene" + std::to_string(scene_index + 1) + ".scn";
+                event_dispatcher.dispatch(SceneEvent(SceneEventType::load, scene_path));
+            }
+            ImGui::NextColumn();
+
+            // Column 3: Save button
+            if (ImGui::Button(("Save##" + std::to_string(scene_index)).c_str()))
+            {
+                std::string scene_path = "scenes/scene" + std::to_string(scene_index + 1) + ".scn";
+				event_dispatcher.dispatch(SceneEvent(SceneEventType::save, scene_path));
+            }
+            ImGui::NextColumn();
+        }
+
+        ImGui::Columns(1); // reset back to 1 column layout
         ImGui::End();
 
 	}
