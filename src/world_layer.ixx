@@ -32,8 +32,9 @@ public:
 	virtual void init(GLFWwindow* window) override
 	{
 		Layer::init(window);
-		scene.create_world();
-		scene.setup();
+		//scene.create_world();
+		//scene.setup();
+		//scene.setup_shader();
 
 		event_dispatcher.subscribe<SceneEvent>([this](const SceneEvent& scene_event) {
 			if (scene_event.event_type == SceneEventType::load) {

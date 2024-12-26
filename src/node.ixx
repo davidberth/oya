@@ -5,25 +5,19 @@ module;
 #include <glm/gtc/matrix_transform.hpp>
 
 export module node;
-import vertex;
+
+import polygon;
 
 export class Node
 {
 public:
-	std::vector<glm::vec2> outline;
-	std::vector<glm::vec2> buffer;
 	
-	std::vector<Vertex> vertices;
-	std::vector<unsigned int> indices;
-	int buffer_offset = 0;
-	int index_offset = 0;
-	
-	glm::vec3 color;
-	glm::vec3 outline_color = { 0.1f, 0.1f, 0.1f };
-	float outline_width;
-
 	Node* parent;
 	std::vector<Node*> children;
+
+	Polygon polygon;
+
+	// transform properties
 	float rotate_delta = 0.0f;
 	float angle=0.0f;
 
@@ -31,47 +25,14 @@ public:
 	bool needs_child_transforms = false;
 	int total_indices = 0;
 
-
 	glm::mat4 transform;
 	glm::vec2 centroid;
 
 	Node() {
-		vertices.clear();
-		indices.clear();
+
 		transform = glm::mat4(1.0f);
 	};
 	~Node() {};
-
-	void setup()
-	{
-		compute_centroid();
-		set_rotation(angle);
-	}
-
-	void add_vertex(glm::vec2 pos)
-	{
-		outline.push_back(pos);
-	}
-
-	int get_num_vertices()
-	{
-		return vertices.size();
-	}
-
-	int get_num_indices()
-	{
-		return indices.size();
-	}
-
-	void compute_centroid()
-	{
-		centroid = glm::vec2(0.0f, 0.0f);
-		for (int i = 0; i < outline.size(); i++)
-		{
-			centroid += outline.at(i);
-		}
-		centroid /= outline.size();
-	}
 
 	void set_transform(const glm::mat4& new_transform)
 	{
@@ -83,24 +44,10 @@ public:
 		return transform;
 	}
 
-	inline int get_buffer_offset()
+	void setup_polygon()
 	{
-		return buffer_offset;
-	}
-
-	inline void set_buffer_offset(int offset)
-	{
-		buffer_offset = offset;
-	}
-
-	inline int get_index_offset()
-	{
-		return index_offset;
-	}
-
-	inline void set_index_offset(int offset)
-	{
-		index_offset = offset;
+		polygon.setup();
+		centroid = polygon.compute_centroid();
 	}
 
 	void set_rotation(float angle)

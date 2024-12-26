@@ -4,10 +4,11 @@ module;
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 #include <glm/glm.hpp>
+#include "loguru.hpp"
 
 export module geometry_buffer;
 
-import node;
+import polygon;
 import vertex;
 import render_stats_event;
 import event;
@@ -18,16 +19,17 @@ export class GeometryBuffer
 private:
 	std::vector<Vertex> vertices;
 	std::vector<unsigned int> indices;
-	int vertex_buffer_size = 4000;
-	int index_buffer_size = 4000;
+	int vertex_buffer_size = 40000;
+	int index_buffer_size = 40000;
 	int current_offset = 0;
 	int index_offset = 0;
 
 	int num_draw_calls = 0;
 	int num_total_indices = 0;
 
-	GLuint VBO, VAO;
-	GLuint EBO;
+	GLuint VBO = -1;
+	GLuint VAO = -1;
+	GLuint EBO = -1;
 public:
 	GeometryBuffer() {};
 	~GeometryBuffer() {};
@@ -41,21 +43,21 @@ public:
 
 	}
 
-	void add_node(Node* node)
+	void add_polygon(Polygon *polygon)
 	{
-		node->set_buffer_offset(current_offset);
-		node->set_index_offset(index_offset);
+		polygon->set_buffer_offset(current_offset);
+		polygon->set_index_offset(index_offset);
 
-		for (int i = 0; i < node->get_num_vertices(); i++)
+		for (int i = 0; i < polygon->get_num_vertices(); i++)
 		{
-			vertices.push_back(node->vertices.at(i));
+			vertices.push_back(polygon->vertices.at(i));
 		}
-		for (int i = 0; i < node->get_num_indices(); i++)
+		for (int i = 0; i < polygon->get_num_indices(); i++)
 		{
-			indices.push_back(node->indices.at(i) + current_offset);
+			indices.push_back(polygon->indices.at(i) + current_offset);
 		}
-		current_offset += node->get_num_vertices();
-		index_offset += node->get_num_indices();
+		current_offset += polygon->get_num_vertices();
+		index_offset += polygon->get_num_indices();
 	}
 
 	int get_num_vertices()
@@ -70,6 +72,19 @@ public:
 
 	void setup_vbo()
 	{
+
+		if (VAO >= 0)
+		{
+			glDeleteVertexArrays(1, &VAO);
+		}
+		if (VBO >= 0)
+		{
+			glDeleteBuffers(1, &VBO);
+		}
+		if (EBO >= 0)
+		{
+			glDeleteBuffers(1, &EBO);
+		}
 
 		glGenVertexArrays(1, &VAO);
 		glBindVertexArray(VAO);
@@ -95,6 +110,7 @@ public:
 		if (num_indices > 0)
 		{
 			glDrawElements(GL_TRIANGLES, num_indices, GL_UNSIGNED_INT, (void*)(start_index * sizeof(unsigned int)));
+			
 			num_draw_calls += 1;
 			num_total_indices += num_indices;
 		}

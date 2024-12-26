@@ -21,9 +21,17 @@ public:
     }
 
     static void deserialize(Scene& scene, const std::string& filepath) {
+        //scene.root = deserialize_node(file, nullptr);
+        //scene.setup();
+        //scene.setup_shader();
         std::ifstream file(filepath, std::ios::binary);
         verify_header(file);
+
         scene.root = deserialize_node(file, nullptr);
+        // scene.create_world();
+        scene.setup();
+        scene.setup_shader();
+        
     }
 
 private:
@@ -41,12 +49,12 @@ private:
 
     static void serialize_node(std::ofstream& file, const Node* node) {
         // write node properties
-        uint32_t outline_size = static_cast<uint32_t>(node->outline.size());
+        uint32_t outline_size = static_cast<uint32_t>(node->polygon.outline.size());
         file.write(reinterpret_cast<const char*>(&outline_size), sizeof(outline_size));
-        file.write(reinterpret_cast<const char*>(node->outline.data()), outline_size * sizeof(glm::vec2));
-        file.write(reinterpret_cast<const char*>(&node->color), sizeof(glm::vec3));
-        file.write(reinterpret_cast<const char*>(&node->outline_color), sizeof(glm::vec3));
-        file.write(reinterpret_cast<const char*>(&node->outline_width), sizeof(float));
+        file.write(reinterpret_cast<const char*>(node->polygon.outline.data()), outline_size * sizeof(glm::vec2));
+        file.write(reinterpret_cast<const char*>(&node->polygon.color), sizeof(glm::vec3));
+        file.write(reinterpret_cast<const char*>(&node->polygon.outline_color), sizeof(glm::vec3));
+        file.write(reinterpret_cast<const char*>(&node->polygon.outline_width), sizeof(float));
         file.write(reinterpret_cast<const char*>(&node->rotate_delta), sizeof(float));
         file.write(reinterpret_cast<const char*>(&node->angle), sizeof(float));
 
@@ -64,16 +72,17 @@ private:
         // read node properties
         uint32_t outline_size;
         file.read(reinterpret_cast<char*>(&outline_size), sizeof(outline_size));
-        node->outline.resize(outline_size);
-        file.read(reinterpret_cast<char*>(node->outline.data()), outline_size * sizeof(glm::vec2));
-        file.read(reinterpret_cast<char*>(&node->color), sizeof(glm::vec3));
-        file.read(reinterpret_cast<char*>(&node->outline_color), sizeof(glm::vec3));
-        file.read(reinterpret_cast<char*>(&node->outline_width), sizeof(float));
+        node->polygon.outline.resize(outline_size);
+        file.read(reinterpret_cast<char*>(node->polygon.outline.data()), outline_size * sizeof(glm::vec2));
+        file.read(reinterpret_cast<char*>(&node->polygon.color), sizeof(glm::vec3));
+        file.read(reinterpret_cast<char*>(&node->polygon.outline_color), sizeof(glm::vec3));
+        file.read(reinterpret_cast<char*>(&node->polygon.outline_width), sizeof(float));
         file.read(reinterpret_cast<char*>(&node->rotate_delta), sizeof(float));
         file.read(reinterpret_cast<char*>(&node->angle), sizeof(float));
 
         node->parent = parent;
-        node->compute_centroid();
+        node->setup_polygon();
+        node->centroid = node->polygon.compute_centroid();
         
         // read children
         uint32_t child_count;
