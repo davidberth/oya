@@ -17,15 +17,20 @@ export class Scene
 {
 public:
     Node* root;
-    GeometryBuffer geom;
+    GeometryBuffer *geom;
+    GeometryBuffer *debug_geom;
     Shader* shader;
     GLuint viewLoc;
 
     Scene() {
+      
         root = new Node();
         root->centroid = glm::vec2(0.0f, 0.0f);
         root->rotate_delta = 0.001f;
         shader = nullptr;
+
+        geom = new GeometryBuffer(false);
+        debug_geom = new GeometryBuffer(true);
     };
 
     ~Scene() {
@@ -33,6 +38,8 @@ public:
         {
             delete root->children.at(i);
         }
+        delete geom;
+        delete debug_geom;
         delete root;
         delete shader;
     };
@@ -60,14 +67,14 @@ public:
 
     void setup()
     {
-        geom.clear_buffer();
+        geom->clear_buffer();
 
         check_transform_needs(root);
         propagate_transform_needs(root);
         count_total_indices(root);
         add_node_recursive(root);
 
-        geom.setup_vbo();
+        geom->setup_vbo();
     }
 
     void setup_shader()
@@ -88,9 +95,9 @@ public:
 			return;
 		}
         shader->use();
-        geom.new_frame();
+        geom->new_frame();
         render_node(root, glm::mat4(1.0f), view_proj);
-        geom.end_frame();
+        geom->end_frame();
     }
 
     void render_node(Node* node, const glm::mat4& parent_transform, const glm::mat4& view_proj)
@@ -100,11 +107,11 @@ public:
 
         if (!node->needs_child_transforms) {
             // render this node and all children in one draw call
-            geom.render(node->polygon.get_index_offset(), node->total_indices);
+            geom->render(node->polygon.get_index_offset(), node->total_indices);
         }
         else {
             // render just this node
-            geom.render(node->polygon.get_index_offset(), node->polygon.get_num_indices());
+            geom->render(node->polygon.get_index_offset(), node->polygon.get_num_indices());
 
             // recursively render children that need transforms
             for (Node* child : node->children) {
@@ -146,7 +153,7 @@ private:
     }
 
     void add_node_recursive(Node* node) {
-        geom.add_polygon(&node->polygon);
+        geom->add_polygon(&node->polygon);
         for (Node* child : node->children) {
             add_node_recursive(child);
         }

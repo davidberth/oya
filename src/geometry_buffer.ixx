@@ -30,8 +30,10 @@ private:
 	GLuint VBO = -1;
 	GLuint VAO = -1;
 	GLuint EBO = -1;
+
+	bool dynamic = false;
 public:
-	GeometryBuffer() {};
+	GeometryBuffer(bool dyn) { dynamic = dyn; };
 	~GeometryBuffer() {};
 
 	void clear_buffer()
@@ -40,7 +42,6 @@ public:
 		indices.clear();
 		current_offset = 0;
 		index_offset = 0;
-
 	}
 
 	void add_polygon(Polygon *polygon)
@@ -73,6 +74,8 @@ public:
 	void setup_vbo()
 	{
 
+		GLuint draw_type = dynamic ? GL_DYNAMIC_DRAW : GL_STATIC_DRAW;
+
 		if (VAO >= 0)
 		{
 			glDeleteVertexArrays(1, &VAO);
@@ -92,17 +95,26 @@ public:
 		glGenBuffers(1, &VBO);
 		glBindBuffer(GL_ARRAY_BUFFER, VBO);
 
-		glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(Vertex), vertices.data(), GL_STATIC_DRAW);
+		glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(Vertex), vertices.data(), draw_type);
 		glGenBuffers(1, &EBO);
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
 
-		glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(unsigned int), indices.data(), GL_STATIC_DRAW);
+		glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(unsigned int), indices.data(), draw_type);
 		glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, x));
 		glEnableVertexAttribArray(0);
 
 		glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, red));
 		glEnableVertexAttribArray(1);
 		glBindVertexArray(0);
+	}
+
+	void update_vbo()
+	{
+		glBindBuffer(GL_ARRAY_BUFFER, VBO);
+		glBufferSubData(GL_ARRAY_BUFFER, 0, vertices.size() * sizeof(Vertex), vertices.data());
+
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+		glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, 0, indices.size() * sizeof(unsigned int), indices.data());
 	}
 
 	void render(int start_index, int num_indices) 

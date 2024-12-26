@@ -1,4 +1,7 @@
 ToDo
+
+- Implement bounding boxes
+
 Done
 - Implemnt hierarchical scene rendering with transforms
 	- Implement rendering one node at a time with traversal
