@@ -49,9 +49,9 @@ private:
 
     static void serialize_node(std::ofstream& file, const Node* node) {
         // write node properties
-        uint32_t outline_size = static_cast<uint32_t>(node->polygon.outline.size());
+        uint32_t outline_size = static_cast<uint32_t>(node->polygon.core.size());
         file.write(reinterpret_cast<const char*>(&outline_size), sizeof(outline_size));
-        file.write(reinterpret_cast<const char*>(node->polygon.outline.data()), outline_size * sizeof(glm::vec2));
+        file.write(reinterpret_cast<const char*>(node->polygon.core.data()), outline_size * sizeof(glm::vec2));
         file.write(reinterpret_cast<const char*>(&node->polygon.color), sizeof(glm::vec3));
         file.write(reinterpret_cast<const char*>(&node->polygon.outline_color), sizeof(glm::vec3));
         file.write(reinterpret_cast<const char*>(&node->polygon.outline_width), sizeof(float));
@@ -72,8 +72,8 @@ private:
         // read node properties
         uint32_t outline_size;
         file.read(reinterpret_cast<char*>(&outline_size), sizeof(outline_size));
-        node->polygon.outline.resize(outline_size);
-        file.read(reinterpret_cast<char*>(node->polygon.outline.data()), outline_size * sizeof(glm::vec2));
+        node->polygon.core.resize(outline_size);
+        file.read(reinterpret_cast<char*>(node->polygon.core.data()), outline_size * sizeof(glm::vec2));
         file.read(reinterpret_cast<char*>(&node->polygon.color), sizeof(glm::vec3));
         file.read(reinterpret_cast<char*>(&node->polygon.outline_color), sizeof(glm::vec3));
         file.read(reinterpret_cast<char*>(&node->polygon.outline_width), sizeof(float));

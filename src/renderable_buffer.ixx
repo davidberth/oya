@@ -8,10 +8,16 @@ module;
 
 export module renderable_buffer;
 
-import polygon;
+import renderable;
 import vertex;
 import render_stats_event;
 import event;
+
+export enum RenderType
+{
+	polygon = GL_TRIANGLES,
+	line = GL_LINES
+};
 
 
 export class RenderableBuffer
@@ -32,8 +38,13 @@ private:
 	GLuint EBO = -1;
 
 	bool dynamic = false;
+	RenderType render_type;
 public:
-	RenderableBuffer(bool dyn) { dynamic = dyn; };
+	RenderableBuffer(bool dyn, RenderType render_typ) 
+	{ 
+		dynamic = dyn; 
+		render_type = render_typ;
+	};
 	~RenderableBuffer() {};
 
 	void clear_buffer()
@@ -44,21 +55,21 @@ public:
 		index_offset = 0;
 	}
 
-	void add_polygon(Polygon *polygon)
+	void add_renderable(Renderable *renderable)
 	{
-		polygon->set_buffer_offset(current_offset);
-		polygon->set_index_offset(index_offset);
+		renderable->set_buffer_offset(current_offset);
+		renderable->set_index_offset(index_offset);
 
-		for (int i = 0; i < polygon->get_num_vertices(); i++)
+		for (int i = 0; i < renderable->get_num_vertices(); i++)
 		{
-			vertices.push_back(polygon->vertices.at(i));
+			vertices.push_back(renderable->vertices.at(i));
 		}
-		for (int i = 0; i < polygon->get_num_indices(); i++)
+		for (int i = 0; i < renderable->get_num_indices(); i++)
 		{
-			indices.push_back(polygon->indices.at(i) + current_offset);
+			indices.push_back(renderable->indices.at(i) + current_offset);
 		}
-		current_offset += polygon->get_num_vertices();
-		index_offset += polygon->get_num_indices();
+		current_offset += renderable->get_num_vertices();
+		index_offset += renderable->get_num_indices();
 	}
 
 	int get_num_vertices()
@@ -121,7 +132,7 @@ public:
 	{
 		if (num_indices > 0)
 		{
-			glDrawElements(GL_TRIANGLES, num_indices, GL_UNSIGNED_INT, (void*)(start_index * sizeof(unsigned int)));
+			glDrawElements(render_type, num_indices, GL_UNSIGNED_INT, (void*)(start_index * sizeof(unsigned int)));
 			
 			num_draw_calls += 1;
 			num_total_indices += num_indices;
@@ -135,7 +146,7 @@ public:
 		num_total_indices = 0;
 	}
 
-	void end_frame()
+	void end_frame() const
 	{
 		glBindVertexArray(0);
 		if (num_draw_calls == 0)

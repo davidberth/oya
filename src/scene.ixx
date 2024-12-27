@@ -29,8 +29,8 @@ public:
         root->rotate_delta = 0.001f;
         shader = nullptr;
 
-        geom = new RenderableBuffer(false);
-        debug_geom = new RenderableBuffer(true);
+        geom = new RenderableBuffer(false, RenderType::polygon);
+        debug_geom = new RenderableBuffer(true, RenderType::line);
     };
 
     ~Scene() {
@@ -153,7 +153,7 @@ private:
     }
 
     void add_node_recursive(Node* node) {
-        geom->add_polygon(&node->polygon);
+        geom->add_renderable(&node->polygon);
         for (Node* child : node->children) {
             add_node_recursive(child);
         }
