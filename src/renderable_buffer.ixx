@@ -6,7 +6,7 @@ module;
 #include <glm/glm.hpp>
 #include "loguru.hpp"
 
-export module geometry_buffer;
+export module renderable_buffer;
 
 import polygon;
 import vertex;
@@ -14,7 +14,7 @@ import render_stats_event;
 import event;
 
 
-export class GeometryBuffer
+export class RenderableBuffer
 {
 private:
 	std::vector<Vertex> vertices;
@@ -33,8 +33,8 @@ private:
 
 	bool dynamic = false;
 public:
-	GeometryBuffer(bool dyn) { dynamic = dyn; };
-	~GeometryBuffer() {};
+	RenderableBuffer(bool dyn) { dynamic = dyn; };
+	~RenderableBuffer() {};
 
 	void clear_buffer()
 	{

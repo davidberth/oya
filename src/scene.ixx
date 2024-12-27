@@ -9,7 +9,7 @@ module;
 export module scene;
 
 import node;
-import geometry_buffer;
+import renderable_buffer;
 import shader;
 
 
@@ -17,8 +17,8 @@ export class Scene
 {
 public:
     Node* root;
-    GeometryBuffer *geom;
-    GeometryBuffer *debug_geom;
+    RenderableBuffer *geom;
+    RenderableBuffer *debug_geom;
     Shader* shader;
     GLuint viewLoc;
 
@@ -29,8 +29,8 @@ public:
         root->rotate_delta = 0.001f;
         shader = nullptr;
 
-        geom = new GeometryBuffer(false);
-        debug_geom = new GeometryBuffer(true);
+        geom = new RenderableBuffer(false);
+        debug_geom = new RenderableBuffer(true);
     };
 
     ~Scene() {

@@ -1,6 +1,11 @@
 ToDo
-
+- Refactor polygon generation routines into separate module
+- Create renderable, generalization of polygon
+- Derive polygon from renderable
+- Create line class derived from renderable
+- Generalize geometry buffer class to support general renderables
 - Implement bounding boxes
+- Implement bounding box rendering
 
 Done
 - Implemnt hierarchical scene rendering with transforms
