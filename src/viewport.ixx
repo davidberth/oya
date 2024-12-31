@@ -7,8 +7,6 @@ export module viewport;
 import event;
 import window_event;
 
-
-
 export struct Viewport {
 	int width;
 	int height;

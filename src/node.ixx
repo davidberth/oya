@@ -15,7 +15,7 @@ public:
 	Node* parent;
 	std::vector<Node*> children;
 
-	Polygon polygon;
+	Outline polygon;
 
 	// transform properties
 	float rotate_delta = 0.0f;
@@ -61,7 +61,6 @@ public:
 
 	void update(float dt)
 	{
-		// update logic here
 		angle += rotate_delta;
 		if (angle > 6.283f) angle -= 2 * 6.283f;
 		set_rotation(angle);

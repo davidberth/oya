@@ -10,7 +10,7 @@ import polygon_utility;
 import renderable;
 
 
-export class Polygon : public Renderable
+export class Outline : public Renderable
 {
 public:
 	
@@ -20,7 +20,7 @@ public:
 	float outline_width;
 	std::vector<glm::vec2> buffer;
 
-	Polygon() : Renderable()
+	Outline() : Renderable()
 	{
 	}
 

@@ -2,7 +2,7 @@ find_package(OpenGL REQUIRED COMPONENTS OpenGL)
 
 add_executable (oya "main.cpp" "update.ixx")
 target_sources(oya PRIVATE FILE_SET CXX_MODULES FILES "window.ixx" "layer.ixx" "layer_stack.ixx" "world_layer.ixx" "gui_layer.ixx" "fbo.ixx" "gui_theme.ixx" "render.ixx" "shader.ixx" "camera.ixx" "persistent_data.ixx" "updatable.ixx" "update_manager.ixx" "update.ixx" "node.ixx" "renderable_buffer.ixx" "vertex.ixx" "scene.ixx"    "event.ixx" "key_event.ixx" "input_event.ixx" "input_manager.ixx" "special_actions.ixx" "window_event.ixx" "viewport.ixx"
-"mouse_event.ixx" "render_stats_event.ixx" "scene_serializer.ixx" "scene_event.ixx" "polygon.ixx" "polygon_utility.ixx" "renderable.ixx")
+"mouse_event.ixx" "render_stats_event.ixx" "scene_serializer.ixx" "scene_event.ixx" "polygon.ixx" "polygon_utility.ixx" "renderable.ixx" "outline.ixx")
 
 target_compile_options(oya PUBLIC /ifcSearchDir${CMAKE_SOURCE_DIR}/build/src/CMakeFiles/oya.dir)
 
