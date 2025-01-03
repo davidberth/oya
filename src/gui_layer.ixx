@@ -40,6 +40,9 @@ private:
 	int num_draw_calls = 0;
     float average_indices = 0.0f;
 	float average_triangles = 0.0f;
+	int num_draw_calls_debug = 0;
+	float average_indices_debug = 0.0f;
+	float average_outlines_debug = 0.0f;
    
     
 public:
@@ -74,10 +77,20 @@ public:
 
 		event_dispatcher.subscribe<InputEvent>([this](const InputEvent& event) { on_input(event); });
         event_dispatcher.subscribe<RenderStatsEvent>([this](const RenderStatsEvent& event) {
+            if (event.render_set == RenderStatsEventSet::world_geometry)
+            {
                 num_draw_calls = event.num_draw_calls;
                 average_indices = event.average_indices;
-				average_triangles = event.average_triangles;
-                });
+                average_triangles = event.average_elements;
+            }
+			else if (event.render_set == RenderStatsEventSet::debug_render)
+            {
+				num_draw_calls_debug = event.num_draw_calls;
+				average_indices_debug = event.average_indices;
+				average_outlines_debug = event.average_elements;
+            }
+            });
+            
 	}
 	virtual void update() override
 	{
@@ -124,7 +137,14 @@ public:
 		ImGui::Text("Average indices: %.1f", average_indices);
 		ImGui::Text("Average triangles: %.1f", average_triangles);
 		ImGui::Text("Total triangles: %d", int(num_draw_calls * average_triangles));
+		ImGui::Separator();
+        ImGui::Text("Debug Render properties");
+        ImGui::Text("Draw calls: %d", num_draw_calls_debug);
+        ImGui::Text("Average indices: %.1f", average_indices_debug);
+        ImGui::Text("Average outlines: %.1f", average_outlines_debug);
+        ImGui::Text("Total outlines: %d", int(num_draw_calls_debug * average_outlines_debug));
         ImGui::End();
+
 
         // Scenes window
         ImGui::Begin("Scenes");

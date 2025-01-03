@@ -46,12 +46,26 @@ private:
 	RenderType render_type;
 
 	Shader* shader;
+	RenderStatsEventSet render_set;
+
+	int vertices_per_element;
+
 public:
-	GeometryRenderer(bool dyn, RenderType render_typ) 
+	GeometryRenderer(bool dyn, RenderType render_typ, RenderStatsEventSet rend_set) 
 	{ 
 		dynamic = dyn; 
 		render_type = render_typ;
+		render_set = rend_set;
 		shader = nullptr;
+
+		if (render_type == RenderType::polygon)
+		{
+			vertices_per_element = 3;
+		}
+		else if (render_type == RenderType::line)
+		{
+			vertices_per_element = 2;
+		}
 	};
 	~GeometryRenderer() {
 		if (shader != nullptr)
@@ -192,12 +206,12 @@ public:
 		glBindVertexArray(0);
 		if (num_draw_calls == 0)
 		{
-			event_dispatcher.dispatch(RenderStatsEvent(0, 0.0f, 0.0f));
+			event_dispatcher.dispatch(RenderStatsEvent(render_set, 0, 0.0f, 0.0f));
 			return;
 		}
 		float average_indices = num_total_indices / num_draw_calls;
-		float average_triangles = average_indices / 3;
+		float average_triangles = average_indices / vertices_per_element;
 		
-		event_dispatcher.dispatch(RenderStatsEvent(num_draw_calls, average_indices, average_triangles));
+		event_dispatcher.dispatch(RenderStatsEvent(render_set, num_draw_calls, average_indices, average_triangles));
 	}
 };

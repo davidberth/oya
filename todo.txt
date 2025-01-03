@@ -3,9 +3,12 @@ ToDo
 - Implement bounding box rendering
 
 In Progress
-- Move shaders to geometry renderer
+
+- Enable move camera by right mouse button and drag
 
 Done
+- Implement multiple render counters
+- Move shaders to geometry renderer
 - Implement test outline rendering
 - Create outline class derived from renderable
 - Refactor polygon generation routines into separate module

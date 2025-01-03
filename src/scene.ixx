@@ -9,6 +9,7 @@ export module scene;
 
 import node;
 import geometry_renderer;
+import render_stats_event;
 import outline;
 
 
@@ -26,10 +27,9 @@ public:
         root = new Node();
         root->centroid = glm::vec2(0.0f, 0.0f);
         root->rotate_delta = 0.001f;
-      
 
-        geom = new GeometryRenderer(false, RenderType::polygon);
-        debug_geom = new GeometryRenderer(true, RenderType::line);
+        geom = new GeometryRenderer(false, RenderType::polygon, RenderStatsEventSet::world_geometry);
+        debug_geom = new GeometryRenderer(true, RenderType::line, RenderStatsEventSet::debug_render);
 
         test_outlines.clear();
         Outline* outline1 = new Outline();
@@ -92,6 +92,7 @@ public:
     void setup()
     {
         geom->clear_buffer();
+        debug_geom->clear_buffer();
 
         check_transform_needs(root);
         propagate_transform_needs(root);
