@@ -4,14 +4,17 @@ module;
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 #include <glm/glm.hpp>
+#include <glm/gtc/type_ptr.hpp>
 #include "loguru.hpp"
+#include <string>
 
-export module renderable_buffer;
+export module geometry_renderer;
 
 import renderable;
 import vertex;
 import render_stats_event;
 import event;
+import shader;
 
 export enum RenderType
 {
@@ -20,7 +23,7 @@ export enum RenderType
 };
 
 
-export class RenderableBuffer
+export class GeometryRenderer
 {
 private:
 	std::vector<Vertex> vertices;
@@ -37,15 +40,25 @@ private:
 	GLuint VAO = -1;
 	GLuint EBO = -1;
 
+	GLuint view_proj_model;
+
 	bool dynamic = false;
 	RenderType render_type;
+
+	Shader* shader;
 public:
-	RenderableBuffer(bool dyn, RenderType render_typ) 
+	GeometryRenderer(bool dyn, RenderType render_typ) 
 	{ 
 		dynamic = dyn; 
 		render_type = render_typ;
+		shader = nullptr;
 	};
-	~RenderableBuffer() {};
+	~GeometryRenderer() {
+		if (shader != nullptr)
+		{
+			delete shader;
+		}
+	};
 
 	void clear_buffer()
 	{
@@ -53,6 +66,18 @@ public:
 		indices.clear();
 		current_offset = 0;
 		index_offset = 0;
+	}
+
+	void update_renderable_vertices(Renderable* renderable)
+	{
+        auto buffer_offset = renderable->get_vertex_offset();
+        auto num_vertices = renderable->get_num_vertices();
+        auto& renderable_vertices = renderable->vertices;
+
+        for (int i = 0; i < num_vertices; i++)
+        {
+            vertices.at(buffer_offset + i) = renderable_vertices.at(i);
+        }
 	}
 
 	void add_renderable(Renderable *renderable)
@@ -119,6 +144,13 @@ public:
 		glBindVertexArray(0);
 	}
 
+	void assign_shader(const std::string& vertex_path, const std::string& fragment_path)
+	{
+		shader = new Shader(vertex_path, fragment_path);
+		view_proj_model = glGetUniformLocation(shader->program_id, "view_proj_model");
+		set_transformation(glm::mat4(1.0f));
+	}
+	
 	void update_vbo()
 	{
 		glBindBuffer(GL_ARRAY_BUFFER, VBO);
@@ -128,15 +160,9 @@ public:
 		glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, 0, indices.size() * sizeof(unsigned int), indices.data());
 	}
 
-	void render(int start_index, int num_indices) 
+	void set_transformation(const glm::mat4& transform) const
 	{
-		if (num_indices > 0)
-		{
-			glDrawElements(render_type, num_indices, GL_UNSIGNED_INT, (void*)(start_index * sizeof(unsigned int)));
-			
-			num_draw_calls += 1;
-			num_total_indices += num_indices;
-		}
+		glUniformMatrix4fv(view_proj_model, 1, GL_FALSE, glm::value_ptr(transform));
 	}
 
 	void new_frame()
@@ -144,6 +170,21 @@ public:
 		glBindVertexArray(VAO);
 		num_draw_calls = 0;
 		num_total_indices = 0;
+		if (shader != nullptr)
+		{
+			shader->use();
+		}	
+	}
+
+	void render(int start_index, int num_indices)
+	{
+		if (num_indices > 0 and shader != nullptr)
+		{
+			glDrawElements(render_type, num_indices, GL_UNSIGNED_INT, (void*)(start_index * sizeof(unsigned int)));
+
+			num_draw_calls += 1;
+			num_total_indices += num_indices;
+		}
 	}
 
 	void end_frame() const

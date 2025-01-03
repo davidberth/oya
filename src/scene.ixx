@@ -4,33 +4,51 @@ module;
 #include <string>
 #include <loguru.hpp>
 #include "GL/glew.h"
-#include <glm/gtc/type_ptr.hpp>
 
 export module scene;
 
 import node;
-import renderable_buffer;
-import shader;
+import geometry_renderer;
+import outline;
 
 
 export class Scene
 {
 public:
     Node* root;
-    RenderableBuffer *geom;
-    RenderableBuffer *debug_geom;
-    Shader* shader;
-    GLuint viewLoc;
+    GeometryRenderer *geom;
+    GeometryRenderer *debug_geom;
+
+    std::vector<Outline *> test_outlines;
 
     Scene() {
       
         root = new Node();
         root->centroid = glm::vec2(0.0f, 0.0f);
         root->rotate_delta = 0.001f;
-        shader = nullptr;
+      
 
-        geom = new RenderableBuffer(false, RenderType::polygon);
-        debug_geom = new RenderableBuffer(true, RenderType::line);
+        geom = new GeometryRenderer(false, RenderType::polygon);
+        debug_geom = new GeometryRenderer(true, RenderType::line);
+
+        test_outlines.clear();
+        Outline* outline1 = new Outline();
+		outline1->color = glm::vec3(1.0f, 0.0f, 0.0f);
+		outline1->core.push_back(glm::vec2(-0.5f, -0.5f));
+		outline1->core.push_back(glm::vec2(0.5f, -0.5f));
+		outline1->core.push_back(glm::vec2(0.5f, 0.5f));
+		outline1->core.push_back(glm::vec2(-0.5f, 0.5f));
+        outline1->setup();
+		test_outlines.push_back(outline1);
+
+		Outline* outline2 = new Outline();
+		outline2->color = glm::vec3(0.0f, 1.0f, 0.0f);
+		outline2->core.push_back(glm::vec2(0.5f, -0.5f));
+		outline2->core.push_back(glm::vec2(1.5f, -0.5f));
+		outline2->core.push_back(glm::vec2(1.5f, 0.5f));
+		outline2->core.push_back(glm::vec2(0.5f, 0.5f));
+        outline2->setup();
+		test_outlines.push_back(outline2);
     };
 
     ~Scene() {
@@ -38,10 +56,16 @@ public:
         {
             delete root->children.at(i);
         }
+
+		for (Outline *outline : test_outlines)
+		{
+			delete outline;
+		}
+
         delete geom;
         delete debug_geom;
         delete root;
-        delete shader;
+     
     };
 
     Node* add_node(Node *parent, glm::vec2 vertices[], int num_vertices, 
@@ -73,38 +97,33 @@ public:
         propagate_transform_needs(root);
         count_total_indices(root);
         add_node_recursive(root);
+        add_outlines();
 
         geom->setup_vbo();
+        debug_geom->setup_vbo();
+
+		geom->assign_shader("shaders/polygon_vert.glsl", "shaders/polygon_frag.glsl");
+		debug_geom->assign_shader("shaders/polygon_vert.glsl", "shaders/polygon_frag.glsl");
+
     }
 
-    void setup_shader()
+    void render(const glm::mat4 &view_proj)
     {
-        if (shader != nullptr)
-        {
-            delete shader;
-        }
-        shader = new Shader("shaders/vertex.glsl", "shaders/fragment.glsl");
-        viewLoc = glGetUniformLocation(shader->programID, "view_proj_model");
-    }
-
-
-    void render(const glm::mat4 view_proj)
-    {
-		if (shader == nullptr)
-		{
-			return;
-		}
-        shader->use();
         geom->new_frame();
         render_node(root, glm::mat4(1.0f), view_proj);
         geom->end_frame();
+
+		debug_geom->new_frame();
+        debug_geom->set_transformation(view_proj);
+		debug_geom->render(0, debug_geom->get_num_indices());
+		debug_geom->end_frame();
     }
 
     void render_node(Node* node, const glm::mat4& parent_transform, const glm::mat4& view_proj)
     {
         glm::mat4 global_transform = parent_transform * node->get_transform();
-        glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view_proj * global_transform));
-
+        geom->set_transformation(view_proj * global_transform);
+      
         if (!node->needs_child_transforms) {
             // render this node and all children in one draw call
             geom->render(node->polygon.get_index_offset(), node->total_indices);
@@ -124,6 +143,14 @@ public:
     {
         root->update(dt);
     }
+
+	void add_outlines()
+	{
+		for (Outline* outline : test_outlines)
+		{
+			debug_geom->add_renderable(outline);
+		}
+	}
 
 private:
     void check_transform_needs(Node* node) {

@@ -1,9 +1,13 @@
 ToDo
-- Create line class derived from renderable
 - Implement bounding boxes
 - Implement bounding box rendering
 
+In Progress
+- Move shaders to geometry renderer
+
 Done
+- Implement test outline rendering
+- Create outline class derived from renderable
 - Refactor polygon generation routines into separate module
 - Create renderable, generalization of polygon
 - Derive polygon from renderable

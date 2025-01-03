@@ -3,7 +3,7 @@ module;
 #include <vector>
 #include <glm/glm.hpp>
 
-export module line;
+export module outline;
 
 import vertex;
 import polygon_utility;

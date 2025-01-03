@@ -15,7 +15,7 @@ public:
 	Node* parent;
 	std::vector<Node*> children;
 
-	Outline polygon;
+	Polygon polygon;
 
 	// transform properties
 	float rotate_delta = 0.0f;

@@ -30,7 +30,6 @@ public:
         scene.root = deserialize_node(file, nullptr);
         // scene.create_world();
         scene.setup();
-        scene.setup_shader();
         
     }
 

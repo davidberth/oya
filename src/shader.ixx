@@ -13,11 +13,10 @@ export module shader;
 export class Shader
 {
 public:
-    GLuint programID;
+    GLuint program_id;
 
     Shader(const std::string& vertexPath, const std::string& fragmentPath)
     {
-        // Read vertex shader from file
         std::string vertexCode;
         std::ifstream vShaderFile(vertexPath);
         std::stringstream vShaderStream;
@@ -25,7 +24,6 @@ public:
         vertexCode = vShaderStream.str();
         vShaderFile.close();
 
-        // Read fragment shader from file
         std::string fragmentCode;
         std::ifstream fShaderFile(fragmentPath);
         std::stringstream fShaderStream;
@@ -33,34 +31,31 @@ public:
         fragmentCode = fShaderStream.str();
         fShaderFile.close();
 
-        // Compile shaders
         GLuint vertexShader = compileShader(vertexCode.c_str(), GL_VERTEX_SHADER);
         GLuint fragmentShader = compileShader(fragmentCode.c_str(), GL_FRAGMENT_SHADER);
 
-        // Link shaders to create a program
-        programID = glCreateProgram();
-        glAttachShader(programID, vertexShader);
-        glAttachShader(programID, fragmentShader);
-        glLinkProgram(programID);
+        program_id = glCreateProgram();
+        glAttachShader(program_id, vertexShader);
+        glAttachShader(program_id, fragmentShader);
+        glLinkProgram(program_id);
 
-        // Check for linking errors
+       
         GLint success;
         GLchar infoLog[512];
-        glGetProgramiv(programID, GL_LINK_STATUS, &success);
+        glGetProgramiv(program_id, GL_LINK_STATUS, &success);
         if (!success)
         {
-            glGetProgramInfoLog(programID, 512, nullptr, infoLog);
+            glGetProgramInfoLog(program_id, 512, nullptr, infoLog);
             std::cerr << "ERROR::SHADER::PROGRAM::LINKING_FAILED\n" << infoLog << std::endl;
         }
 
-        // Delete shaders as they're linked into our program now and no longer necessary
         glDeleteShader(vertexShader);
         glDeleteShader(fragmentShader);
     }
 
     void use()
     {
-        glUseProgram(programID);
+        glUseProgram(program_id);
     }
 
 private:
@@ -70,7 +65,6 @@ private:
         glShaderSource(shader, 1, &shaderSource, nullptr);
         glCompileShader(shader);
 
-        // Check for compilation errors
         GLint success;
         GLchar infoLog[512];
         glGetShaderiv(shader, GL_COMPILE_STATUS, &success);

@@ -16,7 +16,7 @@ import layer;
 
 import camera;
 import persistent_data;
-import renderable_buffer;
+import geometry_renderer;
 import scene;
 import scene_event;
 import scene_serializer;
