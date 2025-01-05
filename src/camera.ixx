@@ -5,6 +5,8 @@ module;
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 #include <glm/mat4x4.hpp>
+// TODO Change the mouse button event so that glfw is not needed here
+#include <GLFW/glfw3.h>
 #include <math.h>
 
 
@@ -39,12 +41,33 @@ public:
 	glm::mat4 view_proj;
 	glm::mat4 view_proj_inv;
 
+	bool is_mouse_down = false;
+	glm::vec2 mouse_pos;
+	float pan_speed = 0.01f;
+
     Camera(glm::vec2 start_pos, float start_height, float start_rotation)
         : position(start_pos), height(start_height), rotation(start_rotation) 
 	{
 		event_dispatcher.subscribe<InputEvent>([this](const InputEvent& input_event) {
 			on_input(input_event);
 		});
+
+		event_dispatcher.subscribe<MouseMoveEvent>([this](const MouseMoveEvent& mouse_event) {
+			on_mouse_move(mouse_event);
+		});
+
+		event_dispatcher.subscribe<MouseButtonEvent>([this](const MouseButtonEvent& mouse_event) {
+			if (mouse_event.button == GLFW_MOUSE_BUTTON_RIGHT && mouse_event.action == GLFW_PRESS)
+			{
+				is_mouse_down = true;
+			}
+			if (mouse_event.button == GLFW_MOUSE_BUTTON_RIGHT && mouse_event.action == GLFW_RELEASE)
+			{
+				is_mouse_down = false;
+			}
+			});
+
+
 	}
 
 	glm::vec2 ndc_to_world_at_z(glm::vec2 ndc_pos, float target_z)
@@ -115,6 +138,31 @@ public:
 			if (height > 50.f) height = 50.0f;
 		}
 
+	}
+
+	void on_mouse_move(const MouseMoveEvent& mouse_event)
+	{
+		if (is_mouse_down)
+		{
+			glm::vec2 delta = glm::vec2(mouse_event.xpos, mouse_event.ypos) - mouse_pos;
+			delta.x = -delta.x;
+			position += delta * pan_speed;
+			
+		}
+		mouse_pos = glm::vec2(mouse_event.xpos, mouse_event.ypos);
+		
+	}
+
+	void on_mouse_button(const MouseButtonEvent& mouse_event)
+	{
+		if (mouse_event.button == GLFW_MOUSE_BUTTON_RIGHT && mouse_event.action == GLFW_PRESS)
+		{
+			is_mouse_down = true;
+		}
+		if (mouse_event.button == GLFW_MOUSE_BUTTON_RIGHT && mouse_event.action == GLFW_RELEASE)
+		{
+			is_mouse_down = false;
+		}
 	}
 };
 

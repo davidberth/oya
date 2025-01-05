@@ -4,9 +4,9 @@ ToDo
 
 In Progress
 
-- Enable move camera by right mouse button and drag
 
 Done
+- Enable move camera by right mouse button and drag
 - Implement multiple render counters
 - Move shaders to geometry renderer
 - Implement test outline rendering

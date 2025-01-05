@@ -33,7 +33,7 @@ public:
 
         test_outlines.clear();
         Outline* outline1 = new Outline();
-		outline1->color = glm::vec3(1.0f, 0.0f, 0.0f);
+		outline1->color = glm::vec3(1.0f, 1.0f, 1.0f);
 		outline1->core.push_back(glm::vec2(-0.5f, -0.5f));
 		outline1->core.push_back(glm::vec2(0.5f, -0.5f));
 		outline1->core.push_back(glm::vec2(0.5f, 0.5f));
@@ -42,11 +42,11 @@ public:
 		test_outlines.push_back(outline1);
 
 		Outline* outline2 = new Outline();
-		outline2->color = glm::vec3(0.0f, 1.0f, 0.0f);
-		outline2->core.push_back(glm::vec2(0.5f, -0.5f));
-		outline2->core.push_back(glm::vec2(1.5f, -0.5f));
-		outline2->core.push_back(glm::vec2(1.5f, 0.5f));
-		outline2->core.push_back(glm::vec2(0.5f, 0.5f));
+		outline2->color = glm::vec3(0.5f, 1.0f, 0.5f);
+		outline2->core.push_back(glm::vec2(0.6f, -0.5f));
+		outline2->core.push_back(glm::vec2(1.6f, -0.5f));
+		outline2->core.push_back(glm::vec2(1.6f, 0.5f));
+		outline2->core.push_back(glm::vec2(0.6f, 0.5f));
         outline2->setup();
 		test_outlines.push_back(outline2);
     };
