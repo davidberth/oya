@@ -2,7 +2,6 @@ module;
 
 #include <unordered_map>
 #include <GLFW/glfw3.h>
-#include <loguru.hpp>
 #include <array>
 
 export module input_manager;
@@ -48,7 +47,7 @@ public:
             // convert key event to input event
             bool is_pressed = (key_event.action == GLFW_PRESS); 
             auto input_event = InputEvent(it->second, is_pressed);
-            LOG_F(INFO, "Input event: %d", static_cast<int>(input_event.action));
+           
             input_states[static_cast<size_t>(input_event.action)] = is_pressed;
             // dispatch the input event
             event_dispatcher.dispatch(input_event);

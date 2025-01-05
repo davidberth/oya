@@ -2,7 +2,6 @@ module;
 
 #include <glm/glm.hpp>
 #include <string>
-#include <loguru.hpp>
 #include "GL/glew.h"
 
 export module scene;

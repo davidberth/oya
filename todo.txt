@@ -1,6 +1,7 @@
 ToDo
 - Implement bounding boxes
 - Implement bounding box rendering
+- Fix memory access violation in release mode
 
 In Progress
 

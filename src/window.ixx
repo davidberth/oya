@@ -4,7 +4,6 @@ module;
 #include <GLFW/glfw3.h>
 #include <string>
 #include "configure.h"
-#include "loguru.hpp"
 
 export module window;
 
@@ -26,7 +25,7 @@ GLFWcursor* cursor;
 
 void glfw_errorCallback(int error, const char* description)
 {
-	LOG_F(INFO, "GLFW error: %d description: %s", error, description);
+	// LOG_F(INFO, "GLFW error: %d description: %s", error, description);
 }
 
 export void set_window_size(float size_ratio_x, float size_ratio_y, int monitor)
@@ -159,7 +158,7 @@ export bool init_window()
 	if (GLEW_OK != glewInit())
 	{
 		// GLEW failed!
-		LOG_F(ERROR, "Failed to initialize GLEW\n");
+		// LOG_F(ERROR, "Failed to initialize GLEW\n");
 		return 1;
 	}
 

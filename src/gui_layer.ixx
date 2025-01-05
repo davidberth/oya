@@ -1,7 +1,6 @@
 module;
 
 #include <string>
-#include "loguru.hpp"
 
 #include "imgui.h"
 #include "imgui_impl_glfw.h"
@@ -67,14 +66,13 @@ public:
         ImGui_ImplGlfw_InitForOpenGL(window, true);
         ImGui_ImplOpenGL3_Init("#version 460");
 
-        LOG_F(INFO, "Loading fonts");
+   
 		for (int i = 0; i < 3; ++i)
 		{
 			font[i] = io.Fonts->AddFontFromFileTTF(font_paths[i], font_sizes[i]);
 			IM_ASSERT(font[i] != nullptr);
 		}
-        LOG_F(INFO, "done");
-
+   
 		event_dispatcher.subscribe<InputEvent>([this](const InputEvent& event) { on_input(event); });
         event_dispatcher.subscribe<RenderStatsEvent>([this](const RenderStatsEvent& event) {
             if (event.render_set == RenderStatsEventSet::world_geometry)
@@ -219,7 +217,7 @@ public:
 	}
 
     void on_input(const InputEvent& event) {
-		LOG_F(INFO, "Key Input: %d %d ", event.action);
+		
         if (event.is_pressed)
         {
 

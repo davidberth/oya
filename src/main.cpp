@@ -1,7 +1,7 @@
 ﻿#include <stdio.h>
 #include <iostream>
 
-#include "loguru.hpp"
+
 
 import window;
 import layer;
@@ -17,12 +17,6 @@ import camera;
 
 int main(int argc, char** argv)
 {
-
-    loguru::g_preamble_date = false;
-    loguru::g_preamble_thread = false;
-    loguru::g_preamble_time = false;
-    loguru::init(argc, argv);
-
 	Layer* world_layer = new WorldLayer("world");
 	layer_stack.add_layer(world_layer);
 

@@ -2,7 +2,6 @@ module;
 
 #include <string>
 #include <functional>
-#include "loguru.hpp"
 #include "GL/glew.h"
 #include <glm/glm.hpp>
 #include <iostream>

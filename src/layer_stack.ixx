@@ -1,7 +1,6 @@
 module; 
 
 #include <vector>
-#include "loguru.hpp"
 
 export module layer_stack;
 
@@ -19,7 +18,6 @@ public:
 
 	void add_layer(Layer* layer)
 	{
-		LOG_F(INFO, "Layer %s added", layer->get_name().c_str());
 		layers.emplace_back(layer);
 	}
 

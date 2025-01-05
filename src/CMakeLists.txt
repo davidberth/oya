@@ -12,18 +12,10 @@ include_directories(${CMAKE_SOURCE_DIR}/external/glm)
 include_directories(${CMAKE_SOURCE_DIR}/external/imgui)
 include_directories(${CMAKE_SOURCE_DIR}/external/imgui/backends)
 include_directories(${CMAKE_SOURCE_DIR}/external/glew-2.2.0/include)
-include_directories(${CMAKE_SOURCE_DIR}/external/loguru)
-include_directories(${CMAKE_SOURCE_DIR}/external/cereal/include)
 
 set(glfw_lib "${CMAKE_SOURCE_DIR}/external/build/glfw/src/${CMAKE_BUILD_TYPE}/glfw3.lib")
 set(imgui_lib "${CMAKE_SOURCE_DIR}/external/build/${CMAKE_BUILD_TYPE}/imgui.lib")
 set(glew_lib "${CMAKE_SOURCE_DIR}/external/build/${CMAKE_BUILD_TYPE}/glew.lib")
-
-if (CMAKE_BUILD_TYPE STREQUAL "Debug")
-    set(logoru_lib "${CMAKE_SOURCE_DIR}/external/build/loguru/Debug/logurud.lib")
-else()
-    set(logoru_lib "${CMAKE_SOURCE_DIR}/external/build/loguru/Release/loguru.lib")
-endif()
 	
 target_compile_definitions(oya PUBLIC GLEW_STATIC)
 target_link_libraries(oya ${glfw_lib} ${imgui_lib} ${glew_lib} ${logoru_lib} OpenGL32) 
