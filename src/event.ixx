@@ -55,4 +55,8 @@ public:
     }
 };
 
-export EventDispatcher event_dispatcher;
+export inline EventDispatcher& get_event_dispatcher() {
+	static EventDispatcher event_dispatcher;
+	return event_dispatcher;
+}
+

@@ -95,4 +95,7 @@ private:
     }
 };
 
-export SceneSerializer scene_serializer;
+export inline SceneSerializer& get_scene_serializer() {
+	static SceneSerializer scene_serializer;
+	return scene_serializer;
+}

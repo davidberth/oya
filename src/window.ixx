@@ -47,7 +47,7 @@ export void set_window_size(float size_ratio_x, float size_ratio_y, int monitor)
 		glfwSetWindowMonitor(window, monitors[index], 0, 0, mwidth, mheight, GLFW_DONT_CARE);
 		glViewport(0, 0, mwidth, mheight);
 
-		event_dispatcher.dispatch(WindowEvent(mwidth, mheight));
+		get_event_dispatcher().dispatch(WindowEvent(mwidth, mheight));
 
 	}
 	else
@@ -57,7 +57,7 @@ export void set_window_size(float size_ratio_x, float size_ratio_y, int monitor)
 		glfwSetWindowMonitor(window, NULL, resolution_width / 2 - sizex / 2, resolution_height / 2 - sizey / 2, sizex, sizey, 0);
 		glViewport(0, 0, sizex, sizey);
 		
-		event_dispatcher.dispatch(WindowEvent(sizex, sizey));
+		get_event_dispatcher().dispatch(WindowEvent(sizex, sizey));
 
 	}
 }
@@ -71,29 +71,29 @@ void glfw_key_callback(GLFWwindow* lwindow, int key, int scancode, int action, i
 	if ((action == GLFW_PRESS) || (action == GLFW_RELEASE))
 	{
 		KeyEvent event(key, action);
-		event_dispatcher.dispatch(event);
+		get_event_dispatcher().dispatch(event);
 	}	
 }
 
 void glfw_scroll_callback(GLFWwindow* lwindow, double xoffset, double yoffset)
 {
-	event_dispatcher.dispatch(MouseScrollEvent(xoffset, yoffset));
+	get_event_dispatcher().dispatch(MouseScrollEvent(xoffset, yoffset));
 }
 
 void glfw_mouse_button_callback(GLFWwindow* lwindow, int button, int action, int mods)
 {
-	event_dispatcher.dispatch(MouseButtonEvent(button, action, mods));
+	get_event_dispatcher().dispatch(MouseButtonEvent(button, action, mods));
 }
 
 void glfw_cursor_position_callback(GLFWwindow* lwindow, double xpos, double ypos)
 {
-	event_dispatcher.dispatch(MouseMoveEvent(xpos, ypos));
+	get_event_dispatcher().dispatch(MouseMoveEvent(xpos, ypos));
 }
 
 void glfw_window_size_callback(GLFWwindow* lwindow, int width, int height)
 {
 	glViewport(0, 0, width, height);
-	event_dispatcher.dispatch(WindowEvent(width, height));
+	get_event_dispatcher().dispatch(WindowEvent(width, height));
 
 }
 
@@ -178,9 +178,9 @@ export bool init_window()
 	glfwSwapInterval(1);
 
 	int width, height;
-	viewport.init();
+	get_viewport().init();
 	get_window_size(width, height);
-	viewport.set_size(width, height);
+	get_viewport().set_size(width, height);
 
 	return true;
 }

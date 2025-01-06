@@ -29,4 +29,7 @@ private:
     std::vector<Updatable*> updatables;
 };
 
-export UpdatableManager updatable_manager;
+export inline UpdatableManager& get_updatable_manager() {
+	static UpdatableManager updatable_manager;
+	return updatable_manager;
+}

@@ -1,8 +1,6 @@
 ﻿#include <stdio.h>
 #include <iostream>
 
-
-
 import window;
 import layer;
 import world_layer;
@@ -12,16 +10,17 @@ import render;
 import update;
 import persistent_data;
 import updatable_manager;
+import special_actions;
 import camera;
 
 
 int main(int argc, char** argv)
 {
 	Layer* world_layer = new WorldLayer("world");
-	layer_stack.add_layer(world_layer);
+	get_layer_stack().add_layer(world_layer);
 
 	Layer* gui_layer = new GUILayer("gui");
-	layer_stack.add_layer(gui_layer);
+	get_layer_stack().add_layer(gui_layer);
 
     if (!init_window())
     {
@@ -29,14 +28,15 @@ int main(int argc, char** argv)
     }
 
 	GLFWwindow* window = get_window();
-    for (auto layer : layer_stack)
+    for (auto layer : get_layer_stack())
     {
 		layer->init(window);
 	}
 
-    persistent_data.load();
-    updatable_manager.add_updatable(&camera);
-
+    get_persistent_data().load();
+    get_updatable_manager().add_updatable(&get_camera());
+    // ensure the special actions object is constructed
+    get_special_actions();
 
     while (!window_should_close())
     {
@@ -48,13 +48,13 @@ int main(int argc, char** argv)
         present();
     }
 
-	for (auto layer : layer_stack)
+	for (auto layer : get_layer_stack())
 	{
 		layer->cleanup();
 	}
     
     cleanup_window();
-    persistent_data.save();
+    get_persistent_data().save();
 
 	delete world_layer;
 	delete gui_layer;

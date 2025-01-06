@@ -48,15 +48,15 @@ public:
     Camera(glm::vec2 start_pos, float start_height, float start_rotation)
         : position(start_pos), height(start_height), rotation(start_rotation) 
 	{
-		event_dispatcher.subscribe<InputEvent>([this](const InputEvent& input_event) {
+		get_event_dispatcher().subscribe<InputEvent>([this](const InputEvent& input_event) {
 			on_input(input_event);
 		});
 
-		event_dispatcher.subscribe<MouseMoveEvent>([this](const MouseMoveEvent& mouse_event) {
+		get_event_dispatcher().subscribe<MouseMoveEvent>([this](const MouseMoveEvent& mouse_event) {
 			on_mouse_move(mouse_event);
 		});
 
-		event_dispatcher.subscribe<MouseButtonEvent>([this](const MouseButtonEvent& mouse_event) {
+		get_event_dispatcher().subscribe<MouseButtonEvent>([this](const MouseButtonEvent& mouse_event) {
 			if (mouse_event.button == GLFW_MOUSE_BUTTON_RIGHT && mouse_event.action == GLFW_PRESS)
 			{
 				is_mouse_down = true;
@@ -87,6 +87,7 @@ public:
 	void update() override {
 
 		// update the matrices
+		Viewport viewport = get_viewport();
 		float asp_ratio = float(viewport.width) / float(viewport.height);
 		projection = glm::perspective(glm::radians(45.0f), asp_ratio, near_clip, far_clip);
 		view = glm::mat4(1.0f);
@@ -95,30 +96,30 @@ public:
 		view_proj = projection * view;
 		view_proj_inv = glm::inverse(view_proj);
 
-		if (input_manager.get_input_state(InputAction::zoom_in))
+		if (get_input_manager().get_input_state(InputAction::zoom_in))
 		{
 			height -= zoom_speed;
 			if (height < 1.0f) height = 1.0f;
 		}
-		if (input_manager.get_input_state(InputAction::zoom_out))
+		if (get_input_manager().get_input_state(InputAction::zoom_out))
 		{			
 			height += zoom_speed;
 			if (height > 50.f) height = 50.0f;
 		}
 
-		if (input_manager.get_input_state(InputAction::up))
+		if (get_input_manager().get_input_state(InputAction::up))
 		{
 			position.y += speed;
 		}
-		if (input_manager.get_input_state(InputAction::down))
+		if (get_input_manager().get_input_state(InputAction::down))
 		{
 			position.y -= speed;
 		}
-		if (input_manager.get_input_state(InputAction::left))
+		if (get_input_manager().get_input_state(InputAction::left))
 		{
 			position.x -= speed;
 		}
-		if (input_manager.get_input_state(InputAction::right))
+		if (get_input_manager().get_input_state(InputAction::right))
 		{
 			position.x += speed;
 		}
@@ -166,4 +167,9 @@ public:
 	}
 };
 
-export Camera camera(glm::vec2(0.0f, 0.0f), 8.0f, glm::radians(0.0f));
+export inline Camera& get_camera()
+{
+	static Camera camera(glm::vec2(0.0f, 0.0f), 10.0f, 0.0f);
+	return camera;
+}
+

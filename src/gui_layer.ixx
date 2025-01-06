@@ -73,8 +73,8 @@ public:
 			IM_ASSERT(font[i] != nullptr);
 		}
    
-		event_dispatcher.subscribe<InputEvent>([this](const InputEvent& event) { on_input(event); });
-        event_dispatcher.subscribe<RenderStatsEvent>([this](const RenderStatsEvent& event) {
+		get_event_dispatcher().subscribe<InputEvent>([this](const InputEvent& event) { on_input(event); });
+        get_event_dispatcher().subscribe<RenderStatsEvent>([this](const RenderStatsEvent& event) {
             if (event.render_set == RenderStatsEventSet::world_geometry)
             {
                 num_draw_calls = event.num_draw_calls;
@@ -101,16 +101,16 @@ public:
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
 
-        ImGui::PushFont(font[persistent_data.font_size]);
+        ImGui::PushFont(font[get_persistent_data().font_size]);
         ImGui::DockSpaceOverViewport(0, ImGui::GetMainViewport(), ImGuiDockNodeFlags_PassthruCentralNode);
 
 	}
 	virtual void render() override
 	{
-        float window_x = input_manager.target_x;
-        float window_y = input_manager.target_y;
-        glm::vec2 ndc_coords = viewport.get_ndc_coords(window_x, window_y);
-        glm::vec2 world_pos = camera.ndc_to_world_at_z(ndc_coords, 0.0f);
+        float window_x = get_input_manager().target_x;
+        float window_y = get_input_manager().target_y;
+        glm::vec2 ndc_coords = get_viewport().get_ndc_coords(window_x, window_y);
+        glm::vec2 world_pos = get_camera().ndc_to_world_at_z(ndc_coords, 0.0f);
 
         ImGuiIO& io = ImGui::GetIO();
         float framerate = io.Framerate;
@@ -127,8 +127,8 @@ public:
         ImGui::Text(" World pos: x: %.3f, y: %.3f", world_pos.x, world_pos.y);
         ImGui::Separator();
 		ImGui::Text("Camera properties");
-		ImGui::Text(" Camera pos: x: %.3f, y: %.3f", camera.position.x, camera.position.y);
-		ImGui::Text(" Camera height: %.3f", camera.height);
+		ImGui::Text(" Camera pos: x: %.3f, y: %.3f", get_camera().position.x, get_camera().position.y);
+		ImGui::Text(" Camera height: %.3f", get_camera().height);
         ImGui::Separator();
         ImGui::Text("Render properties");
         ImGui::Text("Draw calls: %d", num_draw_calls);
@@ -162,7 +162,7 @@ public:
             if (ImGui::Button(("Load##" + std::to_string(scene_index)).c_str()))
             {
 				std::string scene_path = "scenes/scene" + std::to_string(scene_index + 1) + ".scn";
-                event_dispatcher.dispatch(SceneEvent(SceneEventType::load, scene_path));
+                get_event_dispatcher().dispatch(SceneEvent(SceneEventType::load, scene_path));
             }
             ImGui::NextColumn();
 
@@ -170,7 +170,7 @@ public:
             if (ImGui::Button(("Save##" + std::to_string(scene_index)).c_str()))
             {
                 std::string scene_path = "scenes/scene" + std::to_string(scene_index + 1) + ".scn";
-				event_dispatcher.dispatch(SceneEvent(SceneEventType::save, scene_path));
+				get_event_dispatcher().dispatch(SceneEvent(SceneEventType::save, scene_path));
             }
             ImGui::NextColumn();
         }
@@ -213,7 +213,7 @@ public:
 		{
 			font_index = 2;
 		}
-		persistent_data.font_size = font_index; 
+		get_persistent_data().font_size = font_index;
 	}
 
     void on_input(const InputEvent& event) {
@@ -223,17 +223,17 @@ public:
 
             if (event.action == InputAction::one)
             {
-            persistent_data.font_size = 0;
+            get_persistent_data().font_size = 0;
             set_font_size(0);
             }
             else if (event.action == InputAction::two)
             {
-                persistent_data.font_size = 1;
+                get_persistent_data().font_size = 1;
                 set_font_size(1);
             }
             else if (event.action == InputAction::three)
             {
-                persistent_data.font_size = 2;
+                get_persistent_data().font_size = 2;
                 set_font_size(2);
             }
             if (event.action == InputAction::function_7)

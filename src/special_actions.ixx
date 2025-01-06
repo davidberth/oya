@@ -30,7 +30,7 @@ class SpecialActions {
 public:
     SpecialActions()
     {
-        event_dispatcher.subscribe<InputEvent>([this](const InputEvent& event) { on_input(event); });
+        get_event_dispatcher().subscribe<InputEvent>([this](const InputEvent& event) { on_input(event); });
       
     }
     void on_input(const InputEvent& event) {
@@ -47,4 +47,7 @@ public:
     }
 };
 
-export SpecialActions special_actions;
+export inline SpecialActions& get_special_actions() {
+	static SpecialActions special_actions;
+	return special_actions;
+}

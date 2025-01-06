@@ -205,12 +205,12 @@ public:
 		glBindVertexArray(0);
 		if (num_draw_calls == 0)
 		{
-			event_dispatcher.dispatch(RenderStatsEvent(render_set, 0, 0.0f, 0.0f));
+			get_event_dispatcher().dispatch(RenderStatsEvent(render_set, 0, 0.0f, 0.0f));
 			return;
 		}
 		float average_indices = num_total_indices / num_draw_calls;
 		float average_triangles = average_indices / vertices_per_element;
 		
-		event_dispatcher.dispatch(RenderStatsEvent(render_set, num_draw_calls, average_indices, average_triangles));
+		get_event_dispatcher().dispatch(RenderStatsEvent(render_set, num_draw_calls, average_indices, average_triangles));
 	}
 };

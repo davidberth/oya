@@ -25,4 +25,8 @@ public:
 	std::vector<Layer*>::iterator end() { return layers.end(); }
 };
 
-export LayerStack layer_stack;
+export inline LayerStack& get_layer_stack()
+{
+	static LayerStack layer_stack;
+	return layer_stack;
+}

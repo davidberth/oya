@@ -43,4 +43,7 @@ public:
     }
 };
 
-export PersistentData persistent_data;
+export inline PersistentData& get_persistent_data() {
+	static PersistentData persistent_data;
+	return persistent_data;
+}
