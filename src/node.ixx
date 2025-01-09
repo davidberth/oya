@@ -7,6 +7,7 @@ module;
 export module node;
 
 import polygon;
+import aabb;
 
 export class Node
 {
@@ -27,6 +28,9 @@ public:
 
 	glm::mat4 transform;
 	glm::vec2 centroid;
+
+	AxisAlignedBoundingBox local_aabb = AxisAlignedBoundingBox();
+	AxisAlignedBoundingBox total_aabb = AxisAlignedBoundingBox();
 
 	Node() {
 
@@ -50,9 +54,13 @@ public:
 		centroid = polygon.compute_centroid();
 	}
 
+	void compute_local_aabb()
+	{
+		local_aabb = AxisAlignedBoundingBox::compute_bounding_box(polygon);
+	}
+
 	void set_rotation(float angle)
 	{
-		
 		transform = glm::translate(glm::mat4(1.0f), glm::vec3(centroid, 0.0f)) * 
 			glm::rotate(glm::mat4(1.0f), angle, glm::vec3(0.0f, 0.0f, 1.0f)) * 
 			glm::translate(glm::mat4(1.0f), glm::vec3(-centroid, 0.0f));

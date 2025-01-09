@@ -19,8 +19,6 @@ public:
     GeometryRenderer *geom;
     GeometryRenderer *debug_geom;
 
-    std::vector<Outline *> test_outlines;
-
     Scene() {
       
         root = new Node();
@@ -30,24 +28,7 @@ public:
         geom = new GeometryRenderer(false, RenderType::polygon, RenderStatsEventSet::world_geometry);
         debug_geom = new GeometryRenderer(true, RenderType::line, RenderStatsEventSet::debug_render);
 
-        test_outlines.clear();
-        Outline* outline1 = new Outline();
-		outline1->color = glm::vec3(1.0f, 1.0f, 1.0f);
-		outline1->core.push_back(glm::vec2(-0.5f, -0.5f));
-		outline1->core.push_back(glm::vec2(0.5f, -0.5f));
-		outline1->core.push_back(glm::vec2(0.5f, 0.5f));
-		outline1->core.push_back(glm::vec2(-0.5f, 0.5f));
-        outline1->setup();
-		test_outlines.push_back(outline1);
-
-		Outline* outline2 = new Outline();
-		outline2->color = glm::vec3(0.5f, 1.0f, 0.5f);
-		outline2->core.push_back(glm::vec2(0.6f, -0.5f));
-		outline2->core.push_back(glm::vec2(1.6f, -0.5f));
-		outline2->core.push_back(glm::vec2(1.6f, 0.5f));
-		outline2->core.push_back(glm::vec2(0.6f, 0.5f));
-        outline2->setup();
-		test_outlines.push_back(outline2);
+      
     };
 
     ~Scene() {
@@ -56,10 +37,7 @@ public:
             delete root->children.at(i);
         }
 
-		for (Outline *outline : test_outlines)
-		{
-			delete outline;
-		}
+
 
         delete geom;
         delete debug_geom;
@@ -84,6 +62,7 @@ public:
         node->rotate_delta = rotate_delta;
 
         node->setup_polygon();
+        node->compute_local_aabb();
         parent->children.push_back(node);
         return node;
     }
@@ -97,8 +76,7 @@ public:
         propagate_transform_needs(root);
         count_total_indices(root);
         add_node_recursive(root);
-        add_outlines();
-
+        
         geom->setup_vbo();
         debug_geom->setup_vbo();
 
@@ -144,13 +122,6 @@ public:
         root->update(dt);
     }
 
-	void add_outlines()
-	{
-		for (Outline* outline : test_outlines)
-		{
-			debug_geom->add_renderable(outline);
-		}
-	}
 
 private:
     void check_transform_needs(Node* node) {
@@ -181,6 +152,19 @@ private:
 
     void add_node_recursive(Node* node) {
         geom->add_renderable(&node->polygon);
+		if (node->local_aabb.outline == nullptr) {
+			node->local_aabb.outline = new Outline();
+			node->local_aabb.outline->color = glm::vec3(0.6f, 0.6f, 0.6f);
+			node->local_aabb.outline->core = {
+				glm::vec2(node->local_aabb.min_.x, node->local_aabb.min_.y),
+				glm::vec2(node->local_aabb.min_.x, node->local_aabb.max_.y),
+				glm::vec2(node->local_aabb.max_.x, node->local_aabb.max_.y),
+				glm::vec2(node->local_aabb.max_.x, node->local_aabb.min_.y)
+			};
+			node->local_aabb.outline->generate_indices();
+			node->local_aabb.outline->generate_vertices();
+		}
+        debug_geom->add_renderable(node->local_aabb.outline);
         for (Node* child : node->children) {
             add_node_recursive(child);
         }

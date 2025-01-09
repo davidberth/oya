@@ -81,6 +81,7 @@ private:
 
         node->parent = parent;
         node->setup_polygon();
+        node->compute_local_aabb();
         node->centroid = node->polygon.compute_centroid();
         
         // read children

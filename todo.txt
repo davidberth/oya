@@ -1,13 +1,15 @@
 ToDo
 - Implement bounding boxes
 - Implement bounding box rendering
-- Fix memory access violation in release mode
-- Implement construct on first use
+- Refactor rendering pipeline
 
 In Progress
 
-
 Done
+- Implement untransformed bounding boxes when instantiating the scene
+- Render untransformed bounding boxes for each node
+- Implement construct on first use
+- Fix memory access violation in release mode
 - Enable move camera by right mouse button and drag
 - Implement multiple render counters
 - Move shaders to geometry renderer
