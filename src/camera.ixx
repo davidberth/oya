@@ -5,8 +5,7 @@ module;
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 #include <glm/mat4x4.hpp>
-// TODO Change the mouse button event so that glfw is not needed here
-#include <GLFW/glfw3.h>
+
 #include <math.h>
 
 
@@ -35,6 +34,7 @@ public:
 
 	float near_clip = 0.1f;
 	float far_clip = 100.0f;
+	float pan_speed = 0.005f;
 
 	glm::mat4 projection;
 	glm::mat4 view;
@@ -43,7 +43,7 @@ public:
 
 	bool is_mouse_down = false;
 	glm::vec2 mouse_pos;
-	float pan_speed = 0.01f;
+	
 
     Camera(glm::vec2 start_pos, float start_height, float start_rotation)
         : position(start_pos), height(start_height), rotation(start_rotation) 
@@ -57,11 +57,11 @@ public:
 		});
 
 		get_event_dispatcher().subscribe<MouseButtonEvent>([this](const MouseButtonEvent& mouse_event) {
-			if (mouse_event.button == GLFW_MOUSE_BUTTON_RIGHT && mouse_event.action == GLFW_PRESS)
+			if (mouse_event.button == MouseButton::right && mouse_event.action == MouseAction::press)
 			{
 				is_mouse_down = true;
 			}
-			if (mouse_event.button == GLFW_MOUSE_BUTTON_RIGHT && mouse_event.action == GLFW_RELEASE)
+			if (mouse_event.button == MouseButton::right && mouse_event.action == MouseAction::release)
 			{
 				is_mouse_down = false;
 			}
@@ -154,17 +154,6 @@ public:
 		
 	}
 
-	void on_mouse_button(const MouseButtonEvent& mouse_event)
-	{
-		if (mouse_event.button == GLFW_MOUSE_BUTTON_RIGHT && mouse_event.action == GLFW_PRESS)
-		{
-			is_mouse_down = true;
-		}
-		if (mouse_event.button == GLFW_MOUSE_BUTTON_RIGHT && mouse_event.action == GLFW_RELEASE)
-		{
-			is_mouse_down = false;
-		}
-	}
 };
 
 export inline Camera& get_camera()

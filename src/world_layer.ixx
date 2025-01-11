@@ -28,9 +28,9 @@ export class WorldLayer : public Layer
 public:
 	WorldLayer(std::string pname) : Layer(pname) {};
 	~WorldLayer() {};
-	virtual void init(GLFWwindow* window) override
+	virtual void init() override
 	{
-		Layer::init(window);
+		Layer::init();
 
 		get_event_dispatcher().subscribe<SceneEvent>([this](const SceneEvent& scene_event) {
 			if (scene_event.event_type == SceneEventType::load) {

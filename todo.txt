@@ -1,7 +1,13 @@
 ToDo
-- Implement bounding boxes
-- Implement bounding box rendering
-- Refactor rendering pipeline
+v Transition to SDL3
+  - Remove all GLFW references outside of window
+  - Add SDL3 as a submodule
+  - Add SDL3 dependecies
+  - Create a window
+  - Get the game running
+  - Implement input handling
+  - Implement window events
+v Implement efficient and easy to use rendering framework
 
 In Progress
 

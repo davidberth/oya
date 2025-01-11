@@ -2,7 +2,7 @@ module;
 
 #include <string>
 #include "GL/glew.h"
-#include <GLFW/glfw3.h>
+
 
 export module layer;
 
@@ -16,7 +16,7 @@ public:
 	bool do_render = true;
 	Layer(std::string pname) : name(pname) {}
 	~Layer() {};
-	virtual void init(GLFWwindow *) {
+	virtual void init() {
 	};
 	
 	virtual void update() {};

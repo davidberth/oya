@@ -7,7 +7,6 @@ module;
 #include "imgui_impl_opengl3.h"
 #include <glm/glm.hpp>
 
-#include "GLFW/glfw3.h"
 
 export module gui_layer;
 
@@ -21,6 +20,7 @@ import viewport;
 import input_manager;
 import render_stats_event;
 import scene_event;
+import window;
 
 export class GUILayer : public Layer
 {
@@ -47,9 +47,9 @@ private:
 public:
 	GUILayer(std::string pname) : Layer(pname) {};
 	~GUILayer() {};
-	virtual void init(GLFWwindow *window) override
+	virtual void init() override
 	{
-		__super::init(window);
+		__super::init();
 
         IMGUI_CHECKVERSION();
         ImGui::CreateContext();
@@ -63,8 +63,8 @@ public:
        
         get_imgui_style();
 
-        ImGui_ImplGlfw_InitForOpenGL(window, true);
-        ImGui_ImplOpenGL3_Init("#version 460");
+        init_imgui();
+
 
    
 		for (int i = 0; i < 3; ++i)
@@ -186,10 +186,12 @@ public:
         ImGui::Render();
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
-        GLFWwindow* backup_current_context = glfwGetCurrentContext();
+        store_window_context();
         ImGui::UpdatePlatformWindows();
         ImGui::RenderPlatformWindowsDefault();
-        glfwMakeContextCurrent(backup_current_context);
+
+        set_window_context();
+ 
 
         Layer::end();
 

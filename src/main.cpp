@@ -27,10 +27,10 @@ int main(int argc, char** argv)
         return 1;
     }
 
-	GLFWwindow* window = get_window();
+
     for (auto layer : get_layer_stack())
     {
-		layer->init(window);
+		layer->init();
 	}
 
     get_persistent_data().load();

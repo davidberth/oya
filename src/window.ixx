@@ -5,6 +5,9 @@ module;
 #include <string>
 #include "configure.h"
 
+#include "imgui_impl_glfw.h"
+#include "imgui_impl_opengl3.h"
+
 export module window;
 
 import render;
@@ -21,6 +24,7 @@ GLFWwindow* window;
 int resolution_width;
 int resolution_height;
 GLFWcursor* cursor;
+GLFWwindow* current_context;
 
 
 void glfw_errorCallback(int error, const char* description)
@@ -82,7 +86,31 @@ void glfw_scroll_callback(GLFWwindow* lwindow, double xoffset, double yoffset)
 
 void glfw_mouse_button_callback(GLFWwindow* lwindow, int button, int action, int mods)
 {
-	get_event_dispatcher().dispatch(MouseButtonEvent(button, action, mods));
+	MouseAction ma;
+	MouseButton mb;
+	if (action == GLFW_PRESS)
+	{
+		ma = MouseAction::press;
+	}
+	else
+	{
+		ma = MouseAction::release;
+	}
+
+	if (button == GLFW_MOUSE_BUTTON_LEFT)
+	{
+		mb = MouseButton::left;
+	}
+	else if (button == GLFW_MOUSE_BUTTON_RIGHT)
+	{
+		mb = MouseButton::right;
+	}
+	else
+	{
+		mb = MouseButton::middle;
+	}
+
+	get_event_dispatcher().dispatch(MouseButtonEvent(mb, ma));
 }
 
 void glfw_cursor_position_callback(GLFWwindow* lwindow, double xpos, double ypos)
@@ -190,6 +218,16 @@ export GLFWwindow* get_window()
 	return window;
 }
 
+export void store_window_context()
+{
+	current_context = glfwGetCurrentContext();
+}
+
+export void set_window_context()
+{
+	glfwMakeContextCurrent(current_context);
+}
+
 
 export bool window_should_close()
 {
@@ -199,6 +237,12 @@ export bool window_should_close()
 export void poll_events()
 {
 	glfwPollEvents();
+}
+
+export void init_imgui()
+{
+	ImGui_ImplGlfw_InitForOpenGL(window, true);
+	ImGui_ImplOpenGL3_Init("#version 130");
 }
 
 export void cleanup_window()

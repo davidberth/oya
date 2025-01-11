@@ -2,6 +2,17 @@ export module mouse_event;
 
 import event;
 
+export enum MouseButton {
+	left = 0,
+	right = 1,
+	middle = 2
+};
+
+export enum MouseAction {
+	press = 0,
+	release = 1
+};
+
 export struct MouseMoveEvent : public Event {
     double xpos;
     double ypos;
@@ -10,11 +21,11 @@ export struct MouseMoveEvent : public Event {
 };
 
 export struct MouseButtonEvent : public Event {
-    int button;
-    int action;
-    int mods;
+    MouseButton button;
+    MouseAction action;
 
-    MouseButtonEvent(int button, int action, int mods) : button(button), action(action), mods(mods) {}
+
+    MouseButtonEvent(MouseButton button, MouseAction action) : button(button), action(action) {}
 };
 
 export struct MouseScrollEvent : public Event {
