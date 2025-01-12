@@ -2,7 +2,6 @@ module;
 
 #include <string>
 #include <functional>
-#include "GL/glew.h"
 #include <glm/glm.hpp>
 #include <iostream>
 
@@ -15,7 +14,7 @@ import layer;
 
 import camera;
 import persistent_data;
-import geometry_renderer;
+// import geometry_renderer;
 import scene;
 import scene_event;
 import scene_serializer;
@@ -54,8 +53,8 @@ public:
 	virtual void render() override
 	{
 
-		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-		glClear(GL_COLOR_BUFFER_BIT);
+		//glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+		//glClear(GL_COLOR_BUFFER_BIT);
 		scene.render(get_camera().view_proj);
 	}
 	virtual void end() override

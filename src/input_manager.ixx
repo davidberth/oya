@@ -1,7 +1,7 @@
 module;
 
 #include <unordered_map>
-#include <GLFW/glfw3.h>
+
 #include <array>
 
 export module input_manager;
@@ -45,12 +45,13 @@ public:
         auto it = key_bindings.find(key_event.key_code);
         if (it != key_bindings.end()) {
             // convert key event to input event
-            bool is_pressed = (key_event.action == GLFW_PRESS); 
-            auto input_event = InputEvent(it->second, is_pressed);
+            //bool is_pressed = (key_event.action == GLFW_PRESS); 
+
+            // auto input_event = InputEvent(it->second, is_pressed);
            
-            input_states[static_cast<size_t>(input_event.action)] = is_pressed;
+            // input_states[static_cast<size_t>(input_event.action)] = is_pressed;
             // dispatch the input event
-            get_event_dispatcher().dispatch(input_event);
+            // get_event_dispatcher().dispatch(input_event);
         }
     }
 
@@ -65,6 +66,7 @@ public:
 private:
     void setup_default_bindings() {
         // default key bindings
+        /*
         key_bindings[GLFW_KEY_W] = InputAction::up;    
         key_bindings[GLFW_KEY_S] = InputAction::down;  
         key_bindings[GLFW_KEY_A] = InputAction::left;  
@@ -83,6 +85,7 @@ private:
         key_bindings[GLFW_KEY_F5] = InputAction::function_5;
         key_bindings[GLFW_KEY_F6] = InputAction::function_6;
         key_bindings[GLFW_KEY_F7] = InputAction::function_7;
+        */
     }
 };
 

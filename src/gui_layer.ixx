@@ -63,7 +63,7 @@ public:
        
         get_imgui_style();
 
-        init_imgui();
+        // init_imgui();
 
 
    
@@ -186,11 +186,11 @@ public:
         ImGui::Render();
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
-        store_window_context();
+        //store_window_context();
         ImGui::UpdatePlatformWindows();
         ImGui::RenderPlatformWindowsDefault();
 
-        set_window_context();
+        //set_window_context();
  
 
         Layer::end();

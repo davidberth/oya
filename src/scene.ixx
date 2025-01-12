@@ -2,12 +2,12 @@ module;
 
 #include <glm/glm.hpp>
 #include <string>
-#include "GL/glew.h"
+
 
 export module scene;
 
 import node;
-import geometry_renderer;
+//import geometry_renderer;
 import render_stats_event;
 import outline;
 
@@ -16,8 +16,8 @@ export class Scene
 {
 public:
     Node* root;
-    GeometryRenderer *geom;
-    GeometryRenderer *debug_geom;
+    //GeometryRenderer *geom;
+    //GeometryRenderer *debug_geom;
 
     Scene() {
       
@@ -25,8 +25,8 @@ public:
         root->centroid = glm::vec2(0.0f, 0.0f);
         root->rotate_delta = 0.001f;
 
-        geom = new GeometryRenderer(false, RenderType::polygon, RenderStatsEventSet::world_geometry);
-        debug_geom = new GeometryRenderer(true, RenderType::line, RenderStatsEventSet::debug_render);
+        //geom = new GeometryRenderer(false, RenderType::polygon, RenderStatsEventSet::world_geometry);
+        //debug_geom = new GeometryRenderer(true, RenderType::line, RenderStatsEventSet::debug_render);
 
       
     };
@@ -39,8 +39,8 @@ public:
 
 
 
-        delete geom;
-        delete debug_geom;
+        //delete geom;
+        //delete debug_geom;
         delete root;
      
     };
@@ -69,24 +69,25 @@ public:
 
     void setup()
     {
-        geom->clear_buffer();
-        debug_geom->clear_buffer();
+        //geom->clear_buffer();
+        //debug_geom->clear_buffer();
 
         check_transform_needs(root);
         propagate_transform_needs(root);
         count_total_indices(root);
         add_node_recursive(root);
         
-        geom->setup_vbo();
-        debug_geom->setup_vbo();
+        //geom->setup_vbo();
+        //debug_geom->setup_vbo();
 
-		geom->assign_shader("shaders/polygon_vert.glsl", "shaders/polygon_frag.glsl");
-		debug_geom->assign_shader("shaders/polygon_vert.glsl", "shaders/polygon_frag.glsl");
+		//geom->assign_shader("shaders/polygon_vert.glsl", "shaders/polygon_frag.glsl");
+		//debug_geom->assign_shader("shaders/polygon_vert.glsl", "shaders/polygon_frag.glsl");
 
     }
 
     void render(const glm::mat4 &view_proj)
     {
+        /*
         geom->new_frame();
         render_node(root, glm::mat4(1.0f), view_proj);
         geom->end_frame();
@@ -95,11 +96,14 @@ public:
         debug_geom->set_transformation(view_proj);
 		debug_geom->render(0, debug_geom->get_num_indices());
 		debug_geom->end_frame();
+        */
     }
 
     void render_node(Node* node, const glm::mat4& parent_transform, const glm::mat4& view_proj)
     {
         glm::mat4 global_transform = parent_transform * node->get_transform();
+        
+        /*
         geom->set_transformation(view_proj * global_transform);
       
         if (!node->needs_child_transforms) {
@@ -115,6 +119,7 @@ public:
                 render_node(child, global_transform, view_proj);
             }
         }
+        */
     }
 
     void update(float dt)
@@ -151,7 +156,7 @@ private:
     }
 
     void add_node_recursive(Node* node) {
-        geom->add_renderable(&node->polygon);
+        //geom->add_renderable(&node->polygon);
 		if (node->local_aabb.outline == nullptr) {
 			node->local_aabb.outline = new Outline();
 			node->local_aabb.outline->color = glm::vec3(0.6f, 0.6f, 0.6f);
@@ -164,7 +169,7 @@ private:
 			node->local_aabb.outline->generate_indices();
 			node->local_aabb.outline->generate_vertices();
 		}
-        debug_geom->add_renderable(node->local_aabb.outline);
+        //debug_geom->add_renderable(node->local_aabb.outline);
         for (Node* child : node->children) {
             add_node_recursive(child);
         }

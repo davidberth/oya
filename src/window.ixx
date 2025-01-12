@@ -1,15 +1,18 @@
 module;
 
+/*
 #include "GL/glew.h"
+#include <SDL3/SDL.h>
 #include <GLFW/glfw3.h>
 #include <string>
 #include "configure.h"
 
 #include "imgui_impl_glfw.h"
 #include "imgui_impl_opengl3.h"
-
+*/
 export module window;
 
+/*
 import render;
 import update;
 import persistent_data;
@@ -251,3 +254,4 @@ export void cleanup_window()
 	glfwDestroyWindow(window);
 	glfwTerminate();
 }
+*/

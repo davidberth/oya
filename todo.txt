@@ -1,17 +1,18 @@
 ToDo
+v Implement efficient and easy to use rendering framework
+
+In Progress
 v Transition to SDL3
-  - Remove all GLFW references outside of window
-  - Add SDL3 as a submodule
-  - Add SDL3 dependecies
   - Create a window
   - Get the game running
   - Implement input handling
   - Implement window events
-v Implement efficient and easy to use rendering framework
-
-In Progress
 
 Done
+p Transition to SDL3
+  - Remove all GLFW references outside of window
+  - Add SDL3 as a submodule
+  - Add SDL3 dependecies
 - Implement untransformed bounding boxes when instantiating the scene
 - Render untransformed bounding boxes for each node
 - Implement construct on first use
@@ -25,7 +26,7 @@ Done
 - Create renderable, generalization of polygon
 - Derive polygon from renderable
 - Generalize geometry buffer class to support general renderables
-- Implemnt hierarchical scene rendering with transforms
+c Implement hierarchical scene rendering with transforms
 	- Implement rendering one node at a time with traversal
 	- Implement transforms for each node 
 	- Implement node updates and rotate deltas (mainly for debugging for now)

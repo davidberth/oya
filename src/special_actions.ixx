@@ -34,6 +34,8 @@ public:
       
     }
     void on_input(const InputEvent& event) {
+
+        /*
         if (event.is_pressed)
         {
             for (int i = 0; i < 6; i++)
@@ -44,6 +46,7 @@ public:
                 }
             }
         }
+        */
     }
 };
 

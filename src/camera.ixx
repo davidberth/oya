@@ -14,7 +14,7 @@ module;
 export module camera;
 
 import updatable;
-import input_manager;
+// import input_manager;
 import input_event;
 import viewport;
 import mouse_event;
@@ -96,6 +96,8 @@ public:
 		view_proj = projection * view;
 		view_proj_inv = glm::inverse(view_proj);
 
+		/*
+
 		if (get_input_manager().get_input_state(InputAction::zoom_in))
 		{
 			height -= zoom_speed;
@@ -123,6 +125,7 @@ public:
 		{
 			position.x += speed;
 		}
+		*/
 
 	}
 

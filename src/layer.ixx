@@ -1,8 +1,6 @@
 module;
 
 #include <string>
-#include "GL/glew.h"
-
 
 export module layer;
 
