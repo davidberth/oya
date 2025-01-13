@@ -1,18 +1,22 @@
 ToDo
-v Implement efficient and easy to use rendering framework
+e Implement efficient and easy to use rendering framework
 
 In Progress
-v Transition to SDL3
-  - Create a window
+e Transition to SDL3
+  - Implement four callbacks in separate modules using function forwarding
   - Get the game running
   - Implement input handling
   - Implement window events
+  e Implement renderer
+	- Implement initialization
+	- Implement simple clear screen
 
 Done
-p Transition to SDL3
+e Transition to SDL3
   - Remove all GLFW references outside of window
   - Add SDL3 as a submodule
   - Add SDL3 dependecies
+  - Create a window and make sure the program runs
 - Implement untransformed bounding boxes when instantiating the scene
 - Render untransformed bounding boxes for each node
 - Implement construct on first use
