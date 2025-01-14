@@ -1,4 +1,4 @@
-module; 
+module;
 
 #include <vector>
 
@@ -14,7 +14,13 @@ private:
 
 public:
 	LayerStack() {}
-	~LayerStack() {}
+	~LayerStack() {
+		for (Layer* layer : layers)
+		{
+			delete layer;
+		}
+
+	}
 
 	void add_layer(Layer* layer)
 	{

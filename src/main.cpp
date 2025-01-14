@@ -3,24 +3,11 @@
 #include <SDL3/SDL_main.h>
 
 import init;
+import render;
 import update;
 import keyboard;
 import mouse;
 import cleanup;
-
-/*
-import window;
-import layer;
-import world_layer;
-import gui_layer;
-import layer_stack;
-import render;
-import update;
-import persistent_data;
-import updatable_manager;
-import special_actions;
-import camera;
-*/
 
 
 
@@ -32,9 +19,8 @@ SDL_AppResult SDL_AppInit(void** appstate, int argc, char* argv[])
 SDL_AppResult SDL_AppIterate(void* appstate)
 {
 	update();
-	// render();
+	render();
 	return SDL_APP_CONTINUE;
-
 }
 
 SDL_AppResult SDL_AppEvent(void* appstate, SDL_Event* event)
@@ -58,7 +44,19 @@ void SDL_AppQuit(void* appstate, SDL_AppResult result)
 }
 
 
-
+/*
+import window;
+import layer;
+import world_layer;
+import gui_layer;
+import layer_stack;
+import render;
+import update;
+import persistent_data;
+import updatable_manager;
+import special_actions;
+import camera;
+*/
 
 /*
 int main(int argc, char** argv)
