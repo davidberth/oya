@@ -8,7 +8,7 @@ import sdl_data;
 
 export void cleanup()
 {
-	SDL_DestroyRenderer(renderer);
-	SDL_DestroyWindow(window);
+	SDL_DestroyRenderer(sdl_renderer);
+	SDL_DestroyWindow(sdl_window);
 	SDL_Quit();
 }

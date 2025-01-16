@@ -1,9 +1,10 @@
 module;
 
-#include <string>
 #include <functional>
 #include <glm/glm.hpp>
 #include <iostream>
+#include <SDL3/SDL.h>
+#include <string>
 
 
 export module world_layer;
@@ -18,10 +19,10 @@ import persistent_data;
 import scene;
 import scene_event;
 import scene_serializer;
+import sdl_data;
 
 export class WorldLayer : public Layer
 {
-  
 	Scene scene;
 
 public:
@@ -40,7 +41,7 @@ public:
 				get_scene_serializer().serialize(scene, scene_event.scene_path);
 			}
 			});
-		
+
 	}
 	virtual void update() override
 	{
@@ -52,10 +53,34 @@ public:
 	}
 	virtual void render() override
 	{
+		SDL_GPUCommandBuffer* cmdbuf = SDL_AcquireGPUCommandBuffer(sdl_device);
+		if (cmdbuf == NULL)
+		{
+			SDL_Log("AcquireGPUCommandBuffer failed: %s", SDL_GetError());
+			return;
+		}
 
-		//glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-		//glClear(GL_COLOR_BUFFER_BIT);
-		scene.render(get_camera().view_proj);
+		SDL_GPUTexture* swapchainTexture;
+		if (!SDL_WaitAndAcquireGPUSwapchainTexture(cmdbuf, sdl_window, &swapchainTexture, NULL, NULL)) {
+			SDL_Log("WaitAndAcquireGPUSwapchainTexture failed: %s", SDL_GetError());
+			return;
+		}
+
+		if (swapchainTexture != NULL)
+		{
+			SDL_GPUColorTargetInfo colorTargetInfo = { 0 };
+			colorTargetInfo.texture = swapchainTexture;
+			colorTargetInfo.clear_color = { 0.3f, 0.4f, 0.5f, 1.0f };
+			colorTargetInfo.load_op = SDL_GPU_LOADOP_CLEAR;
+			colorTargetInfo.store_op = SDL_GPU_STOREOP_STORE;
+
+			SDL_GPURenderPass* renderPass = SDL_BeginGPURenderPass(cmdbuf, &colorTargetInfo, 1, NULL);
+			SDL_EndGPURenderPass(renderPass);
+		}
+
+		SDL_SubmitGPUCommandBuffer(cmdbuf);
+
+		//scene.render(get_camera().view_proj);
 	}
 	virtual void end() override
 	{
@@ -64,7 +89,7 @@ public:
 	virtual void cleanup() override
 	{
 		Layer::cleanup();
-	
+
 	}
 
 };

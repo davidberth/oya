@@ -12,7 +12,7 @@ add_library(imgui STATIC
 	imgui/imgui_demo.cpp
 	imgui/imgui_tables.cpp
 	imgui/backends/imgui_impl_sdl3.cpp
-	imgui/backends/imgui_impl_opengl3.cpp
+	imgui/backends/imgui_impl_sdlgpu3.cpp
 )
 
 target_include_directories(imgui PUBLIC ${CMAKE_SOURCE_DIR}/imgui ${CMAKE_SOURCE_DIR}/sdl3/include)

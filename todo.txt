@@ -3,6 +3,7 @@ e Implement efficient and easy to use rendering framework
 
 In Progress
 e Transition to SDL3
+  - Implement clear screen in SDL3 GPU and Vulkan initialization
   - Get IMGUI and the GUI layer running
   - Get the game running
   - Implement input handling

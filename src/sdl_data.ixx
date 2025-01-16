@@ -4,6 +4,6 @@ module;
 
 export module sdl_data;
 
-export SDL_Window* window = NULL;
-export SDL_Renderer* renderer = NULL;
-export SDL_FRect mouseposrect;
+export SDL_Window* sdl_window = NULL;
+export SDL_GPUDevice* sdl_device = NULL;
+export SDL_Renderer* sdl_renderer = NULL;
