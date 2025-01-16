@@ -3,9 +3,6 @@ e Implement efficient and easy to use rendering framework
 
 In Progress
 e Transition to SDL3
-  - Implement clear screen in SDL3 GPU and Vulkan initialization
-  - Get IMGUI and the GUI layer running
-  - Get the game running
   - Implement input handling
   - Implement window events
   e Implement renderer
@@ -19,6 +16,9 @@ e Transition to SDL3
   - Add SDL3 dependecies
   - Create a window and make sure the program runs
   - Implement four callbacks in separate modules using function forwarding
+  - Implement clear screen in SDL3 GPU and Vulkan initialization
+  - Get IMGUI and the GUI layer running
+  - Get the game running
 - Implement untransformed bounding boxes when instantiating the scene
 - Render untransformed bounding boxes for each node
 - Implement construct on first use

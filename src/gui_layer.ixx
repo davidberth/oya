@@ -59,8 +59,8 @@ public:
 		io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
 		// io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad; 
 
-		//io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
-		//io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
+		io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
+		io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
 		io.ConfigFlags |= ImGuiConfigFlags_NoMouseCursorChange;
 
 		get_imgui_style();
@@ -71,13 +71,13 @@ public:
 		init_info.MSAASamples = SDL_GPU_SAMPLECOUNT_1;
 		ImGui_ImplSDLGPU3_Init(&init_info);
 
-		/*
+
 		for (int i = 0; i < 3; ++i)
 		{
 			font[i] = io.Fonts->AddFontFromFileTTF(font_paths[i], font_sizes[i]);
 			IM_ASSERT(font[i] != nullptr);
 		}
-		*/
+
 
 		get_event_dispatcher().subscribe<InputEvent>([this](const InputEvent& event) { on_input(event); });
 		get_event_dispatcher().subscribe<RenderStatsEvent>([this](const RenderStatsEvent& event) {
@@ -105,8 +105,8 @@ public:
 		ImGui_ImplSDL3_NewFrame();
 		ImGui::NewFrame();
 
-		//		ImGui::PushFont(font[get_persistent_data().font_size]);
-		//		ImGui::DockSpaceOverViewport(0, ImGui::GetMainViewport(), ImGuiDockNodeFlags_PassthruCentralNode);
+		ImGui::PushFont(font[get_persistent_data().font_size]);
+		// ImGui::DockSpaceOverViewport(0, ImGui::GetMainViewport(), ImGuiDockNodeFlags_PassthruCentralNode);
 
 	}
 	virtual void render() override
@@ -186,57 +186,43 @@ public:
 	virtual void end()
 	{
 
-		//ImGui::PopFont();
+		ImGui::PopFont();
 		ImGui::Render();
 		ImDrawData* draw_data = ImGui::GetDrawData();
-		SDL_GPUCommandBuffer* command_buffer = SDL_AcquireGPUCommandBuffer(sdl_device); // Acquire a GPU command buffer
 
-		SDL_GPUTexture* swapchain_texture;
-		SDL_AcquireGPUSwapchainTexture(command_buffer, sdl_window, &swapchain_texture, nullptr, nullptr); // Acquire a swapchain texture
 
-		if (swapchain_texture != nullptr)
+		if (sdl_swapchain_texture != nullptr)
 		{
-			// This is mandatory: call Imgui_ImplSDLGPU3_PrepareDrawData() to upload the vertex/index buffer!
-			Imgui_ImplSDLGPU3_PrepareDrawData(draw_data, command_buffer);
+			// this is mandatory: call Imgui_ImplSDLGPU3_PrepareDrawData() to upload the vertex/index buffer!
+			Imgui_ImplSDLGPU3_PrepareDrawData(draw_data, sdl_cmdbuf);
 
-			// Setup and start a render pass
+			// setup and start a render pass
 			SDL_GPUColorTargetInfo target_info = {};
-			target_info.texture = swapchain_texture;
+			target_info.texture = sdl_swapchain_texture;
 
 			target_info.clear_color = SDL_FColor{ 0.1f, 0.1f, 0.1f, 0.1f };
-			target_info.load_op = SDL_GPU_LOADOP_CLEAR;
+			target_info.load_op = SDL_GPU_LOADOP_LOAD;
 			target_info.store_op = SDL_GPU_STOREOP_STORE;
 			target_info.mip_level = 0;
 			target_info.layer_or_depth_plane = 0;
 			target_info.cycle = false;
-			SDL_GPURenderPass* render_pass = SDL_BeginGPURenderPass(command_buffer, &target_info, 1, nullptr);
+			SDL_GPURenderPass* render_pass = SDL_BeginGPURenderPass(sdl_cmdbuf, &target_info, 1, nullptr);
 
-			// Render ImGui
-			ImGui_ImplSDLGPU3_RenderDrawData(draw_data, command_buffer, render_pass);
-
+			// render ImGui
+			ImGui_ImplSDLGPU3_RenderDrawData(draw_data, sdl_cmdbuf, render_pass);
 			SDL_EndGPURenderPass(render_pass);
 		}
-
-		// Submit the command buffer
-		SDL_SubmitGPUCommandBuffer(command_buffer);
-
-		//store_window_context();
-		//ImGui::UpdatePlatformWindows();
-		//ImGui::RenderPlatformWindowsDefault();
-
-		//set_window_context();
-
 
 		Layer::end();
 
 	}
 	virtual void cleanup() override
 	{
-
-		ImGui_ImplSDLGPU3_Shutdown();
-		//ImGui_ImplOpenGL3_Shutdown();
+		SDL_WaitForGPUIdle(sdl_device);
 		ImGui_ImplSDL3_Shutdown();
+		ImGui_ImplSDLGPU3_Shutdown();
 		ImGui::DestroyContext();
+
 		__super::cleanup();
 	}
 

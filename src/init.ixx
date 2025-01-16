@@ -8,6 +8,7 @@ import sdl_data;
 import layer_stack;
 import world_layer;
 import gui_layer;
+import special_actions;
 
 
 export SDL_AppResult init()
@@ -29,7 +30,7 @@ export SDL_AppResult init()
 	}
 
 	SDL_Log("Creating window");
-	sdl_window = SDL_CreateWindow("Oya 0.1.1", 1000, 800, SDL_WINDOW_RESIZABLE);
+	sdl_window = SDL_CreateWindow("Oya 0.1.1", 1600, 1200, SDL_WINDOW_RESIZABLE);
 	if (!sdl_window) {
 		SDL_Log("SDL_CreateWindow() failed: %s", SDL_GetError());
 		return SDL_APP_FAILURE;
@@ -52,10 +53,12 @@ export SDL_AppResult init()
 	get_layer_stack().add_layer(new WorldLayer("world"));
 	get_layer_stack().add_layer(new GUILayer("gui"));
 
+
 	for (auto layer : get_layer_stack())
 	{
 		layer->init();
 	}
+	get_special_actions();
 
 	return SDL_APP_CONTINUE;
 }

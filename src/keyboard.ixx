@@ -4,7 +4,7 @@ module;
 
 export module keyboard;
 
-export void;
+import key_event;
 
 export bool handle_keyboard_events(SDL_Event* event)
 {
@@ -12,5 +12,9 @@ export bool handle_keyboard_events(SDL_Event* event)
 	{
 		return true;
 	}
+
+	KeyEvent kevent(event->key.key, event->key.down);
+	get_event_dispatcher().dispatch(kevent);
+
 	return false;
 }

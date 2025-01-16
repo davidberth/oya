@@ -53,32 +53,19 @@ public:
 	}
 	virtual void render() override
 	{
-		SDL_GPUCommandBuffer* cmdbuf = SDL_AcquireGPUCommandBuffer(sdl_device);
-		if (cmdbuf == NULL)
-		{
-			SDL_Log("AcquireGPUCommandBuffer failed: %s", SDL_GetError());
-			return;
-		}
-
-		SDL_GPUTexture* swapchainTexture;
-		if (!SDL_WaitAndAcquireGPUSwapchainTexture(cmdbuf, sdl_window, &swapchainTexture, NULL, NULL)) {
-			SDL_Log("WaitAndAcquireGPUSwapchainTexture failed: %s", SDL_GetError());
-			return;
-		}
-
-		if (swapchainTexture != NULL)
+		if (sdl_swapchain_texture != NULL)
 		{
 			SDL_GPUColorTargetInfo colorTargetInfo = { 0 };
-			colorTargetInfo.texture = swapchainTexture;
+			colorTargetInfo.texture = sdl_swapchain_texture;
 			colorTargetInfo.clear_color = { 0.3f, 0.4f, 0.5f, 1.0f };
 			colorTargetInfo.load_op = SDL_GPU_LOADOP_CLEAR;
 			colorTargetInfo.store_op = SDL_GPU_STOREOP_STORE;
 
-			SDL_GPURenderPass* renderPass = SDL_BeginGPURenderPass(cmdbuf, &colorTargetInfo, 1, NULL);
+			SDL_GPURenderPass* renderPass = SDL_BeginGPURenderPass(sdl_cmdbuf, &colorTargetInfo, 1, NULL);
 			SDL_EndGPURenderPass(renderPass);
 		}
 
-		SDL_SubmitGPUCommandBuffer(cmdbuf);
+		//SDL_SubmitGPUCommandBuffer(sdl_cmdbuf);
 
 		//scene.render(get_camera().view_proj);
 	}
