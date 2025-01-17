@@ -8,7 +8,7 @@ import key_event;
 
 export bool handle_keyboard_events(SDL_Event* event)
 {
-	if (event->key.scancode == SDLK_ESCAPE)
+	if (event->key.key == SDLK_ESCAPE)
 	{
 		return true;
 	}

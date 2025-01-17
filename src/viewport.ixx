@@ -1,7 +1,7 @@
 module;
 
 #include <glm/glm.hpp>
-
+#include <SDL3/SDL.h>
 export module viewport;
 
 import event;
@@ -15,7 +15,7 @@ export struct Viewport {
 	{
 		width = 100;
 		height = 100;
-	}	
+	}
 
 	void init() {
 		get_event_dispatcher().subscribe<WindowEvent>([this](const WindowEvent& event) {

@@ -9,7 +9,8 @@ import update;
 import keyboard;
 import mouse;
 import cleanup;
-
+import event;
+import window_event;
 
 
 SDL_AppResult SDL_AppInit(void** appstate, int argc, char* argv[])
@@ -35,6 +36,11 @@ SDL_AppResult SDL_AppEvent(void* appstate, SDL_Event* event)
 		break;
 	case SDL_EVENT_MOUSE_MOTION:
 		handle_mouse_movement(event);
+		break;
+	case SDL_EVENT_WINDOW_RESIZED:
+		int width = event->window.data1;
+		int height = event->window.data2;
+		get_event_dispatcher().dispatch(WindowEvent(width, height));
 		break;
 	}
 	return SDL_APP_CONTINUE;

@@ -9,6 +9,9 @@ import layer_stack;
 import world_layer;
 import gui_layer;
 import special_actions;
+import camera;
+import updatable_manager;
+import viewport;
 
 
 export SDL_AppResult init()
@@ -59,6 +62,11 @@ export SDL_AppResult init()
 		layer->init();
 	}
 	get_special_actions();
+	get_updatable_manager().add_updatable(&get_camera());
+	get_viewport().init();
+	int window_width, window_height;
+	SDL_GetWindowSize(sdl_window, &window_width, &window_height);
+	get_viewport().set_size(window_width, window_height);
 
 	return SDL_APP_CONTINUE;
 }

@@ -57,7 +57,7 @@ public:
 		{
 			SDL_GPUColorTargetInfo colorTargetInfo = { 0 };
 			colorTargetInfo.texture = sdl_swapchain_texture;
-			colorTargetInfo.clear_color = { 0.3f, 0.4f, 0.5f, 1.0f };
+			colorTargetInfo.clear_color = { 0.0f, 0.0f, 0.0f, 1.0f };
 			colorTargetInfo.load_op = SDL_GPU_LOADOP_CLEAR;
 			colorTargetInfo.store_op = SDL_GPU_STOREOP_STORE;
 
@@ -65,7 +65,7 @@ public:
 			SDL_EndGPURenderPass(renderPass);
 		}
 
-		//SDL_SubmitGPUCommandBuffer(sdl_cmdbuf);
+
 
 		//scene.render(get_camera().view_proj);
 	}
