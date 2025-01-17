@@ -37,6 +37,9 @@ SDL_AppResult SDL_AppEvent(void* appstate, SDL_Event* event)
 	case SDL_EVENT_MOUSE_MOTION:
 		handle_mouse_movement(event);
 		break;
+	case SDL_EVENT_MOUSE_WHEEL:
+		handle_mouse_scroll(event);
+		break;
 	case SDL_EVENT_WINDOW_RESIZED:
 		int width = event->window.data1;
 		int height = event->window.data2;

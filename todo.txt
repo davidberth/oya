@@ -3,14 +3,15 @@ e Implement efficient and easy to use rendering framework
 
 In Progress
 e Transition to SDL3
-  - Implement input handling
-  - Implement window events
+  - Implement mouse scroll handling
   e Implement renderer
 	- Implement initialization
 	- Implement simple clear screen
 
 Done
 e Transition to SDL3
+  - Implement keyboard input handling
+  - Implement window events
   - Remove all GLFW references outside of window
   - Add SDL3 as a submodule
   - Add SDL3 dependecies

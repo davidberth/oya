@@ -13,3 +13,9 @@ export void handle_mouse_movement(SDL_Event* event)
 	get_event_dispatcher().dispatch(mevent);
 
 }
+
+export void handle_mouse_scroll(SDL_Event* event)
+{
+	MouseScrollEvent mevent(event->wheel.x, event->wheel.y);
+	get_event_dispatcher().dispatch(mevent);
+}
