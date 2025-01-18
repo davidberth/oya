@@ -2,9 +2,11 @@
 layout(location = 0) in vec2 aPos;
 layout(location = 1) in vec3 aColor;
 
-out vec3 ourColor;
+layout(location = 0) out vec3 ourColor;
 
-uniform mat4 view_proj_model;
+layout(set = 0, binding = 0) uniform UBO {
+    mat4 view_proj_model;
+};
 
 void main()
 {

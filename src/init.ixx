@@ -25,7 +25,7 @@ export SDL_AppResult init()
 		return SDL_APP_FAILURE;
 	}
 
-	sdl_device = SDL_CreateGPUDevice(SDL_GPU_SHADERFORMAT_SPIRV | SDL_GPU_SHADERFORMAT_DXIL, true, "vulkan");
+	sdl_device = SDL_CreateGPUDevice(SDL_GPU_SHADERFORMAT_SPIRV, true, "vulkan");
 	SDL_Log("Creating GPU Device");
 	if (!sdl_device) {
 		SDL_Log("SDL_CreateGPUDevice() failed: %s", SDL_GetError());

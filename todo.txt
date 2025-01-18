@@ -2,14 +2,18 @@ ToDo
 e Implement efficient and easy to use rendering framework
 
 In Progress
+q Implement new renderer
+  e stage 1 - render a single polygon to the window
+	- Restructure scene to contain just a single simple polygon
+	
+Done
+q Implement new renderer
+  e stage 1 - render a single polygon to the window
+  	- Implement a simple shader that works with SDL3
+	- Look into the shader cross compiler that can be used with SDL3 (used Vulkan SDK for glsl to spir-v)
+	- Integrate shader compilation in CMake
 e Transition to SDL3
   - Implement mouse scroll handling
-  e Implement renderer
-	- Implement initialization
-	- Implement simple clear screen
-
-Done
-e Transition to SDL3
   - Implement keyboard input handling
   - Implement window events
   - Remove all GLFW references outside of window
