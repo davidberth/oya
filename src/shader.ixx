@@ -1,16 +1,16 @@
 module;
 
-
 #include <fstream>
-#include <GL/glew.h>
 #include <iostream>
+#include <SDL3/SDL.h>
 #include <sstream>
 #include <string>
 
-
 export module shader;
 
-SDL_GPUShader* load_shader(
+import sdl_data;
+
+export SDL_GPUShader* load_shader(
 	SDL_GPUDevice* device,
 	const char* shader_base_name,
 	Uint32 sample_count,
@@ -53,18 +53,18 @@ SDL_GPUShader* load_shader(
 		return NULL;
 	}
 
-	SDL_GPUShaderCreateInfo shaderInfo = {
-		.code = code,
-		.code_size = codeSize,
-		.entrypoint = entrypoint,
-		.format = format,
-		.stage = stage,
-		.num_samplers = samplerCount,
-		.num_uniform_buffers = uniformBufferCount,
-		.num_storage_buffers = storageBufferCount,
-		.num_storage_textures = storageTextureCount
-	};
-	SDL_GPUShader* shader = SDL_CreateGPUShader(device, &shaderInfo);
+	SDL_GPUShaderCreateInfo shader_info = {};
+	shader_info.code = (const Uint8*)code;
+	shader_info.code_size = codeSize;
+	shader_info.entrypoint = entrypoint;
+	shader_info.format = format;
+	shader_info.stage = stage;
+	shader_info.num_samplers = sample_count;
+	shader_info.num_uniform_buffers = uniform_buffer_count;
+	shader_info.num_storage_buffers = storage_buffer_count;
+	shader_info.num_storage_textures = storage_texture_count;
+
+	SDL_GPUShader* shader = SDL_CreateGPUShader(sdl_device, &shader_info);
 	if (shader == NULL)
 	{
 		SDL_Log("Failed to create shader!");
@@ -75,3 +75,4 @@ SDL_GPUShader* load_shader(
 	SDL_free(code);
 	return shader;
 }
+

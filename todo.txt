@@ -5,6 +5,7 @@ In Progress
 q Implement new renderer
   e stage 1 - render a single polygon to the window
 	- Restructure scene to contain just a single simple polygon
+	- Get polygon rendering working with the new shader, not worrying about efficiency
 	
 Done
 q Implement new renderer

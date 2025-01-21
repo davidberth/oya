@@ -55,19 +55,21 @@ public:
 	{
 		if (sdl_swapchain_texture != NULL)
 		{
-			SDL_GPUColorTargetInfo colorTargetInfo = { 0 };
-			colorTargetInfo.texture = sdl_swapchain_texture;
-			colorTargetInfo.clear_color = { 0.0f, 0.0f, 0.0f, 1.0f };
-			colorTargetInfo.load_op = SDL_GPU_LOADOP_CLEAR;
-			colorTargetInfo.store_op = SDL_GPU_STOREOP_STORE;
+			SDL_GPUColorTargetInfo color_target_info = { 0 };
+			color_target_info.texture = sdl_swapchain_texture;
+			color_target_info.clear_color = { 0.0f, 0.0f, 0.0f, 1.0f };
+			color_target_info.load_op = SDL_GPU_LOADOP_CLEAR;
+			color_target_info.store_op = SDL_GPU_STOREOP_STORE;
 
-			SDL_GPURenderPass* renderPass = SDL_BeginGPURenderPass(sdl_cmdbuf, &colorTargetInfo, 1, NULL);
-			SDL_EndGPURenderPass(renderPass);
+			SDL_GPURenderPass* render_pass = SDL_BeginGPURenderPass(sdl_cmdbuf, &color_target_info, 1, NULL);
+
+			scene.render(render_pass, get_camera().view_proj);
+
+			SDL_EndGPURenderPass(render_pass);
 		}
 
 
 
-		//scene.render(get_camera().view_proj);
 	}
 	virtual void end() override
 	{

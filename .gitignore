@@ -12,3 +12,4 @@ imgui.ini
 /.vs/tasks.vs.json
 /preferences.txt
 /.vs/CopilotSnapshots/
+shaders/compiled/
