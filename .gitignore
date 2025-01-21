@@ -13,3 +13,4 @@ imgui.ini
 /preferences.txt
 /.vs/CopilotSnapshots/
 shaders/compiled/
+enc_temp_folder/
