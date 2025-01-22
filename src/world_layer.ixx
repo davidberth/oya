@@ -26,8 +26,9 @@ export class WorldLayer : public Layer
 	Scene scene;
 
 public:
-	WorldLayer(std::string pname) : Layer(pname) {};
-	~WorldLayer() {};
+	WorldLayer(std::string pname) : Layer(pname) {}
+	~WorldLayer() {
+	}
 	virtual void init() override
 	{
 		Layer::init();
@@ -77,6 +78,7 @@ public:
 	}
 	virtual void cleanup() override
 	{
+		scene.render_set->cleanup();
 		Layer::cleanup();
 
 	}

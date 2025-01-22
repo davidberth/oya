@@ -105,12 +105,6 @@ public:
 		SDL_ReleaseGPUTransferBuffer(sdl_device, transfer_buffer);
 	}
 
-	~RenderSet()
-	{
-		SDL_ReleaseGPUBuffer(sdl_device, vertex_buffer);
-		SDL_ReleaseGPUGraphicsPipeline(sdl_device, graphics_pipeline);
-	}
-
 	void render(SDL_GPURenderPass* render_pass)
 	{
 		SDL_BindGPUGraphicsPipeline(render_pass, graphics_pipeline);
@@ -119,6 +113,12 @@ public:
 		vertex_buffer_binding.offset = 0;
 		SDL_BindGPUVertexBuffers(render_pass, 0, &vertex_buffer_binding, 1);
 		SDL_DrawGPUPrimitives(render_pass, 3, 1, 0, 0);
+	}
+
+	void cleanup()
+	{
+		SDL_ReleaseGPUBuffer(sdl_device, vertex_buffer);
+		SDL_ReleaseGPUGraphicsPipeline(sdl_device, graphics_pipeline);
 	}
 };
 
