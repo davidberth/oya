@@ -10,7 +10,7 @@ export module scene;
 import node;
 import render_stats_event;
 import outline;
-import render_system;
+import render_set;
 import shader;
 import sdl_data;
 
@@ -30,7 +30,8 @@ public:
 		SDL_GPUShader* vertex_shader = load_shader(sdl_device, "polygon_vert", 0, 0, 0, 0);
 		SDL_GPUShader* fragment_shader = load_shader(sdl_device, "polygon_frag", 0, 0, 0, 0);
 
-		render_set = new RenderSet(RenderGeometryType::TRIANGLE_LIST, vertex_shader, fragment_shader);
+		render_set = new RenderSet();
+		render_set->init(RenderGeometryType::TRIANGLE_LIST, vertex_shader, fragment_shader);
 	};
 
 	~Scene() {

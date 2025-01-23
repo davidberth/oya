@@ -16,7 +16,7 @@ export void render()
 		SDL_Log("AcquireGPUCommandBuffer failed: %s", SDL_GetError());
 	}
 
-	if (!SDL_WaitAndAcquireGPUSwapchainTexture(sdl_cmdbuf, sdl_window, &sdl_swapchain_texture, NULL, NULL)) {
+	if (!SDL_AcquireGPUSwapchainTexture(sdl_cmdbuf, sdl_window, &sdl_swapchain_texture, NULL, NULL)) {
 		SDL_Log("WaitAndAcquireGPUSwapchainTexture failed: %s", SDL_GetError());
 	}
 

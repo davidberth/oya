@@ -2,7 +2,7 @@ module;
 
 #include <SDL3/SDL.h>
 #include <vector>
-export module render_system;
+export module render_set;
 
 import sdl_data;
 import vertex; 
@@ -16,8 +16,11 @@ export class RenderSet {
 public:
 	SDL_GPUGraphicsPipeline* graphics_pipeline;
 	SDL_GPUBuffer* vertex_buffer;
+	SDL_GPUTransferBuffer* transfer_buffer;
 
-	RenderSet(RenderGeometryType geometry_type, SDL_GPUShader* vertex_shader, SDL_GPUShader* fragment_shader) {
+	RenderSet() {}
+
+	void init(RenderGeometryType geometry_type, SDL_GPUShader* vertex_shader, SDL_GPUShader* fragment_shader) {
 
 		SDL_GPUColorTargetDescription color_target_description{};
 		color_target_description.format = SDL_GetGPUSwapchainTextureFormat(sdl_device, sdl_window);
@@ -72,22 +75,25 @@ public:
 
 		vertex_buffer = SDL_CreateGPUBuffer(sdl_device, &buffer_create_info);
 
+
 		SDL_GPUTransferBufferCreateInfo transfer_buffer_create_info{};
 		transfer_buffer_create_info.usage = SDL_GPU_TRANSFERBUFFERUSAGE_UPLOAD;
 		transfer_buffer_create_info.size = sizeof(Vertex) * 3;
 
-		SDL_GPUTransferBuffer* transfer_buffer = SDL_CreateGPUTransferBuffer(sdl_device, &transfer_buffer_create_info);
+		transfer_buffer = SDL_CreateGPUTransferBuffer(sdl_device, &transfer_buffer_create_info);
+
+	}
+
+	void update_geometry()
+	{
 		Vertex* transfer_data = static_cast<Vertex*>(SDL_MapGPUTransferBuffer(sdl_device, transfer_buffer, false));
 
-		transfer_data[0] = Vertex{ -1, -1, 1.0f, 0.0f, 0.0f };
-		transfer_data[1] = Vertex{ 1, -1, 0.0f, 1.0f, 0.0f };
-		transfer_data[2] = Vertex{ 0, 1, 0.0f, 0.0f, 1.0f };
+		transfer_data[0] = Vertex{ -0.5f, -.5f, 0.5f, 0.0f, 0.0f };
+		transfer_data[1] = Vertex{ 0.5f, -0.5f, 0.0f, 0.5f, 0.0f };
+		transfer_data[2] = Vertex{ 0, 0.5f, 0.0f, 0.0f, 0.5f };
 
 		SDL_UnmapGPUTransferBuffer(sdl_device, transfer_buffer);
-
-		// Upload the transfer data to the vertex buffer
-		SDL_GPUCommandBuffer* upload_cmd_buffer = SDL_AcquireGPUCommandBuffer(sdl_device);
-		SDL_GPUCopyPass* copy_pass = SDL_BeginGPUCopyPass(upload_cmd_buffer);
+		SDL_GPUCopyPass* copy_pass = SDL_BeginGPUCopyPass(sdl_cmdbuf);
 
 		SDL_GPUTransferBufferLocation transfer_buffer_location{};
 		transfer_buffer_location.transfer_buffer = transfer_buffer;
@@ -99,13 +105,11 @@ public:
 		buffer_region.size = sizeof(Vertex) * 3;
 
 		SDL_UploadToGPUBuffer(copy_pass, &transfer_buffer_location, &buffer_region, false);
-
 		SDL_EndGPUCopyPass(copy_pass);
-		SDL_SubmitGPUCommandBuffer(upload_cmd_buffer);
-		SDL_ReleaseGPUTransferBuffer(sdl_device, transfer_buffer);
+
 	}
 
-	void render(SDL_GPURenderPass* render_pass)
+	void render(SDL_GPURenderPass* render_pass) const
 	{
 		SDL_BindGPUGraphicsPipeline(render_pass, graphics_pipeline);
 		SDL_GPUBufferBinding vertex_buffer_binding{};
@@ -115,8 +119,9 @@ public:
 		SDL_DrawGPUPrimitives(render_pass, 3, 1, 0, 0);
 	}
 
-	void cleanup()
+	void cleanup() const
 	{
+		SDL_ReleaseGPUTransferBuffer(sdl_device, transfer_buffer);
 		SDL_ReleaseGPUBuffer(sdl_device, vertex_buffer);
 		SDL_ReleaseGPUGraphicsPipeline(sdl_device, graphics_pipeline);
 	}

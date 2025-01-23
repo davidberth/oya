@@ -20,12 +20,20 @@ export SDL_AppResult init()
 
 	SDL_Log("Initializing Video");
 	SDL_SetHint(SDL_HINT_RENDER_DRIVER, "vulkan");
-	if (!SDL_Init(SDL_INIT_VIDEO)) {
+
+
+	if (!SDL_InitSubSystem(SDL_INIT_VIDEO)) {
 		SDL_Log("SDL_Init(SDL_INIT_VIDEO) failed: %s", SDL_GetError());
 		return SDL_APP_FAILURE;
 	}
 
-	sdl_device = SDL_CreateGPUDevice(SDL_GPU_SHADERFORMAT_SPIRV, true, "vulkan");
+#ifdef DEBUG
+	bool debug_mode = true;
+#else
+	bool debug_mode = false;
+#endif
+
+	sdl_device = SDL_CreateGPUDevice(SDL_GPU_SHADERFORMAT_SPIRV, debug_mode, "vulkan");
 	SDL_Log("Creating GPU Device");
 	if (!sdl_device) {
 		SDL_Log("SDL_CreateGPUDevice() failed: %s", SDL_GetError());
@@ -49,6 +57,13 @@ export SDL_AppResult init()
 		SDL_Log(SDL_GetError());
 		return SDL_APP_FAILURE;
 	}
+
+	SDL_SetGPUSwapchainParameters(
+		sdl_device,
+		sdl_window,
+		SDL_GPU_SWAPCHAINCOMPOSITION_SDR,
+		SDL_GPU_PRESENTMODE_IMMEDIATE
+	);
 
 	SDL_ShowWindow(sdl_window);
 

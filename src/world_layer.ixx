@@ -56,6 +56,9 @@ public:
 	{
 		if (sdl_swapchain_texture != NULL)
 		{
+
+			scene.render_set->update_geometry();
+
 			SDL_GPUColorTargetInfo color_target_info = { 0 };
 			color_target_info.texture = sdl_swapchain_texture;
 			color_target_info.clear_color = { 0.0f, 0.0f, 0.0f, 1.0f };

@@ -18,8 +18,26 @@ SDL_AppResult SDL_AppInit(void** appstate, int argc, char* argv[])
 	return init();
 }
 
+#include <chrono>  
+
 SDL_AppResult SDL_AppIterate(void* appstate)
 {
+	static auto last_time = std::chrono::high_resolution_clock::now();
+	static int frame_count = 0;
+
+	frame_count++;
+
+	auto current_time = std::chrono::high_resolution_clock::now();
+	std::chrono::duration<double> elapsed = current_time - last_time;
+
+	if (elapsed.count() >= 1.0)
+	{
+		double framerate = frame_count / elapsed.count();
+		SDL_Log("Framerate: %.2f FPS", framerate);
+		frame_count = 0;
+		last_time = current_time;
+	}
+
 	update();
 	render();
 	return SDL_APP_CONTINUE;
