@@ -5,8 +5,8 @@ ToDo
 		v stage 2 : refacter rendering pipeline
 		v stage 3 : implement index-based rendering
 		v stage 4 : implement static general buffer size (eventual automatic resizing as needed)
-		p stage 4 : implement single polygon scene without transforms
-		- stage 5 : render scene geometries without transforms
+		v stage 4 : implement single polygon scene without transforms
+		p stage 5 : render scene geometries without transforms
 		- stage 6 : render scene geometries with transforms
 		- stage 7 : optimize rendering engine  
 v Implement new renderer
