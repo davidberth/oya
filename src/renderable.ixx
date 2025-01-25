@@ -1,7 +1,7 @@
 module;
 
-#include <vector>
 #include <glm/glm.hpp>
+#include <vector>
 
 export module renderable;
 
@@ -11,14 +11,10 @@ export class Renderable
 {
 public:
 	std::vector<glm::vec2> core;
+	glm::vec3 color;
 
 	std::vector<Vertex> vertices;
 	std::vector<unsigned int> indices;
-
-	int vertex_offset = 0;
-	int index_offset = 0;
-
-	glm::vec3 color;
 
 	Renderable()
 	{
@@ -59,26 +55,6 @@ public:
 		return centroid;
 	}
 
-	inline int get_vertex_offset()
-	{
-		return vertex_offset;
-	}
-
-	inline void set_buffer_offset(int offset)
-	{
-		vertex_offset = offset;
-	}
-
-	inline int get_index_offset()
-	{
-		return index_offset;
-	}
-
-	inline void set_index_offset(int offset)
-	{
-		index_offset = offset;
-	}
-
 	virtual void generate_indices() = 0;
-	virtual void generate_vertices() = 0;	
+	virtual void generate_vertices() = 0;
 };

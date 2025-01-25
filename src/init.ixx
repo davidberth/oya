@@ -62,11 +62,10 @@ export SDL_AppResult init()
 		sdl_device,
 		sdl_window,
 		SDL_GPU_SWAPCHAINCOMPOSITION_SDR,
-		SDL_GPU_PRESENTMODE_IMMEDIATE
+		SDL_GPU_PRESENTMODE_VSYNC
 	);
 
 	SDL_ShowWindow(sdl_window);
-
 
 	get_layer_stack().add_layer(new WorldLayer("world"));
 	get_layer_stack().add_layer(new GUILayer("gui"));

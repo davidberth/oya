@@ -15,7 +15,6 @@ import layer;
 
 import camera;
 import persistent_data;
-// import geometry_renderer;
 import scene;
 import scene_event;
 import scene_serializer;
@@ -56,8 +55,9 @@ public:
 	{
 		if (sdl_swapchain_texture != NULL)
 		{
-
-			scene.render_set->update_geometry();
+			scene.render_set->begin();
+			scene.render_set->render(&scene.root->children[0]->polygon);
+			scene.render_set->end();
 
 			SDL_GPUColorTargetInfo color_target_info = { 0 };
 			color_target_info.texture = sdl_swapchain_texture;
@@ -71,9 +71,6 @@ public:
 
 			SDL_EndGPURenderPass(render_pass);
 		}
-
-
-
 	}
 	virtual void end() override
 	{

@@ -1,53 +1,53 @@
 ToDo
 
-In Progress
-e Implement efficient and easy to use rendering framework
-	q Implement new renderer
-		e stage 2 : refacter rendering pipeline
-		e stage 3 : render scene geometries without transforms
-		e stage 4 : render scene geometries with transforms
-		e stage 5 : optimize rendering engine  
-		
-Done
-q Implement new renderer
-  e stage 1 - render a single polygon to the window
-	- Render a triangle!
-  	- Implement a simple shader that works with SDL3
-	- Look into the shader cross compiler that can be used with SDL3 (used Vulkan SDK for glsl to spir-v)
-	- Integrate shader compilation in CMake
-e Transition to SDL3
-  - Implement mouse scroll handling
-  - Implement keyboard input handling
-  - Implement window events
-  - Remove all GLFW references outside of window
-  - Add SDL3 as a submodule
-  - Add SDL3 dependecies
-  - Create a window and make sure the program runs
-  - Implement four callbacks in separate modules using function forwarding
-  - Implement clear screen in SDL3 GPU and Vulkan initialization
-  - Get IMGUI and the GUI layer running
-  - Get the game running
-- Implement untransformed bounding boxes when instantiating the scene
-- Render untransformed bounding boxes for each node
-- Implement construct on first use
-- Fix memory access violation in release mode
-- Enable move camera by right mouse button and drag
-- Implement multiple render counters
-- Move shaders to geometry renderer
-- Implement test outline rendering
-- Create outline class derived from renderable
-- Refactor polygon generation routines into separate module
-- Create renderable, generalization of polygon
-- Derive polygon from renderable
-- Generalize geometry buffer class to support general renderables
-c Implement hierarchical scene rendering with transforms
-	- Implement rendering one node at a time with traversal
-	- Implement transforms for each node 
-	- Implement node updates and rotate deltas (mainly for debugging for now)
-	- Optimize rendering by batching nodes that don't need transform
-	- Support proper hierarchy in scene loader and rendering
-- Ensure Oya is working on the work laptop
-- Remove all previous data triggers and listeners
-- Remove listeners from the Layer classes
-- Implement event system across all of Oya
-- Transition back to Visual Studio (needed copilot features are now supported in preview)
+- Implement efficient and easy to use rendering framework
+	- Implement new renderer
+		v stage 2 : refacter rendering pipeline
+		v stage 3 : implement index-based rendering
+		v stage 4 : implement static general buffer size (eventual automatic resizing as needed)
+		p stage 4 : implement single polygon scene without transforms
+		- stage 5 : render scene geometries without transforms
+		- stage 6 : render scene geometries with transforms
+		- stage 7 : optimize rendering engine  
+v Implement new renderer
+  v stage 1 - render a single polygon to the window
+	v Render a triangle!
+  	v Implement a simple shader that works with SDL3
+	v Look into the shader cross compiler that can be used with SDL3 (used Vulkan SDK for glsl to spir-v)
+	v Integrate shader compilation in CMake
+v Transition to SDL3
+  v Implement mouse scroll handling
+  v Implement keyboard input handling
+  v Implement window events
+  v Remove all GLFW references outside of window
+  v Add SDL3 as a submodule
+  v Add SDL3 dependecies
+  v Create a window and make sure the program runs
+  v Implement four callbacks in separate modules using function forwarding
+  v Implement clear screen in SDL3 GPU and Vulkan initialization
+  v Get IMGUI and the GUI layer running
+  v Get the game running
+v Implement untransformed bounding boxes when instantiating the scene
+v Render untransformed bounding boxes for each node
+v Implement construct on first use
+v Fiv memory access violation in release mode
+v Enable move camera by right mouse button and drag
+v Implement multiple render counters
+v Move shaders to geometry renderer
+v Implement test outline rendering
+v Create outline class derived from renderable
+v Refactor polygon generation routines into separate module
+v Create renderable, generalization of polygon
+v Derive polygon from renderable
+v Generalize geometry buffer class to support general renderables
+v Implement hierarchical scene rendering with transforms
+	v Implement rendering one node at a time with traversal
+	v Implement transforms for each node 
+	v Implement node updates and rotate deltas (mainly for debugging for now)
+	v Optimize rendering by batching nodes that don't need transform
+	v Support proper hierarchy in scene loader and rendering
+v Ensure Oya is working on the work laptop
+v Remove all previous data triggers and listeners
+v Remove listeners from the Layer classes
+v Implement event system across all of Oya
+v Transition back to Visual Studio (needed copilot features are now supported in preview)

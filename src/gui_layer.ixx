@@ -94,9 +94,7 @@ public:
 				average_outlines_debug = event.average_elements;
 			}
 			});
-
 	}
-
 
 	virtual void begin() override
 	{
