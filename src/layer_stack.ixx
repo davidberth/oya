@@ -13,7 +13,9 @@ private:
 	unsigned int layer_insert_index = 0;
 
 public:
-	LayerStack() {}
+	LayerStack() {
+		printf("Creating layer stack\n");
+	}
 	~LayerStack() {
 		for (Layer* layer : layers)
 		{
@@ -31,8 +33,19 @@ public:
 	std::vector<Layer*>::iterator end() { return layers.end(); }
 };
 
-export inline LayerStack& get_layer_stack()
+LayerStack* layer_stack;
+
+export inline LayerStack* get_layer_stack()
 {
-	static LayerStack layer_stack;
 	return layer_stack;
+}
+
+export inline void init_layer_stack()
+{
+	layer_stack = new LayerStack();
+}
+
+export inline void delete_layer_stack()
+{
+	delete layer_stack;
 }

@@ -1,5 +1,4 @@
 ﻿#define SDL_MAIN_USE_CALLBACKS
-#include "imgui_impl_sdl3.h"
 #include <chrono>  
 #include <SDL3/SDL.h>
 #include <SDL3/SDL_main.h>
@@ -33,7 +32,6 @@ SDL_AppResult SDL_AppEvent(void* appstate, SDL_Event* event)
 {
 	if (event->type == SDL_EVENT_QUIT) return SDL_APP_SUCCESS;
 
-	ImGui_ImplSDL3_ProcessEvent(event);
 	switch (event->type) {
 	case SDL_EVENT_KEY_DOWN:
 		if (handle_keyboard_events(event)) return SDL_APP_SUCCESS;
@@ -47,7 +45,7 @@ SDL_AppResult SDL_AppEvent(void* appstate, SDL_Event* event)
 	case SDL_EVENT_WINDOW_RESIZED:
 		int width = event->window.data1;
 		int height = event->window.data2;
-		get_event_dispatcher().dispatch(WindowEvent(width, height));
+		get_event_dispatcher()->dispatch(WindowEvent(width, height));
 		break;
 	}
 	return SDL_APP_CONTINUE;

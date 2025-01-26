@@ -7,16 +7,28 @@ export module init;
 import sdl_data;
 import layer_stack;
 import world_layer;
-import gui_layer;
+import input_manager;
+import scene_serializer;
 import special_actions;
 import camera;
 import updatable_manager;
 import viewport;
+import event;
+import camera;
 
 
 export SDL_AppResult init()
 {
 	SDL_SetAppMetadata("Oya", "1.0", "oya");
+
+	init_event_dispatcher();
+	init_camera();
+	init_input_manager();
+	init_layer_stack();
+	init_scene_serializer();
+	init_special_actions();
+	init_updatable_manager();
+	init_viewport();
 
 	SDL_Log("Initializing Video");
 	SDL_SetHint(SDL_HINT_RENDER_DRIVER, "vulkan");
@@ -62,25 +74,23 @@ export SDL_AppResult init()
 		sdl_device,
 		sdl_window,
 		SDL_GPU_SWAPCHAINCOMPOSITION_SDR,
-		SDL_GPU_PRESENTMODE_VSYNC
+		SDL_GPU_PRESENTMODE_IMMEDIATE
 	);
 
 	SDL_ShowWindow(sdl_window);
 
-	get_layer_stack().add_layer(new WorldLayer("world"));
-	get_layer_stack().add_layer(new GUILayer("gui"));
+	get_layer_stack()->add_layer(new WorldLayer("world"));
 
-
-	for (auto layer : get_layer_stack())
+	for (auto layer : *get_layer_stack())
 	{
 		layer->init();
 	}
-	get_special_actions();
-	get_updatable_manager().add_updatable(&get_camera());
-	get_viewport().init();
+
+	get_updatable_manager()->add_updatable(get_camera());
+
 	int window_width, window_height;
 	SDL_GetWindowSize(sdl_window, &window_width, &window_height);
-	get_viewport().set_size(window_width, window_height);
+	get_viewport()->set_size(window_width, window_height);
 
 	return SDL_APP_CONTINUE;
 }

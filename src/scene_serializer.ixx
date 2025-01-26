@@ -13,6 +13,11 @@ public:
 	// version number to handle format changes
 	static constexpr uint32_t CURRENT_VERSION = 1;
 
+	SceneSerializer()
+	{
+		printf("SceneSerializer created\n");
+	}
+
 	static void serialize(const Scene& scene, const std::string& filepath) {
 		std::ofstream file(filepath, std::ios::binary);
 		write_header(file);
@@ -95,7 +100,16 @@ private:
 	}
 };
 
-export inline SceneSerializer& get_scene_serializer() {
-	static SceneSerializer scene_serializer;
+SceneSerializer* scene_serializer;
+
+export inline SceneSerializer* get_scene_serializer() {
 	return scene_serializer;
+}
+
+export inline void init_scene_serializer() {
+	scene_serializer = new SceneSerializer();
+}
+
+export inline void delete_scene_serializer() {
+	delete scene_serializer;
 }

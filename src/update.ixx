@@ -13,10 +13,10 @@ export SDL_AppResult update()
 {
 
 	// update updatables
-	get_updatable_manager().update_all();
+	get_updatable_manager()->update_all();
 
 	// update layers
-	for (auto layer : get_layer_stack())
+	for (auto layer : *get_layer_stack())
 	{
 
 		layer->update();

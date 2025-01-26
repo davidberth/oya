@@ -6,7 +6,6 @@ module;
 #include <SDL3/SDL.h>
 #include <string>
 
-
 export module world_layer;
 
 import event;
@@ -26,19 +25,19 @@ export class WorldLayer : public Layer
 
 public:
 	WorldLayer(std::string pname) : Layer(pname) {}
-	~WorldLayer() {
+	virtual ~WorldLayer() {
 	}
 	virtual void init() override
 	{
 		Layer::init();
 
-		get_event_dispatcher().subscribe<SceneEvent>([this](const SceneEvent& scene_event) {
-			if (scene_event.event_type == SceneEventType::load) {
-				get_scene_serializer().deserialize(scene, scene_event.scene_path);
+		get_event_dispatcher()->subscribe<SceneEvent>([this](const SceneEvent& scene_event) {
+			if (scene_event.event_type == 0) {
+				get_scene_serializer()->deserialize(scene, "scenes/scene1.scn");
 				scene.setup();
 			}
-			else if (scene_event.event_type == SceneEventType::save) {
-				get_scene_serializer().serialize(scene, scene_event.scene_path);
+			else if (scene_event.event_type == 1) {
+				get_scene_serializer()->serialize(scene, "scenes/scene1.scn");
 			}
 			});
 
@@ -55,9 +54,7 @@ public:
 	{
 		if (sdl_swapchain_texture != NULL)
 		{
-			scene.render_set->begin();
-			scene.render_set->render(&scene.root->children[0]->polygon);
-			scene.render_set->end();
+			scene.stage_renderables();
 
 			SDL_GPUColorTargetInfo color_target_info = { 0 };
 			color_target_info.texture = sdl_swapchain_texture;
@@ -67,7 +64,7 @@ public:
 
 			SDL_GPURenderPass* render_pass = SDL_BeginGPURenderPass(sdl_cmdbuf, &color_target_info, 1, NULL);
 
-			scene.render(render_pass, get_camera().view_proj);
+			scene.render(render_pass, get_camera()->view_proj);
 
 			SDL_EndGPURenderPass(render_pass);
 		}

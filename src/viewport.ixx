@@ -18,7 +18,7 @@ export struct Viewport {
 	}
 
 	void init() {
-		get_event_dispatcher().subscribe<WindowEvent>([this](const WindowEvent& event) {
+		get_event_dispatcher()->subscribe<WindowEvent>([this](const WindowEvent& event) {
 			width = event.width;
 			height = event.height;
 			});
@@ -34,7 +34,19 @@ export struct Viewport {
 	}
 };
 
-export inline Viewport& get_viewport() {
-	static Viewport viewport;
+
+
+Viewport* viewport;
+
+export inline Viewport* get_viewport() {
 	return viewport;
+}
+
+export inline void init_viewport() {
+	viewport = new Viewport();
+	viewport->init();
+}
+
+export inline void delete_viewport() {
+	delete viewport;
 }

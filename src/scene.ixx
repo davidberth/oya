@@ -26,12 +26,11 @@ public:
 		root->centroid = glm::vec2(0.0f, 0.0f);
 		root->rotate_delta = 0.001f;
 
-		add_node(root, new glm::vec2[4]{ {-0.5f, -0.5f}, {0.5f, -0.5f}, {0.5f, 0.5f}, {-0.5f, 0.5f} }, 4, 0.01f, glm::vec3(0.0f, 0.0f, 1.0f), glm::vec3(1.0f, 1.0f, 1.0f), 0.0f);
 		SDL_GPUShader* vertex_shader = load_shader(sdl_device, "polygon_vert", 0, 0, 0, 0);
 		SDL_GPUShader* fragment_shader = load_shader(sdl_device, "polygon_frag", 0, 0, 0, 0);
 
 		render_set = new RenderSet();
-		render_set->init(RenderGeometryType::TRIANGLE_LIST, vertex_shader, fragment_shader, 1000, 1000);
+		render_set->init(RenderGeometryType::TRIANGLE_LIST, vertex_shader, fragment_shader, 100000, 100000);
 	};
 
 	~Scene() {
@@ -73,6 +72,21 @@ public:
 		add_node_recursive(root);
 	}
 
+	void stage_renderables()
+	{
+		render_set->begin();
+		stage_node(root);
+		render_set->end();
+	}
+
+	void stage_node(Node* node)
+	{
+		render_set->add(&node->polygon);
+		for (Node* child : node->children) {
+			stage_node(child);
+		}
+	}
+
 	void render(SDL_GPURenderPass* render_pass, const glm::mat4& view_proj)
 	{
 		render_set->render_all_geometries(render_pass);
@@ -80,7 +94,7 @@ public:
 
 	void render_node(Node* node, const glm::mat4& parent_transform, const glm::mat4& view_proj)
 	{
-		glm::mat4 global_transform = parent_transform * node->get_transform();
+		// glm::mat4 global_transform = parent_transform * node->get_transform();
 
 		/*
 		geom->set_transformation(view_proj * global_transform);

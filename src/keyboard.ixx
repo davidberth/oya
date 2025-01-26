@@ -14,7 +14,7 @@ export bool handle_keyboard_events(SDL_Event* event)
 	}
 
 	KeyEvent kevent(event->key.key, event->key.down);
-	get_event_dispatcher().dispatch(kevent);
+	get_event_dispatcher()->dispatch(kevent);
 
 	return false;
 }

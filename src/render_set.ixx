@@ -26,7 +26,10 @@ public:
 	int current_index = 0;
 	int current_vertex = 0;
 
-	Renderable* renderables[1000];
+	int total_indices = 0;
+	int total_vertices = 0;
+	static const int max_renderables = 5000;
+	Renderable* renderables[max_renderables];
 
 	RenderSet() {
 		memset(renderables, 0, sizeof(renderables));
@@ -107,12 +110,26 @@ public:
 		current_renderable = 0;
 		current_index = 0;
 		current_vertex = 0;
+
+		total_indices = 0;
+		total_vertices = 0;
 	}
 
-	void render(Renderable* renderable)
+	void add(Renderable* renderable)
 	{
-		renderables[current_renderable] = renderable;
-		current_renderable++;
+		if ((current_renderable < max_renderables) &&
+			(total_vertices + renderable->get_num_vertices() < vertex_buffer_size) &&
+			(total_indices + renderable->get_num_indices() < index_buffer_size))
+		{
+			renderables[current_renderable] = renderable;
+			current_renderable++;
+			total_vertices += renderable->vertices.size();
+			total_indices += renderable->indices.size();
+		}
+		else
+		{
+			SDL_Log("RenderSet::add: Renderable not added, max renderables or buffer size exceeded");
+		}
 	}
 
 	void end()
@@ -122,22 +139,26 @@ public:
 		// TODO This will be optimized by only copying new data when geometry changes
 		for (int i = 0; i < current_renderable; i++)
 		{
-			Renderable* renderable = renderables[i];
-			for (int j = 0; j < renderable->get_num_vertices(); j++)
+			if (current_vertex + renderables[i]->vertices.size() > vertex_buffer_size)
 			{
-				transfer_data[current_vertex] = renderable->vertices[j];
-				current_vertex++;
+
 			}
+			Renderable* renderable = renderables[i];
+			memcpy(&transfer_data[current_vertex], renderable->vertices.data(), sizeof(Vertex) * renderable->vertices.size());
+			current_vertex += renderable->vertices.size();
 		}
 		Uint16* indexData = (Uint16*)&transfer_data[current_vertex];
+		int vertex_offset = 0;
 		for (int i = 0; i < current_renderable; i++)
 		{
 			Renderable* renderable = renderables[i];
+
 			for (int j = 0; j < renderable->get_num_indices(); j++)
 			{
-				indexData[current_index] = renderable->indices[j];
+				indexData[current_index] = renderable->indices[j] + vertex_offset;
 				current_index++;
 			}
+			vertex_offset += renderable->get_num_vertices();
 		}
 
 		SDL_UnmapGPUTransferBuffer(sdl_device, transfer_buffer);

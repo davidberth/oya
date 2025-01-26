@@ -1,7 +1,7 @@
 module;
 
-#include <glm/glm.hpp>
 #include <glm/ext/matrix_projection.hpp>
+#include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 #include <glm/mat4x4.hpp>
@@ -19,11 +19,11 @@ import input_event;
 import viewport;
 import mouse_event;
 
-export class Camera  : public Updatable {
+export class Camera : public Updatable {
 public:
-    glm::vec2 position;
-    float height;
-    float rotation;
+	glm::vec2 position;
+	float height;
+	float rotation;
 
 	glm::vec2 forward;
 	glm::vec2 side;
@@ -43,20 +43,21 @@ public:
 
 	bool is_mouse_down = false;
 	glm::vec2 mouse_pos;
-	
 
-    Camera(glm::vec2 start_pos, float start_height, float start_rotation)
-        : position(start_pos), height(start_height), rotation(start_rotation) 
+
+	Camera(glm::vec2 start_pos, float start_height, float start_rotation)
+		: position(start_pos), height(start_height), rotation(start_rotation)
 	{
-		get_event_dispatcher().subscribe<InputEvent>([this](const InputEvent& input_event) {
+		printf("Creating camera\n");
+		get_event_dispatcher()->subscribe<InputEvent>([this](const InputEvent& input_event) {
 			on_input(input_event);
-		});
+			});
 
-		get_event_dispatcher().subscribe<MouseMoveEvent>([this](const MouseMoveEvent& mouse_event) {
+		get_event_dispatcher()->subscribe<MouseMoveEvent>([this](const MouseMoveEvent& mouse_event) {
 			on_mouse_move(mouse_event);
-		});
+			});
 
-		get_event_dispatcher().subscribe<MouseButtonEvent>([this](const MouseButtonEvent& mouse_event) {
+		get_event_dispatcher()->subscribe<MouseButtonEvent>([this](const MouseButtonEvent& mouse_event) {
 			if (mouse_event.button == MouseButton::right && mouse_event.action == MouseAction::press)
 			{
 				is_mouse_down = true;
@@ -74,7 +75,7 @@ public:
 	{
 
 		glm::vec3 camera_pos = -glm::vec3(position.x, position.y, -height);
-		float z_eye = camera_pos.z - target_z;  
+		float z_eye = camera_pos.z - target_z;
 		float z_ndc = ((1.0f / z_eye) - (1.0f / near_clip)) / ((1.0f / far_clip) - (1.0f / near_clip)) * 2.0f - 1.0f;
 
 		glm::vec4 clip_pos(ndc_pos.x, ndc_pos.y, z_ndc, 1.0f);
@@ -87,8 +88,8 @@ public:
 	void update() override {
 
 		// update the matrices
-		Viewport viewport = get_viewport();
-		float asp_ratio = float(viewport.width) / float(viewport.height);
+		Viewport* viewport = get_viewport();
+		float asp_ratio = float(viewport->width) / float(viewport->height);
 		projection = glm::perspective(glm::radians(45.0f), asp_ratio, near_clip, far_clip);
 		view = glm::mat4(1.0f);
 		view = glm::translate(view, glm::vec3(-position.x, -position.y, -height));
@@ -104,7 +105,7 @@ public:
 			if (height < 1.0f) height = 1.0f;
 		}
 		if (get_input_manager().get_input_state(InputAction::zoom_out))
-		{			
+		{
 			height += zoom_speed;
 			if (height > 50.f) height = 50.0f;
 		}
@@ -151,17 +152,27 @@ public:
 			glm::vec2 delta = glm::vec2(mouse_event.xpos, mouse_event.ypos) - mouse_pos;
 			delta.x = -delta.x;
 			position += delta * pan_speed;
-			
+
 		}
 		mouse_pos = glm::vec2(mouse_event.xpos, mouse_event.ypos);
-		
+
 	}
 
 };
 
-export inline Camera& get_camera()
+Camera* camera;
+
+export inline Camera* get_camera()
 {
-	static Camera camera(glm::vec2(0.0f, 0.0f), 10.0f, 0.0f);
 	return camera;
 }
 
+export inline void init_camera()
+{
+	camera = new Camera(glm::vec2(0.0f, 0.0f), 10.0f, 0.0f);
+}
+
+export inline void delete_camera()
+{
+	delete camera;
+}

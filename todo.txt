@@ -1,14 +1,20 @@
 ToDo
 
+
 - Implement efficient and easy to use rendering framework
 	- Implement new renderer
-		v stage 2 : refacter rendering pipeline
-		v stage 3 : implement index-based rendering
-		v stage 4 : implement static general buffer size (eventual automatic resizing as needed)
-		v stage 4 : implement single polygon scene without transforms
-		p stage 5 : render scene geometries without transforms
-		- stage 6 : render scene geometries with transforms
-		- stage 7 : optimize rendering engine  
+		v refacter rendering pipeline
+		v implement index-based rendering
+		v implement static general buffer size (eventual automatic resizing as needed)
+		v implement single polygon scene without transforms
+		v render scene geometries without transforms
+		- render scene with a single camera and view transform
+		- render scene geometries with transforms
+		- optimize rendering engine  
+v Fix crash in release mode when creating a new scene (this was caused by create on first use of global objects)
+v Implement explicit creation and deletion of all global objects (create on first use is causing major issues)
+v Remove IMGUI from the game
+v Enable input events and special actions
 v Implement new renderer
   v stage 1 - render a single polygon to the window
 	v Render a triangle!

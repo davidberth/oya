@@ -24,19 +24,19 @@ public:
 
 	InputManager() {
 		setup_default_bindings();
-		get_event_dispatcher().subscribe<KeyEvent>([this](const KeyEvent& key_event) {
+		get_event_dispatcher()->subscribe<KeyEvent>([this](const KeyEvent& key_event) {
 			on_key_event(key_event);
 			});
-		get_event_dispatcher().subscribe<MouseMoveEvent>([this](const MouseMoveEvent& mouse_event) {
+		get_event_dispatcher()->subscribe<MouseMoveEvent>([this](const MouseMoveEvent& mouse_event) {
 			target_x = mouse_event.xpos;
 			target_y = mouse_event.ypos;
 			});
-		get_event_dispatcher().subscribe<MouseScrollEvent>([this](const MouseScrollEvent& scroll_event) {
+		get_event_dispatcher()->subscribe<MouseScrollEvent>([this](const MouseScrollEvent& scroll_event) {
 			if (scroll_event.yoffset > 0) {
-				get_event_dispatcher().dispatch(InputEvent(InputAction::scroll_in, true));
+				get_event_dispatcher()->dispatch(InputEvent(InputAction::scroll_in, true));
 			}
 			else {
-				get_event_dispatcher().dispatch(InputEvent(InputAction::scroll_out, true));
+				get_event_dispatcher()->dispatch(InputEvent(InputAction::scroll_out, true));
 			}
 			});
 	}
@@ -51,7 +51,7 @@ public:
 
 			input_states[static_cast<size_t>(input_event.action)] = is_pressed;
 			// dispatch the input event
-			get_event_dispatcher().dispatch(input_event);
+			get_event_dispatcher()->dispatch(input_event);
 		}
 	}
 
@@ -88,7 +88,16 @@ private:
 	}
 };
 
-export inline InputManager& get_input_manager() {
-	static InputManager input_manager;
+InputManager* input_manager;
+
+export inline InputManager* get_input_manager() {
 	return input_manager;
+}
+
+export inline void init_input_manager() {
+	input_manager = new InputManager();
+}
+
+export inline void delete_input_manager() {
+	delete input_manager;
 }
