@@ -1,0 +1,14 @@
+Generating a font atlas with msdf-atlas-gen
+
+msdf-atlas-gen.exe -font c:\windows\fonts\bell.ttf 
+-type softmask 
+-format png 
+-chars "[42, 90]"  
+-size 100 -pots 
+-imageout ../oya/textures/font.png 
+-csv ../oya/textures/font.csv
+
+This only does numbers, upper case letters and a few punctuation marks (ascii 42 through 90). 
+This is easy to expand as needed.
+
+../atlas_gen/msdf-atlas-gen.exe -font c:\windows\fonts\bell.ttf -type softmask -format png -chars "[42, 90]"  -size 100 -pots -imageout resources/textures/font.png -csv resources/font_layouts/font.csv

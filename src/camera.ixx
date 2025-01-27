@@ -40,6 +40,7 @@ public:
 	glm::mat4 view;
 	glm::mat4 view_proj;
 	glm::mat4 view_proj_inv;
+	glm::mat4 view_proj_t;
 
 	bool is_mouse_down = false;
 	glm::vec2 mouse_pos;
@@ -96,6 +97,7 @@ public:
 		view = glm::rotate(view, rotation, glm::vec3(0.0f, 0.0f, 1.0f));
 		view_proj = projection * view;
 		view_proj_inv = glm::inverse(view_proj);
+		view_proj_t = glm::transpose(view_proj);
 
 		/*
 

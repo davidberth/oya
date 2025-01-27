@@ -1,5 +1,6 @@
 module;
 
+#include <glm/glm.hpp>
 #include <SDL3/SDL.h>
 #include <vector>
 export module render_set;
@@ -194,8 +195,10 @@ public:
 
 	}
 
-	void render_all_geometries(SDL_GPURenderPass* render_pass) const
+	void render_all_geometries(SDL_GPURenderPass* render_pass, const glm::mat4x4& view_proj) const
 	{
+
+
 		SDL_BindGPUGraphicsPipeline(render_pass, graphics_pipeline);
 		SDL_GPUBufferBinding vertex_buffer_binding{};
 		vertex_buffer_binding.buffer = vertex_buffer;
@@ -207,8 +210,9 @@ public:
 		index_buffer_binding.offset = 0;
 		SDL_BindGPUIndexBuffer(render_pass, &index_buffer_binding, SDL_GPU_INDEXELEMENTSIZE_16BIT);
 
-		SDL_DrawGPUIndexedPrimitives(render_pass, current_index, 1, 0, 0, 0);
+		SDL_PushGPUVertexUniformData(sdl_cmdbuf, 0, &view_proj, sizeof(view_proj));
 
+		SDL_DrawGPUIndexedPrimitives(render_pass, current_index, 1, 0, 0, 0);
 	}
 
 	void cleanup() const

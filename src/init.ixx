@@ -1,6 +1,7 @@
 module;
 
 #include <SDL3/SDL.h>
+#include <sstream>
 
 export module init;
 
@@ -15,6 +16,8 @@ import updatable_manager;
 import viewport;
 import event;
 import camera;
+
+#include "configure.h"
 
 
 export SDL_AppResult init()
@@ -46,19 +49,36 @@ export SDL_AppResult init()
 #endif
 
 	sdl_device = SDL_CreateGPUDevice(SDL_GPU_SHADERFORMAT_SPIRV, debug_mode, "vulkan");
-	SDL_Log("Creating GPU Device");
+	SDL_Log("Creating GPU device");
 	if (!sdl_device) {
 		SDL_Log("SDL_CreateGPUDevice() failed: %s", SDL_GetError());
 		return SDL_APP_FAILURE;
 	}
 
 	SDL_Log("Creating window");
-	sdl_window = SDL_CreateWindow("Oya 0.1.1", 1600, 1200, SDL_WINDOW_RESIZABLE);
+	std::ostringstream window_title;
+	window_title << APPNAME << " " << APPVERSION << " " << "Vulkan";
+	std::string window_title_str = window_title.str();
+	window_title_str[0] = std::toupper(window_title_str[0]);
+	sdl_window = SDL_CreateWindow(window_title_str.c_str(), 1600, 1200, SDL_WINDOW_RESIZABLE);
+
 	if (!sdl_window) {
 		SDL_Log("SDL_CreateWindow() failed: %s", SDL_GetError());
 		return SDL_APP_FAILURE;
 	}
 
+	SDL_Log("Loading main icon");
+
+	SDL_Surface* icon_surface = SDL_LoadBMP("resources/icons/main.bmp");
+	if (!icon_surface) {
+		SDL_Log("SDL_LoadBMP() failed: %s", SDL_GetError());
+		return SDL_APP_FAILURE;
+	}
+	SDL_SetWindowIcon(sdl_window, icon_surface);
+	SDL_DestroySurface(icon_surface);
+
+
+	SDL_Log("Available drivers:");
 	SDL_Log(SDL_GetGPUDriver(0));
 	SDL_Log(SDL_GetGPUDriver(1));
 

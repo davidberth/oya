@@ -14,3 +14,7 @@ imgui.ini
 /.vs/CopilotSnapshots/
 shaders/compiled/
 enc_temp_folder/
+/resources/renderdoc/
+/resources/font_layouts/
+/resources/textures/font.png
+.vs/slnx.sqlite-journal

@@ -89,7 +89,7 @@ public:
 
 	void render(SDL_GPURenderPass* render_pass, const glm::mat4& view_proj)
 	{
-		render_set->render_all_geometries(render_pass);
+		render_set->render_all_geometries(render_pass, view_proj);
 	}
 
 	void render_node(Node* node, const glm::mat4& parent_transform, const glm::mat4& view_proj)

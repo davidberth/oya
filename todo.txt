@@ -1,5 +1,8 @@
 ToDo
 
+- Implement font rendering
+	v Generate single font atlas from TTF 
+	v Create general font atlas generator pipeline with CMake
 
 - Implement efficient and easy to use rendering framework
 	- Implement new renderer
@@ -8,9 +11,12 @@ ToDo
 		v implement static general buffer size (eventual automatic resizing as needed)
 		v implement single polygon scene without transforms
 		v render scene geometries without transforms
-		- render scene with a single camera and view transform
+		p render scene with a single camera and view transform
 		- render scene geometries with transforms
 		- optimize rendering engine  
+		- Implement general texture rendering
+v Create and load a main icon for the game	
+v Include application information (from config) in window title
 v Fix crash in release mode when creating a new scene (this was caused by create on first use of global objects)
 v Implement explicit creation and deletion of all global objects (create on first use is causing major issues)
 v Remove IMGUI from the game
