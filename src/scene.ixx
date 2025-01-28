@@ -26,7 +26,7 @@ public:
 		root->centroid = glm::vec2(0.0f, 0.0f);
 		root->rotate_delta = 0.001f;
 
-		SDL_GPUShader* vertex_shader = load_shader(sdl_device, "polygon_vert", 0, 0, 0, 0);
+		SDL_GPUShader* vertex_shader = load_shader(sdl_device, "polygon_vert", 0, 1, 0, 0);
 		SDL_GPUShader* fragment_shader = load_shader(sdl_device, "polygon_frag", 0, 0, 0, 0);
 
 		render_set = new RenderSet();

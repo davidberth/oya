@@ -64,7 +64,7 @@ public:
 
 			SDL_GPURenderPass* render_pass = SDL_BeginGPURenderPass(sdl_cmdbuf, &color_target_info, 1, NULL);
 
-			scene.render(render_pass, get_camera()->view_proj_t);
+			scene.render(render_pass, get_camera()->view_proj);
 
 			SDL_EndGPURenderPass(render_pass);
 		}
