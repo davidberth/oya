@@ -14,7 +14,7 @@ module;
 export module camera;
 
 import updatable;
-// import input_manager;
+import input_manager;
 import input_event;
 import viewport;
 import mouse_event;
@@ -99,36 +99,34 @@ public:
 		view_proj_inv = glm::inverse(view_proj);
 
 
-		/*
-
-		if (get_input_manager().get_input_state(InputAction::zoom_in))
+		if (get_input_manager()->get_input_state(InputAction::zoom_in))
 		{
 			height -= zoom_speed;
 			if (height < 1.0f) height = 1.0f;
 		}
-		if (get_input_manager().get_input_state(InputAction::zoom_out))
+		if (get_input_manager()->get_input_state(InputAction::zoom_out))
 		{
 			height += zoom_speed;
 			if (height > 50.f) height = 50.0f;
 		}
 
-		if (get_input_manager().get_input_state(InputAction::up))
+		if (get_input_manager()->get_input_state(InputAction::up))
 		{
 			position.y += speed;
 		}
-		if (get_input_manager().get_input_state(InputAction::down))
+		if (get_input_manager()->get_input_state(InputAction::down))
 		{
 			position.y -= speed;
 		}
-		if (get_input_manager().get_input_state(InputAction::left))
+		if (get_input_manager()->get_input_state(InputAction::left))
 		{
 			position.x -= speed;
 		}
-		if (get_input_manager().get_input_state(InputAction::right))
+		if (get_input_manager()->get_input_state(InputAction::right))
 		{
 			position.x += speed;
 		}
-		*/
+
 
 	}
 

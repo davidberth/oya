@@ -81,7 +81,16 @@ public:
 
 	void stage_node(Node* node)
 	{
-		render_set->add(&node->polygon);
+		if (node->polygon.get_num_indices() > 0)
+		{
+			if (node->needs_transform) {
+				render_set->add(&node->polygon, &node->transform);
+			}
+			else {
+				render_set->add(&node->polygon, nullptr);
+			}
+		}
+
 		for (Node* child : node->children) {
 			stage_node(child);
 		}
@@ -125,6 +134,7 @@ private:
 	void check_transform_needs(Node* node) {
 		constexpr float epsilon = 0.001f;
 		node->needs_transform = std::abs(node->rotate_delta) > epsilon;
+
 		for (Node* child : node->children) {
 			check_transform_needs(child);
 		}
@@ -162,7 +172,7 @@ private:
 			node->local_aabb.outline->generate_indices();
 			node->local_aabb.outline->generate_vertices();
 		}
-		//debug_geom->add_renderable(node->local_aabb.outline);
+
 		for (Node* child : node->children) {
 			add_node_recursive(child);
 		}

@@ -18,3 +18,4 @@ enc_temp_folder/
 /resources/font_layouts/
 /resources/textures/font.png
 .vs/slnx.sqlite-journal
+/shaders/compiled/

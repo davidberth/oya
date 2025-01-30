@@ -3,6 +3,7 @@ module;
 #include <glm/glm.hpp>
 #include <SDL3/SDL.h>
 #include <vector>
+
 export module render_set;
 
 import sdl_data;
@@ -20,6 +21,7 @@ public:
 	SDL_GPUBuffer* vertex_buffer;
 	SDL_GPUBuffer* index_buffer;
 	SDL_GPUTransferBuffer* transfer_buffer;
+
 	int vertex_buffer_size = 0;
 	int index_buffer_size = 0;
 
@@ -31,9 +33,21 @@ public:
 	int total_vertices = 0;
 	static const int max_renderables = 5000;
 	Renderable* renderables[max_renderables];
+	glm::mat4x4* transform[max_renderables];
+
+	int batch_offset[max_renderables];
+	int batch_size[max_renderables];
+	glm::mat4x4* batch_transform[max_renderables];
+	int num_batches;
+
+	glm::mat4x4 identity;
 
 	RenderSet() {
 		memset(renderables, 0, sizeof(renderables));
+		memset(transform, 0, sizeof(transform));
+		num_batches = 0;
+
+		identity = glm::mat4(1.0f);
 	}
 
 	void init(RenderGeometryType geometry_type, SDL_GPUShader* vertex_shader, SDL_GPUShader* fragment_shader,
@@ -116,13 +130,14 @@ public:
 		total_vertices = 0;
 	}
 
-	void add(Renderable* renderable)
+	void add(Renderable* renderable, glm::mat4x4* transf)
 	{
 		if ((current_renderable < max_renderables) &&
 			(total_vertices + renderable->get_num_vertices() < vertex_buffer_size) &&
 			(total_indices + renderable->get_num_indices() < index_buffer_size))
 		{
 			renderables[current_renderable] = renderable;
+			transform[current_renderable] = transf;
 			current_renderable++;
 			total_vertices += renderable->vertices.size();
 			total_indices += renderable->indices.size();
@@ -137,22 +152,47 @@ public:
 	{
 		Vertex* transfer_data = static_cast<Vertex*>(SDL_MapGPUTransferBuffer(sdl_device, transfer_buffer, false));
 
-		// TODO This will be optimized by only copying new data when geometry changes
 		for (int i = 0; i < current_renderable; i++)
 		{
-			if (current_vertex + renderables[i]->vertices.size() > vertex_buffer_size)
+			if (current_vertex + renderables[i]->vertices.size() < vertex_buffer_size)
 			{
-
+				Renderable* renderable = renderables[i];
+				memcpy(&transfer_data[current_vertex], renderable->vertices.data(), sizeof(Vertex) * renderable->vertices.size());
+				current_vertex += renderable->vertices.size();
 			}
-			Renderable* renderable = renderables[i];
-			memcpy(&transfer_data[current_vertex], renderable->vertices.data(), sizeof(Vertex) * renderable->vertices.size());
-			current_vertex += renderable->vertices.size();
+
 		}
 		Uint16* indexData = (Uint16*)&transfer_data[current_vertex];
 		int vertex_offset = 0;
+		num_batches = 0;
+		bool first_time = true;
 		for (int i = 0; i < current_renderable; i++)
 		{
 			Renderable* renderable = renderables[i];
+			if (first_time || (transform[i] != nullptr) || (i == current_renderable - 1))
+			{
+				if (!first_time)
+				{
+					batch_size[num_batches - 1] = current_index - batch_offset[num_batches - 1];
+					batch_offset[num_batches] = current_index;
+					batch_transform[num_batches] = transform[i];
+					++num_batches;
+				}
+				else
+				{
+					first_time = false;
+					batch_offset[num_batches] = 0;
+					if (transform[i] != nullptr)
+					{
+						batch_transform[num_batches] = transform[i];
+					}
+					else
+					{
+						batch_transform[num_batches] = &identity;
+					}
+					++num_batches;
+				}
+			}
 
 			for (int j = 0; j < renderable->get_num_indices(); j++)
 			{
@@ -192,13 +232,10 @@ public:
 			&buffer_region_index, false);
 
 		SDL_EndGPUCopyPass(copy_pass);
-
 	}
 
 	void render_all_geometries(SDL_GPURenderPass* render_pass, const glm::mat4x4& view_proj) const
 	{
-
-
 		SDL_BindGPUGraphicsPipeline(render_pass, graphics_pipeline);
 		SDL_GPUBufferBinding vertex_buffer_binding{};
 		vertex_buffer_binding.buffer = vertex_buffer;
@@ -210,9 +247,19 @@ public:
 		index_buffer_binding.offset = 0;
 		SDL_BindGPUIndexBuffer(render_pass, &index_buffer_binding, SDL_GPU_INDEXELEMENTSIZE_16BIT);
 
-		SDL_PushGPUVertexUniformData(sdl_cmdbuf, 0, &view_proj, sizeof(view_proj));
+		glm::mat4x4 view_proj_model;
 
-		SDL_DrawGPUIndexedPrimitives(render_pass, current_index, 1, 0, 0, 0);
+		for (int i = 0; i < num_batches; i++)
+		{
+			if (batch_size[i] > 0)
+			{
+				view_proj_model = view_proj * (*batch_transform[i]);
+				SDL_PushGPUVertexUniformData(sdl_cmdbuf, 0, &view_proj_model, sizeof(glm::mat4x4));
+				SDL_DrawGPUIndexedPrimitives(render_pass, batch_size[i], 1, batch_offset[i], 0, 0);
+			}
+		}
+		//SDL_PushGPUVertexUniformData(sdl_cmdbuf, 0, &view_proj, sizeof(view_proj));
+		//SDL_DrawGPUIndexedPrimitives(render_pass, current_index, 1, 0, 0, 0);
 	}
 
 	void cleanup() const

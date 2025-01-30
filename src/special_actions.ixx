@@ -6,7 +6,6 @@ export module special_actions;
 
 import event;
 import input_event;
-import window;
 import scene_event;
 
 struct size_option

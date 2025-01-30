@@ -36,6 +36,9 @@ SDL_AppResult SDL_AppEvent(void* appstate, SDL_Event* event)
 	case SDL_EVENT_KEY_DOWN:
 		if (handle_keyboard_events(event)) return SDL_APP_SUCCESS;
 		break;
+	case SDL_EVENT_KEY_UP:
+		handle_keyboard_events(event);
+		break;
 	case SDL_EVENT_MOUSE_MOTION:
 		handle_mouse_movement(event);
 		break;

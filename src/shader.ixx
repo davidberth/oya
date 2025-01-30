@@ -34,22 +34,22 @@ export SDL_GPUShader* load_shader(
 		return NULL;
 	}
 
-	char fullPath[256];
+	char full_path[256];
 	SDL_GPUShaderFormat backendFormats = SDL_GetGPUShaderFormats(device);
 	SDL_GPUShaderFormat format = SDL_GPU_SHADERFORMAT_INVALID;
 	const char* entrypoint;
 
 
-	SDL_snprintf(fullPath, sizeof(fullPath), "shaders/compiled/%s.spv", shader_base_name);
+	SDL_snprintf(full_path, sizeof(full_path), "shaders/compiled/%s.spv", shader_base_name);
 	format = SDL_GPU_SHADERFORMAT_SPIRV;
 	entrypoint = "main";
 
 
 	size_t codeSize;
-	void* code = SDL_LoadFile(fullPath, &codeSize);
+	void* code = SDL_LoadFile(full_path, &codeSize);
 	if (code == NULL)
 	{
-		SDL_Log("Failed to load shader from disk! %s", fullPath);
+		SDL_Log("Failed to load shader from disk! %s", full_path);
 		return NULL;
 	}
 

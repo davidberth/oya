@@ -39,6 +39,10 @@ public:
 				get_event_dispatcher()->dispatch(InputEvent(InputAction::scroll_out, true));
 			}
 			});
+
+		for (int i = 0; i < static_cast<size_t>(InputAction::last); i++) {
+			input_states[i] = false;
+		}
 	}
 
 	void on_key_event(const KeyEvent& key_event) {
