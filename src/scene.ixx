@@ -14,6 +14,7 @@ import render_set;
 import shader;
 import sdl_data;
 
+
 export class Scene
 {
 public:
@@ -84,7 +85,7 @@ public:
 		if (node->polygon.get_num_indices() > 0)
 		{
 			if (node->needs_transform) {
-				render_set->add(&node->polygon, &node->transform);
+				render_set->add(&node->polygon, &node->world_transform);
 			}
 			else {
 				render_set->add(&node->polygon, nullptr);
@@ -101,27 +102,22 @@ public:
 		render_set->render_all_geometries(render_pass, view_proj);
 	}
 
-	void render_node(Node* node, const glm::mat4& parent_transform, const glm::mat4& view_proj)
-	{
-		// glm::mat4 global_transform = parent_transform * node->get_transform();
 
-		/*
-		geom->set_transformation(view_proj * global_transform);
-
-		if (!node->needs_child_transforms) {
-			// render this node and all children in one draw call
-			geom->render(node->polygon.get_index_offset(), node->total_indices);
+	void compute_world_transform(Node* node, const glm::mat4& parent_transform) {
+		if (node->needs_transform) {
+			node->world_transform = parent_transform * node->local_transform;
 		}
 		else {
-			// render just this node
-			geom->render(node->polygon.get_index_offset(), node->polygon.get_num_indices());
-
-			// recursively render children that need transforms
-			for (Node* child : node->children) {
-				render_node(child, global_transform, view_proj);
-			}
+			node->world_transform = parent_transform;
 		}
-		*/
+
+		for (Node* child : node->children) {
+			compute_world_transform(child, node->world_transform);
+		}
+	}
+
+	void compute_world_transforms() {
+		compute_world_transform(root, glm::mat4(1.0f));
 	}
 
 	void update(float dt)
@@ -132,7 +128,7 @@ public:
 
 private:
 	void check_transform_needs(Node* node) {
-		constexpr float epsilon = 0.001f;
+		constexpr float epsilon = 0.00001f;
 		node->needs_transform = std::abs(node->rotate_delta) > epsilon;
 
 		for (Node* child : node->children) {

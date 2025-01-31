@@ -30,6 +30,8 @@ public:
 	virtual void init() override
 	{
 		Layer::init();
+		get_scene_serializer()->deserialize(scene, "scenes/scene1.scn");
+		scene.setup();
 
 		get_event_dispatcher()->subscribe<SceneEvent>([this](const SceneEvent& scene_event) {
 			if (scene_event.event_type == 0) {
@@ -41,10 +43,13 @@ public:
 			}
 			});
 
+
+
 	}
 	virtual void update() override
 	{
 		scene.update(0.01f);
+		scene.compute_world_transforms();
 	}
 	virtual void begin()
 	{

@@ -12,9 +12,10 @@ ToDo
 		v implement single polygon scene without transforms
 		v render scene geometries without transforms
 		v render scene with a single camera and view transform
-		- render scene geometries with transforms
-		- optimize rendering engine  
+		v render scene geometries with transforms
+		v optimize rendering engine  
 		- implement general texture rendering
+v Support diagonal inputs for camera movement
 v Create and load a main icon for the game	
 v Include application information (from config) in window title
 v Fix crash in release mode when creating a new scene (this was caused by create on first use of global objects)

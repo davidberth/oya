@@ -3,20 +3,25 @@ module;
 #include <glm/glm.hpp>
 #include <vector>
 
+
 export module renderable;
 
 import vertex;
 
+
+unsigned long int global_id_counter(1);
+
 export class Renderable
 {
 public:
+	unsigned long int id;
 	std::vector<glm::vec2> core;
 	glm::vec3 color;
 
 	std::vector<Vertex> vertices;
 	std::vector<unsigned int> indices;
 
-	Renderable()
+	Renderable() : id(global_id_counter++)
 	{
 		vertices.clear();
 		indices.clear();

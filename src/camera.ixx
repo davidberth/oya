@@ -68,8 +68,6 @@ public:
 				is_mouse_down = false;
 			}
 			});
-
-
 	}
 
 	glm::vec2 ndc_to_world_at_z(glm::vec2 ndc_pos, float target_z)
@@ -110,19 +108,27 @@ public:
 			if (height > 50.f) height = 50.0f;
 		}
 
-		if (get_input_manager()->get_input_state(InputAction::up))
+		if (get_input_manager()->get_input_state(InputAction::up) ||
+			(get_input_manager()->get_input_state(InputAction::upleft) ||
+				get_input_manager()->get_input_state(InputAction::upright)))
 		{
 			position.y += speed;
 		}
-		if (get_input_manager()->get_input_state(InputAction::down))
+		if (get_input_manager()->get_input_state(InputAction::down) ||
+			(get_input_manager()->get_input_state(InputAction::downleft) ||
+				get_input_manager()->get_input_state(InputAction::downright)))
 		{
 			position.y -= speed;
 		}
-		if (get_input_manager()->get_input_state(InputAction::left))
+		if (get_input_manager()->get_input_state(InputAction::left) ||
+			(get_input_manager()->get_input_state(InputAction::upleft) ||
+				get_input_manager()->get_input_state(InputAction::downleft)))
 		{
 			position.x -= speed;
 		}
-		if (get_input_manager()->get_input_state(InputAction::right))
+		if (get_input_manager()->get_input_state(InputAction::right) ||
+			(get_input_manager()->get_input_state(InputAction::upright) ||
+				get_input_manager()->get_input_state(InputAction::downright)))
 		{
 			position.x += speed;
 		}

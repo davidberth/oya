@@ -70,10 +70,18 @@ public:
 private:
 	void setup_default_bindings() {
 
-		key_bindings[SDLK_W] = InputAction::up;
-		key_bindings[SDLK_S] = InputAction::down;
-		key_bindings[SDLK_A] = InputAction::left;
-		key_bindings[SDLK_D] = InputAction::right;
+		key_bindings[SDLK_UP] = InputAction::up;
+		key_bindings[SDLK_DOWN] = InputAction::down;
+		key_bindings[SDLK_LEFT] = InputAction::left;
+		key_bindings[SDLK_RIGHT] = InputAction::right;
+		key_bindings[SDLK_KP_8] = InputAction::up;
+		key_bindings[SDLK_KP_2] = InputAction::down;
+		key_bindings[SDLK_KP_4] = InputAction::left;
+		key_bindings[SDLK_KP_6] = InputAction::right;
+		key_bindings[SDLK_KP_7] = InputAction::upleft;
+		key_bindings[SDLK_KP_9] = InputAction::upright;
+		key_bindings[SDLK_KP_1] = InputAction::downleft;
+		key_bindings[SDLK_KP_3] = InputAction::downright;
 		key_bindings[SDLK_Q] = InputAction::rotate_left;
 		key_bindings[SDLK_E] = InputAction::rotate_right;
 		key_bindings[SDLK_R] = InputAction::zoom_in;
@@ -88,7 +96,6 @@ private:
 		key_bindings[SDLK_F5] = InputAction::function_5;
 		key_bindings[SDLK_F6] = InputAction::function_6;
 		key_bindings[SDLK_F7] = InputAction::function_7;
-
 	}
 };
 
