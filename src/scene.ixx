@@ -30,10 +30,8 @@ public:
 
 	Scene() {
 
-		font_quad.add_vertex(glm::vec2(0.2f, 0.2f));
-		font_quad.add_vertex(glm::vec2(0.4f, 0.2f));
-		font_quad.add_vertex(glm::vec2(0.4f, 0.4f));
-		font_quad.add_vertex(glm::vec2(0.2f, 0.4f));
+		font_quad.add_vertex(glm::vec2(-0.8f, -0.8f));
+		font_quad.add_vertex(glm::vec2(0.8f, 0.8f));
 		font_quad.setup();
 
 		root = new Node();

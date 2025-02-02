@@ -15,6 +15,8 @@ export enum RenderGeometryType
 	TRIANGLE_LIST
 };
 
+
+
 export template <typename VertexType>
 class RenderSet {
 public:
@@ -84,153 +86,13 @@ public:
 		vertex_buffer_size = vert_buffer_size;
 		index_buffer_size = ind_buffer_size;
 
-		SDL_GPUColorTargetDescription color_target_description{};
-		color_target_description.format = SDL_GetGPUSwapchainTextureFormat(sdl_device, sdl_window);
-		std::vector color_target_descriptions{ color_target_description };
-
-		SDL_GPUGraphicsPipelineTargetInfo target_info{};
-		target_info.color_target_descriptions = color_target_descriptions.data();
-		target_info.num_color_targets = color_target_descriptions.size();
-
-		SDL_GPUGraphicsPipelineCreateInfo pipeline_create_info{};
-		pipeline_create_info.vertex_shader = vertex_shader;
-		pipeline_create_info.fragment_shader = fragment_shader;
-		pipeline_create_info.primitive_type = SDL_GPU_PRIMITIVETYPE_TRIANGLELIST;
-		pipeline_create_info.rasterizer_state.cull_mode = SDL_GPU_CULLMODE_NONE;
-		pipeline_create_info.rasterizer_state.fill_mode = SDL_GPU_FILLMODE_FILL;
-		pipeline_create_info.target_info = target_info;
-
-		SDL_GPUVertexBufferDescription vertex_input_description{};
-		vertex_input_description.slot = 0;
-		vertex_input_description.input_rate = SDL_GPU_VERTEXINPUTRATE_VERTEX;
-		vertex_input_description.instance_step_rate = 0;
-		vertex_input_description.pitch = sizeof(VertexType);
-
-		std::vector vertex_input_descriptions{ vertex_input_description };
-		pipeline_create_info.vertex_input_state.vertex_buffer_descriptions = vertex_input_descriptions.data();
-		pipeline_create_info.vertex_input_state.num_vertex_buffers = vertex_input_descriptions.size();
-
-		SDL_GPUVertexAttribute vertex_attribute{};
-		vertex_attribute.buffer_slot = 0;
-		vertex_attribute.format = SDL_GPU_VERTEXELEMENTFORMAT_FLOAT2;
-		vertex_attribute.location = 0;
-		vertex_attribute.offset = 0;
-
-		SDL_GPUVertexAttribute vertex_attribute2{};
-		vertex_attribute2.buffer_slot = 0;
-		if (uses_texture)
-		{
-			vertex_attribute2.format = SDL_GPU_VERTEXELEMENTFORMAT_FLOAT2;
-		}
-		else
-		{
-			vertex_attribute2.format = SDL_GPU_VERTEXELEMENTFORMAT_FLOAT3;
-		}
-		vertex_attribute2.location = 1;
-		vertex_attribute2.offset = sizeof(float) * 2;
-
-		std::vector vertex_attributes{ vertex_attribute, vertex_attribute2 };
-		pipeline_create_info.vertex_input_state.vertex_attributes = vertex_attributes.data();
-		pipeline_create_info.vertex_input_state.num_vertex_attributes = vertex_attributes.size();
-
-		graphics_pipeline = SDL_CreateGPUGraphicsPipeline(sdl_device, &pipeline_create_info);
-
-		SDL_ReleaseGPUShader(sdl_device, vertex_shader);
-		SDL_ReleaseGPUShader(sdl_device, fragment_shader);
-
-		int vertex_size = sizeof(VertexType);
-
-		SDL_GPUBufferCreateInfo vertex_buffer_create_info{};
-		vertex_buffer_create_info.usage = SDL_GPU_BUFFERUSAGE_VERTEX;
-		vertex_buffer_create_info.size = vertex_size * vertex_buffer_size;
-		vertex_buffer = SDL_CreateGPUBuffer(sdl_device, &vertex_buffer_create_info);
-
-		SDL_GPUBufferCreateInfo index_buffer_create_info{};
-		index_buffer_create_info.usage = SDL_GPU_BUFFERUSAGE_INDEX;
-		index_buffer_create_info.size = sizeof(uint16_t) * index_buffer_size;
-		index_buffer = SDL_CreateGPUBuffer(sdl_device, &index_buffer_create_info);
-
-		SDL_GPUTransferBufferCreateInfo transfer_buffer_create_info{};
-		transfer_buffer_create_info.usage = SDL_GPU_TRANSFERBUFFERUSAGE_UPLOAD;
-		transfer_buffer_create_info.size = (vertex_size * vertex_buffer_size) + (sizeof(Uint16) * index_buffer_size);
-
-		transfer_buffer = SDL_CreateGPUTransferBuffer(sdl_device, &transfer_buffer_create_info);
-
-		if (uses_texture)
-		{
-			SDL_GPUSamplerCreateInfo sample_info{};
-			sample_info.min_filter = SDL_GPU_FILTER_LINEAR;
-			sample_info.mag_filter = SDL_GPU_FILTER_LINEAR;
-			sample_info.mipmap_mode = SDL_GPU_SAMPLERMIPMAPMODE_LINEAR;
-			sample_info.address_mode_u = SDL_GPU_SAMPLERADDRESSMODE_CLAMP_TO_EDGE;
-			sample_info.address_mode_v = SDL_GPU_SAMPLERADDRESSMODE_CLAMP_TO_EDGE;
-			sample_info.address_mode_w = SDL_GPU_SAMPLERADDRESSMODE_CLAMP_TO_EDGE;
-
-			texture_sampler = SDL_CreateGPUSampler(sdl_device, &sample_info);
-
-			SDL_GPUTextureCreateInfo texture_create_info{};
-			texture_create_info.format = SDL_GPU_TEXTUREFORMAT_R8G8B8A8_UNORM;
-			texture_create_info.type = SDL_GPU_TEXTURETYPE_2D;
-			texture_create_info.width = texture_surface->w;
-			texture_create_info.height = texture_surface->h;
-			texture_create_info.layer_count_or_depth = 1;
-			texture_create_info.num_levels = 1;
-			texture_create_info.usage = SDL_GPU_TEXTUREUSAGE_SAMPLER;
-
-			texture = SDL_CreateGPUTexture(sdl_device, &texture_create_info);
-
-			SDL_GPUTransferBufferCreateInfo texture_transfer_create_info{};
-			texture_transfer_create_info.usage = SDL_GPU_TRANSFERBUFFERUSAGE_UPLOAD;
-			texture_transfer_create_info.size = texture_surface->w * texture_surface->h * 4;
-
-			SDL_GPUTransferBuffer* texture_transfer_buffer = SDL_CreateGPUTransferBuffer(sdl_device, &texture_transfer_create_info);
-
-			Uint8* texture_transfer_ptr = (Uint8*)SDL_MapGPUTransferBuffer(
-				sdl_device,
-				texture_transfer_buffer,
-				false
-			);
-
-			for (int i = 0; i < texture_surface->h; i++)
-			{
-				for (int j = 0; j < texture_surface->w; j++)
-				{
-					Uint8* pixel = (Uint8*)texture_surface->pixels + (i * texture_surface->pitch) + (j * 3);
-					texture_transfer_ptr[(i * texture_surface->w + j) * 4] = pixel[0];
-					texture_transfer_ptr[(i * texture_surface->w + j) * 4 + 1] = pixel[1];
-					texture_transfer_ptr[(i * texture_surface->w + j) * 4 + 2] = pixel[2];
-					texture_transfer_ptr[(i * texture_surface->w + j) * 4 + 3] = 255;
-				}
-			}
-
-			SDL_UnmapGPUTransferBuffer(sdl_device, texture_transfer_buffer);
-
-			SDL_GPUCommandBuffer* upload_cmd_buffer = SDL_AcquireGPUCommandBuffer(sdl_device);
-			SDL_GPUCopyPass* copy_pass = SDL_BeginGPUCopyPass(upload_cmd_buffer);
-
-			SDL_GPUTextureTransferInfo texture_transfer_info{};
-			texture_transfer_info.transfer_buffer = texture_transfer_buffer;
-			texture_transfer_info.offset = 0;
-
-			SDL_GPUTextureRegion texture_region{};
-			texture_region.texture = texture;
-			texture_region.w = texture_surface->w;
-			texture_region.h = texture_surface->h;
-			texture_region.d = 1;
-
-			SDL_UploadToGPUTexture(
-				copy_pass,
-				&texture_transfer_info,
-				&texture_region,
-				false
-			);
-
-			SDL_EndGPUCopyPass(copy_pass);
-			SDL_SubmitGPUCommandBuffer(upload_cmd_buffer);
-
-			SDL_ReleaseGPUTransferBuffer(sdl_device, texture_transfer_buffer);
+		init_shaders(vertex_shader, fragment_shader);
+		init_buffers();
+		if (uses_texture) {
+			init_texture(texture_surface);
 		}
 	}
+
 
 	void begin()
 	{
@@ -274,8 +136,8 @@ public:
 		{
 			SDL_Log("RenderSet::add: Renderable not added, max renderables or buffer size exceeded");
 		}
-
 	}
+
 
 	void end()
 	{
@@ -432,5 +294,156 @@ public:
 		SDL_ReleaseGPUBuffer(sdl_device, vertex_buffer);
 		SDL_ReleaseGPUBuffer(sdl_device, index_buffer);
 		SDL_ReleaseGPUGraphicsPipeline(sdl_device, graphics_pipeline);
+	}
+
+private:
+	void init_shaders(SDL_GPUShader* vertex_shader, SDL_GPUShader* fragment_shader) {
+		SDL_GPUColorTargetDescription color_target_description{};
+		color_target_description.format = SDL_GetGPUSwapchainTextureFormat(sdl_device, sdl_window);
+		std::vector color_target_descriptions{ color_target_description };
+
+		SDL_GPUGraphicsPipelineTargetInfo target_info{};
+		target_info.color_target_descriptions = color_target_descriptions.data();
+		target_info.num_color_targets = color_target_descriptions.size();
+
+		SDL_GPUGraphicsPipelineCreateInfo pipeline_create_info{};
+		pipeline_create_info.vertex_shader = vertex_shader;
+		pipeline_create_info.fragment_shader = fragment_shader;
+		pipeline_create_info.primitive_type = SDL_GPU_PRIMITIVETYPE_TRIANGLELIST;
+		pipeline_create_info.rasterizer_state.cull_mode = SDL_GPU_CULLMODE_NONE;
+		pipeline_create_info.rasterizer_state.fill_mode = SDL_GPU_FILLMODE_FILL;
+		pipeline_create_info.target_info = target_info;
+
+		SDL_GPUVertexBufferDescription vertex_input_description{};
+		vertex_input_description.slot = 0;
+		vertex_input_description.input_rate = SDL_GPU_VERTEXINPUTRATE_VERTEX;
+		vertex_input_description.instance_step_rate = 0;
+		vertex_input_description.pitch = sizeof(VertexType);
+
+		std::vector vertex_input_descriptions{ vertex_input_description };
+		pipeline_create_info.vertex_input_state.vertex_buffer_descriptions = vertex_input_descriptions.data();
+		pipeline_create_info.vertex_input_state.num_vertex_buffers = vertex_input_descriptions.size();
+
+		SDL_GPUVertexAttribute vertex_attribute{};
+		vertex_attribute.buffer_slot = 0;
+		vertex_attribute.format = SDL_GPU_VERTEXELEMENTFORMAT_FLOAT2;
+		vertex_attribute.location = 0;
+		vertex_attribute.offset = 0;
+
+		SDL_GPUVertexAttribute vertex_attribute2{};
+		vertex_attribute2.buffer_slot = 0;
+		if (uses_texture)
+		{
+			vertex_attribute2.format = SDL_GPU_VERTEXELEMENTFORMAT_FLOAT2;
+		}
+		else
+		{
+			vertex_attribute2.format = SDL_GPU_VERTEXELEMENTFORMAT_FLOAT3;
+		}
+		vertex_attribute2.location = 1;
+		vertex_attribute2.offset = sizeof(float) * 2;
+
+		std::vector vertex_attributes{ vertex_attribute, vertex_attribute2 };
+		pipeline_create_info.vertex_input_state.vertex_attributes = vertex_attributes.data();
+		pipeline_create_info.vertex_input_state.num_vertex_attributes = vertex_attributes.size();
+
+		graphics_pipeline = SDL_CreateGPUGraphicsPipeline(sdl_device, &pipeline_create_info);
+
+		SDL_ReleaseGPUShader(sdl_device, vertex_shader);
+		SDL_ReleaseGPUShader(sdl_device, fragment_shader);
+	}
+
+	void init_buffers() {
+		int vertex_size = sizeof(VertexType);
+
+		SDL_GPUBufferCreateInfo vertex_buffer_create_info{};
+		vertex_buffer_create_info.usage = SDL_GPU_BUFFERUSAGE_VERTEX;
+		vertex_buffer_create_info.size = vertex_size * vertex_buffer_size;
+		vertex_buffer = SDL_CreateGPUBuffer(sdl_device, &vertex_buffer_create_info);
+
+		SDL_GPUBufferCreateInfo index_buffer_create_info{};
+		index_buffer_create_info.usage = SDL_GPU_BUFFERUSAGE_INDEX;
+		index_buffer_create_info.size = sizeof(uint16_t) * index_buffer_size;
+		index_buffer = SDL_CreateGPUBuffer(sdl_device, &index_buffer_create_info);
+
+		SDL_GPUTransferBufferCreateInfo transfer_buffer_create_info{};
+		transfer_buffer_create_info.usage = SDL_GPU_TRANSFERBUFFERUSAGE_UPLOAD;
+		transfer_buffer_create_info.size = (vertex_size * vertex_buffer_size) + (sizeof(Uint16) * index_buffer_size);
+
+		transfer_buffer = SDL_CreateGPUTransferBuffer(sdl_device, &transfer_buffer_create_info);
+	}
+
+	void init_texture(SDL_Surface* texture_surface) {
+		SDL_GPUSamplerCreateInfo sample_info{};
+		sample_info.min_filter = SDL_GPU_FILTER_LINEAR;
+		sample_info.mag_filter = SDL_GPU_FILTER_LINEAR;
+		sample_info.mipmap_mode = SDL_GPU_SAMPLERMIPMAPMODE_LINEAR;
+		sample_info.address_mode_u = SDL_GPU_SAMPLERADDRESSMODE_CLAMP_TO_EDGE;
+		sample_info.address_mode_v = SDL_GPU_SAMPLERADDRESSMODE_CLAMP_TO_EDGE;
+		sample_info.address_mode_w = SDL_GPU_SAMPLERADDRESSMODE_CLAMP_TO_EDGE;
+
+		texture_sampler = SDL_CreateGPUSampler(sdl_device, &sample_info);
+
+		SDL_GPUTextureCreateInfo texture_create_info{};
+		texture_create_info.format = SDL_GPU_TEXTUREFORMAT_R8G8B8A8_UNORM;
+		texture_create_info.type = SDL_GPU_TEXTURETYPE_2D;
+		texture_create_info.width = texture_surface->w;
+		texture_create_info.height = texture_surface->h;
+		texture_create_info.layer_count_or_depth = 1;
+		texture_create_info.num_levels = 1;
+		texture_create_info.usage = SDL_GPU_TEXTUREUSAGE_SAMPLER;
+
+		texture = SDL_CreateGPUTexture(sdl_device, &texture_create_info);
+
+		SDL_GPUTransferBufferCreateInfo texture_transfer_create_info{};
+		texture_transfer_create_info.usage = SDL_GPU_TRANSFERBUFFERUSAGE_UPLOAD;
+		texture_transfer_create_info.size = texture_surface->w * texture_surface->h * 4;
+
+		SDL_GPUTransferBuffer* texture_transfer_buffer = SDL_CreateGPUTransferBuffer(sdl_device, &texture_transfer_create_info);
+
+		Uint8* texture_transfer_ptr = (Uint8*)SDL_MapGPUTransferBuffer(
+			sdl_device,
+			texture_transfer_buffer,
+			false
+		);
+
+		for (int i = 0; i < texture_surface->h; i++)
+		{
+			for (int j = 0; j < texture_surface->w; j++)
+			{
+				Uint8* pixel = (Uint8*)texture_surface->pixels + (i * texture_surface->pitch) + (j * 3);
+				texture_transfer_ptr[(i * texture_surface->w + j) * 4] = pixel[0];
+				texture_transfer_ptr[(i * texture_surface->w + j) * 4 + 1] = pixel[1];
+				texture_transfer_ptr[(i * texture_surface->w + j) * 4 + 2] = pixel[2];
+				texture_transfer_ptr[(i * texture_surface->w + j) * 4 + 3] = 255;
+			}
+		}
+
+		SDL_UnmapGPUTransferBuffer(sdl_device, texture_transfer_buffer);
+
+		SDL_GPUCommandBuffer* upload_cmd_buffer = SDL_AcquireGPUCommandBuffer(sdl_device);
+		SDL_GPUCopyPass* copy_pass = SDL_BeginGPUCopyPass(upload_cmd_buffer);
+
+		SDL_GPUTextureTransferInfo texture_transfer_info{};
+		texture_transfer_info.transfer_buffer = texture_transfer_buffer;
+		texture_transfer_info.offset = 0;
+
+		SDL_GPUTextureRegion texture_region{};
+		texture_region.texture = texture;
+		texture_region.w = texture_surface->w;
+		texture_region.h = texture_surface->h;
+		texture_region.d = 1;
+
+		SDL_UploadToGPUTexture(
+			copy_pass,
+			&texture_transfer_info,
+			&texture_region,
+			false
+		);
+
+		SDL_EndGPUCopyPass(copy_pass);
+		SDL_SubmitGPUCommandBuffer(upload_cmd_buffer);
+
+		SDL_ReleaseGPUTransferBuffer(sdl_device, texture_transfer_buffer);
 	}
 };
