@@ -14,6 +14,8 @@ ToDo
 		v render scene with a single camera and view transform
 		v render scene geometries with transforms
 		v optimize rendering engine  
+		- make RenderSet max renderables a dynamic value and all required 
+			related attributes dynamically allocated
 		- implement general texture rendering
 v Support diagonal inputs for camera movement
 v Create and load a main icon for the game	

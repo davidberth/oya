@@ -10,12 +10,12 @@ import polygon_utility;
 import renderable;
 
 
-export class Polygon : public Renderable
+export class Polygon : public Renderable<Vertex>
 {
 public:
-	
+
 	glm::vec3 color;
-	
+
 	glm::vec3 outline_color = { 0.1f, 0.1f, 0.1f };
 	float outline_width;
 	std::vector<glm::vec2> buffer;
@@ -137,7 +137,7 @@ public:
 		{
 			vertices.push_back(Vertex{ point.x, point.y, color.x, color.y, color.z });
 		}
-		
+
 		float redo = outline_color.x * 0.9f;
 		float greeno = outline_color.y * 0.9f;
 		float blueo = outline_color.z * 0.9f;

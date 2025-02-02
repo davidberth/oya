@@ -58,7 +58,7 @@ public:
 
 	void compute_local_aabb()
 	{
-		local_aabb = AxisAlignedBoundingBox::compute_bounding_box(polygon);
+		//local_aabb = AxisAlignedBoundingBox::compute_bounding_box(polygon);
 	}
 
 	void set_rotation(float angle)

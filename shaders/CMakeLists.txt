@@ -4,11 +4,14 @@ set(VULKAN_SDK "C:/VulkanSDK/1.4.304.0")
 # find all .frag and .vert files in the shaders/source directory
 file(GLOB SHADER_FILES "${CMAKE_CURRENT_SOURCE_DIR}/source/*.frag" "${CMAKE_CURRENT_SOURCE_DIR}/source/*.vert")
 
+
+
 # create a list to hold the output SPIR-V files
 set(SPIRV_FILES)
 
 # loop through each shader file and add a custom command to compile it
 foreach(SHADER_FILE ${SHADER_FILES})
+    message(STATUS "Found shader file: ${SHADER_FILE}")
     get_filename_component(FILE_NAME ${SHADER_FILE} NAME)
     get_filename_component(FILE_BASE_NAME ${SHADER_FILE} NAME_WE)
     get_filename_component(FILE_EXT ${SHADER_FILE} EXT)

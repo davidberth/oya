@@ -10,7 +10,7 @@ import polygon_utility;
 import renderable;
 
 
-export class Outline : public Renderable
+export class Outline : public Renderable<Vertex>
 {
 public:
 
@@ -20,17 +20,17 @@ public:
 	{
 	}
 
-    void generate_indices()
-    {
-        if (core.size() < 3) return;
-        indices.clear();
+	void generate_indices()
+	{
+		if (core.size() < 3) return;
+		indices.clear();
 
-        for (size_t i = 0; i < core.size(); ++i)
-        {
-            indices.push_back(i);
-            indices.push_back((i + 1) % core.size());
-        }
-    }
+		for (size_t i = 0; i < core.size(); ++i)
+		{
+			indices.push_back(i);
+			indices.push_back((i + 1) % core.size());
+		}
+	}
 
 	void generate_vertices()
 	{

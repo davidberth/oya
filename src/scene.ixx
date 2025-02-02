@@ -13,25 +13,53 @@ import outline;
 import render_set;
 import shader;
 import sdl_data;
+import vertex;
+import textured_quad;
 
 
 export class Scene
 {
 public:
 	Node* root;
-	RenderSet* render_set = nullptr;
+	RenderSet<Vertex>* world_render_set = nullptr;
+	RenderSet<TextureVertex>* font_render_set = nullptr;
+
+	glm::mat4x4 identity = glm::mat4(1.0f);
+
+	TexturedQuad font_quad;
 
 	Scene() {
+
+		font_quad.add_vertex(glm::vec2(0.2f, 0.2f));
+		font_quad.add_vertex(glm::vec2(0.4f, 0.2f));
+		font_quad.add_vertex(glm::vec2(0.4f, 0.4f));
+		font_quad.add_vertex(glm::vec2(0.2f, 0.4f));
+		font_quad.setup();
 
 		root = new Node();
 		root->centroid = glm::vec2(0.0f, 0.0f);
 		root->rotate_delta = 0.001f;
 
-		SDL_GPUShader* vertex_shader = load_shader(sdl_device, "polygon_vert", 0, 1, 0, 0);
-		SDL_GPUShader* fragment_shader = load_shader(sdl_device, "polygon_frag", 0, 0, 0, 0);
+		SDL_Surface* font_surface = SDL_LoadBMP("resources/textures/font.bmp");
+		if (font_surface == NULL)
+		{
+			SDL_Log("Could not load font texture!");
+		}
 
-		render_set = new RenderSet();
-		render_set->init(RenderGeometryType::TRIANGLE_LIST, vertex_shader, fragment_shader, 100000, 100000);
+		SDL_GPUShader* vertex_shader_world = load_shader(sdl_device, "polygon_vert", 0, 1, 0, 0);
+		SDL_GPUShader* fragment_shader_world = load_shader(sdl_device, "polygon_frag", 0, 0, 0, 0);
+
+		world_render_set = new RenderSet<Vertex>();
+		world_render_set->init(RenderGeometryType::TRIANGLE_LIST, 5000,
+			vertex_shader_world, fragment_shader_world, 100000, 100000,
+			nullptr);
+
+		SDL_GPUShader* vertex_shader_font = load_shader(sdl_device, "font_vert", 0, 0, 0, 0);
+		SDL_GPUShader* fragment_shader_font = load_shader(sdl_device, "font_frag", 1, 0, 0, 0);
+
+		font_render_set = new RenderSet<TextureVertex>();
+		font_render_set->init(RenderGeometryType::TRIANGLE_LIST, 50, vertex_shader_font, fragment_shader_font, 1000, 1000,
+			font_surface);
 	};
 
 	~Scene() {
@@ -40,7 +68,7 @@ public:
 			delete root->children.at(i);
 		}
 		delete root;
-		delete render_set;
+		delete world_render_set;
 	};
 
 	Node* add_node(Node* parent, glm::vec2 vertices[], int num_vertices,
@@ -75,9 +103,13 @@ public:
 
 	void stage_renderables()
 	{
-		render_set->begin();
+		world_render_set->begin();
 		stage_node(root);
-		render_set->end();
+		world_render_set->end();
+
+		font_render_set->begin();
+		font_render_set->add(&font_quad, &identity);
+		font_render_set->end();
 	}
 
 	void stage_node(Node* node)
@@ -85,10 +117,10 @@ public:
 		if (node->polygon.get_num_indices() > 0)
 		{
 			if (node->needs_transform) {
-				render_set->add(&node->polygon, &node->world_transform);
+				world_render_set->add(&node->polygon, &node->world_transform);
 			}
 			else {
-				render_set->add(&node->polygon, nullptr);
+				world_render_set->add(&node->polygon, nullptr);
 			}
 		}
 
@@ -97,9 +129,10 @@ public:
 		}
 	}
 
-	void render(SDL_GPURenderPass* render_pass, const glm::mat4& view_proj)
+	void render(SDL_GPURenderPass* render_pass, const glm::mat4& view_proj) const
 	{
-		render_set->render_all_geometries(render_pass, view_proj);
+		world_render_set->render_all_geometries(render_pass, view_proj);
+		font_render_set->render_all_geometries(render_pass, identity);
 	}
 
 

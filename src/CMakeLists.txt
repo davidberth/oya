@@ -1,6 +1,6 @@
 add_executable (oya "main.cpp")
 target_sources(oya PRIVATE FILE_SET CXX_MODULES FILES  "layer.ixx" "layer_stack.ixx" "world_layer.ixx"    "render.ixx" "camera.ixx" "persistent_data.ixx" "updatable.ixx" "update_manager.ixx" "update.ixx" "node.ixx" "vertex.ixx" "scene.ixx" "event.ixx" "key_event.ixx" "input_event.ixx" "special_actions.ixx" "window_event.ixx" "viewport.ixx"
-"mouse_event.ixx" "render_stats_event.ixx" "scene_serializer.ixx" "scene_event.ixx" "polygon.ixx" "polygon_utility.ixx" "renderable.ixx" "outline.ixx" "aabb.ixx" "input_manager.ixx"  "init.ixx" "sdl_data.ixx" "cleanup.ixx" "keyboard.ixx" "mouse.ixx" "render_set.ixx" "shader.ixx" "frame_rate.ixx")
+"mouse_event.ixx" "render_stats_event.ixx" "scene_serializer.ixx" "scene_event.ixx" "polygon.ixx" "polygon_utility.ixx" "renderable.ixx" "outline.ixx" "aabb.ixx" "input_manager.ixx"  "init.ixx" "sdl_data.ixx" "cleanup.ixx" "keyboard.ixx" "mouse.ixx" "render_set.ixx" "shader.ixx" "frame_rate.ixx" "textured_quad.ixx")
 
 # to turn on address sanitizer, uncomment the following lines
 # target_compile_options(oya PRIVATE /fsanitize=address)
@@ -25,16 +25,16 @@ set_target_properties(oya PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR
 set_target_properties(oya PROPERTIES VS_DEBUGGER_WORKING_DIRECTORY ${CMAKE_SOURCE_DIR})
 
 # define the font atlas output files
-set(FONT_ATLAS_PNG ${CMAKE_SOURCE_DIR}/resources/textures/font.png)
+set(FONT_ATLAS_BMP ${CMAKE_SOURCE_DIR}/resources/textures/font.bmp)
 set(FONT_ATLAS_CSV ${CMAKE_SOURCE_DIR}/resources/font_layouts/font.csv)
 set(FONT_SOURCE c:\\windows\\fonts\\bell.ttf)
 
 # build the font atlas
 add_custom_command(
-    OUTPUT ${FONT_ATLAS_PNG} ${FONT_ATLAS_CSV}
+    OUTPUT ${FONT_ATLAS_BMP} ${FONT_ATLAS_CSV}
     COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_SOURCE_DIR}/resources/textures
     COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_SOURCE_DIR}/resources/font_layouts
-    COMMAND ${CMAKE_SOURCE_DIR}/../atlas_gen/msdf-atlas-gen.exe -font ${FONT_SOURCE} -type softmask -format png -chars "[42, 90]" -size 100 -pots -imageout ${FONT_ATLAS_PNG} -csv ${FONT_ATLAS_CSV}
+    COMMAND ${CMAKE_SOURCE_DIR}/../atlas_gen/msdf-atlas-gen.exe -font ${FONT_SOURCE} -type softmask -format bmp -chars "[42, 90]" -size 100 -pots -imageout ${FONT_ATLAS_BMP} -csv ${FONT_ATLAS_CSV}
     WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
     COMMENT "Generating font atlas"
     VERBATIM

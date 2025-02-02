@@ -80,7 +80,7 @@ public:
 	}
 	virtual void cleanup() override
 	{
-		scene.render_set->cleanup();
+		scene.world_render_set->cleanup();
 		Layer::cleanup();
 
 	}
