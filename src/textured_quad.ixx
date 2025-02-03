@@ -13,7 +13,7 @@ export class TexturedQuad : public Renderable<TextureVertex>
 {
 public:
 
-	glm::vec3 color;
+	std::vector<glm::vec2> texcoords;
 
 	TexturedQuad() : Renderable()
 	{

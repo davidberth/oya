@@ -15,6 +15,7 @@ import shader;
 import sdl_data;
 import vertex;
 import textured_quad;
+import font_manager;
 
 
 export class Scene
@@ -27,6 +28,7 @@ public:
 	glm::mat4x4 identity = glm::mat4(1.0f);
 
 	TexturedQuad font_quad;
+	FontManager font_manager;
 
 	Scene() {
 
@@ -38,11 +40,14 @@ public:
 		root->centroid = glm::vec2(0.0f, 0.0f);
 		root->rotate_delta = 0.001f;
 
-		SDL_Surface* font_surface = SDL_LoadBMP("resources/textures/font.bmp");
+		font_manager.load_font("font");
+
+
+		/*SDL_Surface* font_surface = SDL_LoadBMP("resources/textures/font.bmp");
 		if (font_surface == NULL)
 		{
 			SDL_Log("Could not load font texture!");
-		}
+		}*/
 
 		SDL_GPUShader* vertex_shader_world = load_shader(sdl_device, "polygon_vert", 0, 1, 0, 0);
 		SDL_GPUShader* fragment_shader_world = load_shader(sdl_device, "polygon_frag", 0, 0, 0, 0);
@@ -52,12 +57,7 @@ public:
 			vertex_shader_world, fragment_shader_world, 100000, 100000,
 			nullptr);
 
-		SDL_GPUShader* vertex_shader_font = load_shader(sdl_device, "font_vert", 0, 0, 0, 0);
-		SDL_GPUShader* fragment_shader_font = load_shader(sdl_device, "font_frag", 1, 0, 0, 0);
 
-		font_render_set = new RenderSet<TextureVertex>();
-		font_render_set->init(RenderGeometryType::TRIANGLE_LIST, 50, vertex_shader_font, fragment_shader_font, 1000, 1000,
-			font_surface);
 	};
 
 	~Scene() {
